@@ -455,11 +455,17 @@ h1 {
 
 .image-button {
     background: none;
-    border: 1px solid transparent; /* Add border for spacing consistency */
+    border: 1px solid transparent;
     padding: 4px;
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.2s;
+    height: 34px; /* Match estimated select height */
+    width: 34px;  /* Make it square */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-button:hover {
@@ -504,10 +510,7 @@ h1 {
     border-color: #b02a37;
 }
 
-#roster-controls button#delete-roster-btn img {
-    width: 20px;
-    height: 20px;
-}
+
 
 /* Game Mode Styles */
 #game-mode-header {
