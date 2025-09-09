@@ -1,0 +1,21 @@
+{
+  "name": "유닛 조합기",
+  "short_name": "유닛 조합기",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#1c1e21",
+  "description": "유닛 파츠를 조합하여 구성을 만드는 애플리케이션입니다.",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

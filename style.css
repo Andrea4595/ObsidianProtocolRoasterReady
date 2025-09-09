@@ -1,0 +1,558 @@
+body {
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px 20px 120px 20px; /* Add padding to bottom for the add button */
+}
+
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    margin-bottom: 40px;
+}
+
+#units-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center rows and cards */
+    gap: 10px; /* Space between unit entries */
+}
+
+.unit-entry {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px; /* Space between full unit entries */
+}
+
+.unit-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; /* Align wrappers to the top */
+    gap: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Align content to the bottom */
+}
+
+.card-slot {
+    width: 200px;
+    height: 300px;
+    border: 2px dashed #ccd0d5;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden; /* Prevent children from overflowing rounded corners */
+}
+
+.card-slot:hover {
+    background-color: #f7f8fa;
+    border-color: #8a8d91;
+}
+
+.slot-label {
+    font-weight: bold;
+    color: #65676b;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
+.card-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Drone & Sub-card Container Styles */
+#drones-container, .sub-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    align-items: flex-start; /* Align wrappers to the top */
+    margin-top: 20px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sub-cards-container {
+    background-color: #e9ecef; /* Gray background */
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 0;
+}
+
+.drone-card {
+    position: relative;
+    width: fit-content; /* Fit to image width */
+    height: fit-content;
+    margin: auto;
+    overflow: hidden; /* Prevent children from overflowing rounded corners */
+    border-radius: 10px; /* Match image radius */
+}
+
+.drone-card img {
+    height: 300px; /* Set fixed height */
+    width: auto; /* Let width adjust to maintain aspect ratio */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.delete-drone-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #dc3545;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 2;
+}
+
+.delete-drone-button:hover { transform: scale(1.2); }
+
+/* Add/Delete Button Styles */
+.add-button-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+#add-unit-button, #add-drone-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#add-unit-button {
+    background-color: #1877f2;
+    color: #fff;
+}
+#add-unit-button:hover { transform: scale(1.05); background-color: #166fe5; }
+
+#add-drone-button {
+    background-color: #42b72a;
+    color: #fff;
+}
+#add-drone-button:hover { transform: scale(1.05); background-color: #36a420; }
+
+.delete-unit-button {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0; /* Prevent button from shrinking */
+    font-size: 24px;
+    font-weight: bold;
+    color: #dc3545; /* Red */
+    background-color: #f8f9fa;
+    border: 1px solid #dc3545;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.delete-unit-button:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1200px;
+    height: 90%;
+    max-height: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #606770;
+    cursor: pointer;
+}
+
+#modal-title {
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-image-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.modal-image-container img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+    align-self: start; /* Prevent stretching */
+}
+
+.modal-image-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(24, 119, 242, 0.6);
+    border-color: #1877f2;
+}
+
+.deselect-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 5 / 7; /* Set aspect ratio similar to main cards */
+    border: 2px dashed #ccd0d5;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #65676b;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    align-self: start; /* Prevent stretching */
+}
+
+.deselect-option:hover {
+    background-color: #f7f8fa;
+    border-color: #dc3545; /* Red color on hover */
+    color: #dc3545;
+}
+
+/* Roster Summary Styles */
+#roster-summary {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#roster-summary h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #1c1e21;
+}
+
+#total-points {
+    color: #1877f2;
+    font-weight: bold;
+}
+
+/* Card-specific points display */
+.card-points {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 8px;
+    background-color: rgba(24, 119, 242, 0.9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* So it doesn't interfere with the click */
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Responsive Styles */
+@media (max-width: 1400px) {
+    .card-slot {
+        width: 180px;
+        height: 270px;
+    }
+    .drone-card img {
+        height: 270px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .unit-row {
+        width: auto;
+        max-width: 90%;
+    }
+    .card-slot {
+        width: 160px;
+        height: 240px;
+    }
+    .drone-card img {
+        height: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 15px 15px 100px 15px;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .unit-row {
+        gap: 10px; /* Smaller gap for mobile */
+        padding: 15px;
+    }
+
+    .card-slot {
+        width: 140px; /* Consistent width for all cards */
+        height: 210px; /* Maintain aspect ratio */
+    }
+
+    /* Drone Card Styles for mobile */
+    .drone-card img {
+        height: 210px;
+    }
+
+    /* General mobile adjustments */
+    .delete-unit-button {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        margin-left: 10px;
+    }
+    .add-button-container {
+        gap: 10px;
+    }
+    #add-unit-button, #add-drone-button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    .modal-content {
+        width: 95%;
+        height: 85%;
+    }
+    .modal-image-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+}
+
+/* Roster Controls Styles */
+#roster-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e7f3ff;
+    border-radius: 12px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#roster-controls select, #roster-controls button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccd0d5;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+#roster-controls select:hover, #roster-controls button:hover {
+    background-color: #f7f8fa;
+    border-color: #8a8d91;
+}
+
+#roster-controls select {
+    flex-grow: 1;
+    max-width: 250px;
+}
+
+#roster-controls button#delete-roster-btn {
+    background-color: #fbebee;
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+#roster-controls button#delete-roster-btn:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Game Mode Styles */
+#game-mode-header {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#exit-game-mode-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+#exit-game-mode-btn:hover {
+    background-color: #5a6268;
+}
+
+.action-button-wrapper {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.action-button-placeholder {
+    height: 43px; /* Matches height of button (33px) + wrapper margin (10px) */
+}
+
+.action-button {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.drop-button {
+    background-color: #c82333;
+}
+
+.drop-button.dropped {
+    background-color: #6c757d;
+}
+
+.change-button {
+    background-color: #17a2b8;
+}
+
+.resource-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    max-width: 180px; /* Match card width */
+    margin-top: 5px;
+}
+
+.resource-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.status-token {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%; /* 카드 너비의 1/4 */
+    height: auto; /* 종횡비 유지 */
+    z-index: 5;
+    pointer-events: none; /* Make token non-clickable so it passes clicks to the card below */
+}
+
+.token-area {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.charge-token-img {
+    height: 24px; /* Match other tokens */
+    width: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.charge-token-img:hover {
+    transform: scale(1.05);
+}

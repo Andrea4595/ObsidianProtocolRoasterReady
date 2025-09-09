@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유닛 조합기</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-mode-header" style="display: none;">
+        <button id="exit-game-mode-btn">빌더로 돌아가기</button>
+    </div>
+
+    <h1 id="app-title">유닛 조합기</h1>
+
+    <div id="roster-summary">
+        <h2>총합 포인트: <span id="total-points">0</span></h2>
+    </div>
+
+    <div id="roster-controls">
+        <select id="roster-select"></select>
+        <select id="faction-select">
+            <option value="RDL">RDL</option>
+            <option value="UN">UN</option>
+        </select>
+        <button id="new-roster-btn">새 로스터</button>
+        <button id="rename-roster-btn">이름 변경</button>
+        <button id="delete-roster-btn">삭제</button>
+        <button id="export-image-btn">이미지로 저장</button>
+        <button id="game-mode-btn">게임 모드</button>
+    </div>
+
+    <div id="units-container"></div>
+
+    <div class="add-button-container">
+        <button id="add-unit-button">+ 유닛 추가</button>
+        <button id="add-drone-button">+ 드론 추가</button>
+    </div>
+
+    <!-- Modal for selecting images -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <span id="modal-close" class="modal-close">&times;</span>
+            <h2 id="modal-title">부품 선택</h2>
+            <div id="modal-image-container" class="modal-image-container"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
