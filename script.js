@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     dronesContainer.style.marginRight = 'auto';
     const totalPointsSpan = document.getElementById('total-points');
     const rosterSelect = document.getElementById('roster-select');
-    const newRosterBtn = document.getElementById('new-roster-btn');
     const renameRosterBtn = document.getElementById('rename-roster-btn');
     const deleteRosterBtn = document.getElementById('delete-roster-btn');
     const exportImageBtn = document.getElementById('export-image-btn');
@@ -111,7 +110,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         rosterSummary.style.display = enabled ? 'none' : 'block';
         gameModeHeader.style.display = enabled ? 'block' : 'none';
         addButtonContainer.style.display = enabled ? 'none' : 'flex';
-        appTitle.textContent = enabled ? `${activeRosterName} - 게임 모드` : '유닛 조합기';
+        appTitle.textContent = enabled ? activeRosterName : '로스터';
+        appTitle.style.display = enabled ? 'block' : 'none';
 
         if (enabled) {
             gameRosterState = JSON.parse(JSON.stringify(allRosters[activeRosterName]));
@@ -239,6 +239,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (name === activeRosterName) option.selected = true;
             rosterSelect.appendChild(option);
         });
+
+        const newRosterOption = document.createElement('option');
+        newRosterOption.value = '__NEW__';
+        newRosterOption.textContent = '< 새 로스터 추가 >';
+        rosterSelect.appendChild(newRosterOption);
     };
 
     const switchActiveRoster = (rosterName) => {
@@ -851,9 +856,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const handleExportImage = async () => {
-        const originalButtonText = exportImageBtn.textContent;
-        exportImageBtn.textContent = '생성 중...';
+        const exportIcon = exportImageBtn.querySelector('img');
+        if (!exportIcon) return;
+
+        exportIcon.style.display = 'none';
         exportImageBtn.disabled = true;
+        const loadingText = document.createElement('span');
+        loadingText.textContent = '생성 중...';
+        exportImageBtn.appendChild(loadingText);
 
         try {
             await loadHtml2Canvas();
@@ -946,7 +956,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error exporting image:', error);
             alert('이미지 생성에 실패했습니다. 콘솔을 확인해주세요.');
         } finally {
-            exportImageBtn.textContent = originalButtonText;
+            exportIcon.style.display = 'block';
+            exportImageBtn.removeChild(loadingText);
             exportImageBtn.disabled = false;
         }
     };
@@ -964,15 +975,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (event.target === modalOverlay) closeModal();
     });
 
-    rosterSelect.addEventListener('change', (e) => switchActiveRoster(e.target.value));
-
-    newRosterBtn.addEventListener('click', () => {
+    const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
         if (name && !allRosters[name]) {
             allRosters[name] = getNewRosterState();
             switchActiveRoster(name);
-        } else if (allRosters[name]) {
+        } else if (name && allRosters[name]) {
             alert('이미 존재하는 이름입니다.');
+            rosterSelect.value = activeRosterName;
+        } else {
+            rosterSelect.value = activeRosterName;
+        }
+    };
+
+    rosterSelect.addEventListener('change', (e) => {
+        if (e.target.value === '__NEW__') {
+            handleNewRoster();
+        } else {
+            switchActiveRoster(e.target.value);
         }
     });
 

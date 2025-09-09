@@ -80,7 +80,7 @@
         "frame": true,
         "subCards": [
             "Projectile_PD_AS3A.png",
-            "Projectile_PD_AS3B"
+            "Projectile_PD_AS3B.png"
         ],
         "faction": "Public"
     },
@@ -900,7 +900,10 @@
         "points": 30,
         "category": "Back",
         "faction": "UN",
-		"ammunition": 1
+		"ammunition": 1,
+        "subCards": [
+            "Projectile_UN_AMDS210_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Back_CSC60_Front k.png",
@@ -913,7 +916,10 @@
         "points": 39,
         "category": "Back",
         "faction": "UN",
-		"ammunition": 1
+		"ammunition": 1,
+        "subCards": [
+            "Projectile_UN_DBP_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Back_EBSX40_Front k.png",
@@ -933,7 +939,10 @@
         "points": 21,
         "category": "Back",
         "faction": "UN",
-		"ammunition": 3
+		"ammunition": 3,
+        "subCards": [
+            "Projectile_UN_SMG9_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Back_JP1_Front k.png",
@@ -984,7 +993,10 @@
         "points": 75,
         "category": "Left",
         "faction": "UN",
-		"ammunition": 3
+		"ammunition": 3,
+        "subCards": [
+            "Projectile_UN_M7_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Left_K7_S10_Front k.png",
@@ -1009,7 +1021,10 @@
         "points": 54,
         "category": "Left",
         "faction": "UN",
-		"ammunition": 3
+		"ammunition": 3,
+        "subCards": [
+            "Projectile_UN_M7_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Left_MDXS_R6_Front k.png",
@@ -1050,7 +1065,10 @@
         "points": 42,
         "category": "Left",
         "faction": "UN",
-		"ammunition": 1
+		"ammunition": 1,
+        "subCards": [
+            "Projectile_UN_RGM9394_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Left_S100_Front k.png",
@@ -1065,7 +1083,10 @@
         "points": 66,
         "category": "Left",
         "faction": "UN",
-		"ammunition": 2
+		"ammunition": 2,
+        "subCards": [
+            "Projectile_UN_M7_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Left_S9_M5_Front k.png",
@@ -1113,7 +1134,10 @@
         "points": 54,
         "category": "Right",
         "faction": "UN",
-		"ammunition": 3
+		"ammunition": 3,
+        "subCards": [
+            "Projectile_UN_M7_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Right_MDXS_R6_Front k.png",
@@ -1182,7 +1206,10 @@
         "points": 45,
         "category": "Torso",
         "faction": "UN",
-		"ammunition": 1
+		"ammunition": 1,
+        "subCards": [
+            "Projectile_UN_M9_Front k.png"
+        ]
     },
     {
         "fileName": "Part_UN_Torso_TM31R_Front k.png",

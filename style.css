@@ -112,7 +112,6 @@ h1 {
     width: fit-content; /* Fit to image width */
     height: fit-content;
     margin: auto;
-    overflow: hidden; /* Prevent children from overflowing rounded corners */
     border-radius: 10px; /* Match image radius */
 }
 
@@ -370,7 +369,23 @@ h1 {
         margin-bottom: 20px;
     }
     #roster-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    .control-group {
         flex-wrap: wrap;
+        justify-content: center;
+    }
+    .control-group:not(:last-child) {
+        border-right: none;
+        padding-right: 0;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccd0d5;
+    }
+    #roster-controls select#roster-select {
+      flex-grow: 0;
+      max-width: 180px; /* Adjust width for mobile */
     }
     .unit-row {
         gap: 10px; /* Smaller gap for mobile */
@@ -427,6 +442,37 @@ h1 {
     margin-right: auto;
 }
 
+.control-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.control-group:not(:last-child) {
+    border-right: 1px solid #ccd0d5;
+    padding-right: 10px;
+}
+
+.image-button {
+    background: none;
+    border: 1px solid transparent; /* Add border for spacing consistency */
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.image-button:hover {
+    background-color: #0000001a; /* A light grey background on hover */
+    border-color: #ccd0d5;
+}
+
+.image-button img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle; /* Align icon nicely */
+}
+
 #roster-controls select, #roster-controls button {
     padding: 8px 12px;
     font-size: 14px;
@@ -447,15 +493,20 @@ h1 {
     max-width: 250px;
 }
 
+/* Style for the new image-based delete button */
 #roster-controls button#delete-roster-btn {
-    background-color: #fbebee;
-    color: #dc3545;
-    border-color: #dc3545;
+    background-color: #f5c6cb;
+    border-color: #e08991;
 }
 
 #roster-controls button#delete-roster-btn:hover {
     background-color: #dc3545;
-    color: #fff;
+    border-color: #b02a37;
+}
+
+#roster-controls button#delete-roster-btn img {
+    width: 20px;
+    height: 20px;
 }
 
 /* Game Mode Styles */

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>유닛 조합기</title>
+    <title>Roaster Ready</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icons/icon-192x192.png" type="image/png">
     <link rel="stylesheet" href="style.css">
@@ -13,23 +13,32 @@
         <button id="exit-game-mode-btn">빌더로 돌아가기</button>
     </div>
 
-    <h1 id="app-title">유닛 조합기</h1>
+    <h1 id="app-title" style="display: none;">로스터</h1>
+
+    <div id="roster-controls">
+        <div class="control-group">
+            <select id="roster-select"></select>
+            <button id="rename-roster-btn">이름 변경</button>
+            <button id="delete-roster-btn" class="image-button" title="삭제">
+                <img src="icons/remove.png" alt="삭제">
+            </button>
+        </div>
+        <div class="control-group">
+            <select id="faction-select">
+                <option value="RDL">RDL</option>
+                <option value="UN">UN</option>
+            </select>
+            <button id="export-image-btn" class="image-button" title="이미지로 저장">
+                <img src="icons/image.png" alt="이미지로 저장">
+            </button>
+            <button id="game-mode-btn" class="image-button" title="게임 모드">
+                <img src="icons/gameMode.png" alt="게임 모드">
+            </button>
+        </div>
+    </div>
 
     <div id="roster-summary">
         <h2>총합 포인트: <span id="total-points">0</span></h2>
-    </div>
-
-    <div id="roster-controls">
-        <select id="roster-select"></select>
-        <select id="faction-select">
-            <option value="RDL">RDL</option>
-            <option value="UN">UN</option>
-        </select>
-        <button id="new-roster-btn">새 로스터</button>
-        <button id="rename-roster-btn">이름 변경</button>
-        <button id="delete-roster-btn">삭제</button>
-        <button id="export-image-btn">이미지로 저장</button>
-        <button id="game-mode-btn">게임 모드</button>
     </div>
 
     <div id="units-container"></div>
