@@ -369,6 +369,9 @@ h1 {
         font-size: 24px;
         margin-bottom: 20px;
     }
+    #roster-controls {
+        flex-wrap: wrap;
+    }
     .unit-row {
         gap: 10px; /* Smaller gap for mobile */
         padding: 15px;
@@ -397,6 +400,7 @@ h1 {
     #add-unit-button, #add-drone-button {
         padding: 10px 15px;
         font-size: 14px;
+        white-space: nowrap; /* Prevent text wrapping */
     }
     .modal-content {
         width: 95%;
