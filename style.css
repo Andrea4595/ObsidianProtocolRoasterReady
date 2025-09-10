@@ -252,20 +252,26 @@ h1 {
     flex-grow: 1;
 }
 
-.modal-image-container img {
-    width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 6px;
+.modal-card-item {
+    position: relative;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
     border: 3px solid transparent;
-    align-self: start; /* Prevent stretching */
+    border-radius: 6px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    align-self: start;
 }
 
-.modal-image-container img:hover {
+.modal-card-item:hover {
     transform: scale(1.05);
     box-shadow: 0 0 12px rgba(24, 119, 242, 0.6);
     border-color: #1877f2;
+}
+
+.modal-card-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
 }
 
 .deselect-option {

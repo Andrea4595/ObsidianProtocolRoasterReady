@@ -1284,5 +1284,89 @@
         "points": 0,
         "category": "Projectile",
         "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_19_쿼츠.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_20_판저.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_21_파이어플라이.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_22_요유.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_23_오닉스.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_24_시락.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_27_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_28_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_29_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_30_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_31_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_32_라이플맨.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_33_차저.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "UN_pilot_34_차저.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
     }
 ]

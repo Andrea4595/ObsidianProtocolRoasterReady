@@ -783,11 +783,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             .filter(card => !card.faction || card.faction === activeFaction || card.faction === 'Public')
             .sort((a, b) => a.fileName.localeCompare(b.fileName));
         cards.forEach(card => {
+            const cardItem = document.createElement('div');
+            cardItem.className = 'modal-card-item';
+            cardItem.addEventListener('click', () => selectCard(card));
+
             const img = document.createElement('img');
             img.src = `Cards/${card.fileName}`;
             img.alt = card.fileName;
-            img.addEventListener('click', () => selectCard(card));
-            modalImageContainer.appendChild(img);
+            cardItem.appendChild(img);
+
+            modalImageContainer.appendChild(cardItem);
         });
         modalOverlay.style.display = 'flex';
     };
@@ -801,19 +806,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             .filter(drone => !drone.faction || drone.faction === activeFaction || drone.faction === 'Public')
             .sort((a, b) => a.fileName.localeCompare(b.fileName))
             .forEach(droneData => {
-            const img = document.createElement('img');
-            img.src = `Cards/${droneData.fileName}`;
-            img.alt = droneData.fileName;
-            img.addEventListener('click', () => {
-                const droneWithId = { ...droneData, rosterId: `d_${nextDroneId++}` };
-                allRosters[activeRosterName].drones.push(droneWithId);
-                addDroneElement(droneWithId);
-                updateTotalPoints();
-                saveAllRosters();
-                closeModal();
+                const cardItem = document.createElement('div');
+                cardItem.className = 'modal-card-item';
+                cardItem.addEventListener('click', () => {
+                    const droneWithId = { ...droneData, rosterId: `d_${nextDroneId++}` };
+                    allRosters[activeRosterName].drones.push(droneWithId);
+                    addDroneElement(droneWithId);
+                    updateTotalPoints();
+                    saveAllRosters();
+                    closeModal();
+                });
+
+                const img = document.createElement('img');
+                img.src = `Cards/${droneData.fileName}`;
+                img.alt = droneData.fileName;
+                cardItem.appendChild(img);
+
+                const points = document.createElement('div');
+                points.className = 'card-points';
+                points.textContent = droneData.points || 0;
+                cardItem.appendChild(points);
+
+                modalImageContainer.appendChild(cardItem);
             });
-            modalImageContainer.appendChild(img);
-        });
         modalOverlay.style.display = 'flex';
     };
 
