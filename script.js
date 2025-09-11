@@ -55,6 +55,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const getNewRosterState = () => ({ units: {}, drones: [], faction: 'RDL' });
 
+    const calculateNextIds = () => {
+        const rosterState = allRosters[activeRosterName];
+        if (!rosterState) {
+            nextUnitId = 0;
+            nextDroneId = 0;
+            return;
+        }
+
+        let maxUnitId = -1;
+        if (rosterState.units && Object.keys(rosterState.units).length > 0) {
+            const unitIds = Object.keys(rosterState.units).map(id => parseInt(id)).filter(id => !isNaN(id));
+            if(unitIds.length > 0) {
+                 maxUnitId = Math.max(...unitIds);
+            }
+        }
+        nextUnitId = maxUnitId + 1;
+
+        let maxDroneId = -1;
+        if (rosterState.drones && rosterState.drones.length > 0) {
+            const droneIds = rosterState.drones
+                .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
+                .filter(id => !isNaN(id));
+            if (droneIds.length > 0) {
+                maxDroneId = Math.max(...droneIds);
+            }
+        }
+        nextDroneId = maxDroneId + 1;
+    };
+
     const updateTotalPoints = () => {
         const rosterState = allRosters[activeRosterName];
         if (!rosterState) return 0;
@@ -100,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             else if (currentStatus === 2) { card.cardStatus = 3; }
             else if (currentStatus === 3) { card.cardStatus = 0; }
         }
-        renderRoster();
+        // renderRoster(); // This will be called by performActionAndPreserveScroll
     };
 
     // --- View & Mode Management ---
@@ -115,6 +144,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (enabled) {
             gameRosterState = JSON.parse(JSON.stringify(allRosters[activeRosterName]));
+
+            // Promote sub-drones to the main drone list for the game state
+            const allCardsInRoster = [];
+            Object.values(gameRosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+            allCardsInRoster.push(...gameRosterState.drones);
+
+            const processedSubDrones = new Set(gameRosterState.drones.map(d => d.fileName));
+
+            allCardsInRoster.forEach(card => {
+                if (card && card.subCards) {
+                    card.subCards.forEach(subCardFileName => {
+                        const subCardData = allCards.byFileName.get(subCardFileName);
+                        if (subCardData && subCardData.category === 'Drone') {
+                            if (!processedSubDrones.has(subCardFileName)) {
+                                const subDroneInstance = JSON.parse(JSON.stringify(subCardData));
+                                subDroneInstance.rosterId = `sub-drone-${subCardFileName}`;
+                                gameRosterState.drones.push(subDroneInstance);
+                                processedSubDrones.add(subCardFileName);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Initialize states for all units and drones (including promoted ones)
             Object.values(gameRosterState.units).forEach(unit => {
                 Object.values(unit).forEach(card => {
                     if (!card) return;
@@ -184,8 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         unitsContainer.innerHTML = '';
         dronesContainer.innerHTML = '';
         document.querySelectorAll('.sub-cards-container').forEach(el => el.remove());
-        nextUnitId = 0;
-        nextDroneId = 0;
 
         const rosterState = isGameMode ? gameRosterState : allRosters[activeRosterName];
         if (!rosterState) return;
@@ -195,33 +247,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             createUnitElement(parseInt(unitId), rosterState.units[unitId]);
         });
 
-        // Render Drones
+        // Render Drones (will include promoted sub-drones in game mode)
         rosterState.drones.forEach((droneData, index) => {
-            if (droneData.rosterId == null) droneData.rosterId = `d-${index}`;
+            if (droneData.rosterId == null) {
+                droneData.rosterId = `d_${nextDroneId++}`;
+            }
             addDroneElement(droneData);
         });
 
-        // Render All Sub-Cards at the bottom
+        // Render non-drone sub-cards at the bottom
         if (isGameMode) {
-            const unitSubCards = Object.values(rosterState.units).flatMap(unit => Object.values(unit).filter(Boolean).flatMap(p => p.subCards || []));
-            const droneSubCards = rosterState.drones.flatMap(d => d.subCards || []);
-            const allSubCardNames = [...unitSubCards, ...droneSubCards];
-            const uniqueSubCardNames = [...new Set(allSubCardNames)];
+            const subProjectilesContainer = document.createElement('div');
+            subProjectilesContainer.className = 'sub-cards-container';
 
-            if (uniqueSubCardNames.length > 0) {
-                const container = document.createElement('div');
-                container.className = 'sub-cards-container';
-                
-                
+            const allCardsInRoster = [];
+            Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+            allCardsInRoster.push(...rosterState.drones);
 
-                uniqueSubCardNames.forEach(fileName => {
-                    const cardData = allCards.byFileName.get(fileName);
-                    if (cardData) {
-                        container.appendChild(createCardElement(cardData, false));
-                    }
-                });
-                // Append after the drones container
-                dronesContainer.after(container);
+            const projectileSubCards = new Set();
+            allCardsInRoster.forEach(card => {
+                if (card && card.subCards) {
+                    card.subCards.forEach(subCardFileName => {
+                        const subCardData = allCards.byFileName.get(subCardFileName);
+                        if (subCardData && subCardData.category !== 'Drone') {
+                            projectileSubCards.add(subCardFileName);
+                        }
+                    });
+                }
+            });
+
+            projectileSubCards.forEach(fileName => {
+                const cardData = allCards.byFileName.get(fileName);
+                if (cardData) {
+                    subProjectilesContainer.appendChild(createCardElement(cardData, false));
+                }
+            });
+
+            if (subProjectilesContainer.hasChildNodes()) {
+                dronesContainer.after(subProjectilesContainer);
             }
         }
 
@@ -250,6 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!allRosters[rosterName] || isGameMode) return;
         activeRosterName = rosterName;
         factionSelect.value = allRosters[activeRosterName].faction || 'RDL';
+        calculateNextIds();
         renderRoster();
         updateRosterSelect();
         saveAllRosters();
@@ -305,6 +369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveAllRosters();
         }
 
+        calculateNextIds();
         updateRosterSelect();
         renderRoster();
     };
@@ -315,10 +380,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const cardData = await response.json();
             categoryOrder.forEach(cat => allCards.byCategory[cat] = []);
+            allCards.drones = [];
             cardData.forEach(card => {
                 allCards.byFileName.set(card.fileName, card);
-                if (card.category === "Drone") allCards.drones.push(card);
-                else if (allCards.byCategory[card.category]) allCards.byCategory[card.category].push(card);
+                if (card.category === "Drone") {
+                    allCards.drones.push(card);
+                } 
+                if (allCards.byCategory[card.category]) { // Check if category exists
+                    allCards.byCategory[card.category].push(card);
+                }
             });
         } catch (error) {
             console.error("Could not load image data:", error);
@@ -380,7 +450,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isGameMode) {
             const isDestroyed = isInteractive && cardData.cardStatus === 2;
             const img = document.createElement('img');
-            img.src = `Cards/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
+            img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
             if (isDestroyed) {
                 img.style.filter = 'brightness(50%)';
             }
@@ -402,7 +472,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } else {
             const img = document.createElement('img');
-            img.src = `Cards/${cardData.fileName}`;
+            img.src = `Cards/${cardData.category}/${cardData.fileName}`;
             card.appendChild(img);
             const points = document.createElement('div');
             points.className = 'card-points';
@@ -423,7 +493,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (isGameMode && isInteractive) {
             card.style.cursor = 'pointer';
-            card.addEventListener('click', () => advanceCardStatus(cardData));
+            card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
 
             const tokenArea = document.createElement('div');
             tokenArea.className = 'token-area';
@@ -514,7 +584,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (backCardData) {
                 const isDestroyed = isGameMode && backCardData.cardStatus === 2;
                 const img = document.createElement('img');
-                img.src = `Cards/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
+                img.src = `Cards/${backCardData.category}/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
                 if (isDestroyed) img.style.filter = 'brightness(50%)';
                 backSlot.appendChild(img);
 
@@ -546,7 +616,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (isGameMode && backCardData) {
                 backSlot.style.cursor = 'pointer';
-                backSlot.addEventListener('click', () => advanceCardStatus(backCardData));
+                backSlot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
 
                 const tokenArea = document.createElement('div');
                 tokenArea.className = 'token-area';
@@ -611,7 +681,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (cardData) {
                 const isDestroyed = isGameMode && cardData.cardStatus === 2;
                 const img = document.createElement('img');
-                img.src = `Cards/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
+                img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
                 if (isDestroyed) img.style.filter = 'brightness(50%)';
                 slot.appendChild(img);
 
@@ -644,7 +714,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (isGameMode && cardData) {
                 if (category !== 'Pilot') {
                     slot.style.cursor = 'pointer';
-                    slot.addEventListener('click', () => advanceCardStatus(cardData, unitData));
+                    slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
                 }
 
                 const tokenArea = document.createElement('div');
@@ -780,7 +850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const activeFaction = allRosters[activeRosterName].faction;
         const cards = allCards.byCategory[category]
-            .filter(card => !card.faction || card.faction === activeFaction || card.faction === 'Public')
+            .filter(card => (card.visible !== false) && (!card.faction || card.faction === activeFaction || card.faction === 'Public'))
             .sort((a, b) => a.fileName.localeCompare(b.fileName));
         cards.forEach(card => {
             const cardItem = document.createElement('div');
@@ -788,7 +858,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             cardItem.addEventListener('click', () => selectCard(card));
 
             const img = document.createElement('img');
-            img.src = `Cards/${card.fileName}`;
+            img.src = `Cards/${card.category}/${card.fileName}`;
             img.alt = card.fileName;
             cardItem.appendChild(img);
 
@@ -803,7 +873,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         modalImageContainer.innerHTML = '';
         const activeFaction = allRosters[activeRosterName].faction;
         allCards.drones
-            .filter(drone => !drone.faction || drone.faction === activeFaction || drone.faction === 'Public')
+            .filter(drone => (drone.visible !== false) && (!drone.faction || drone.faction === activeFaction || drone.faction === 'Public'))
             .sort((a, b) => a.fileName.localeCompare(b.fileName))
             .forEach(droneData => {
                 const cardItem = document.createElement('div');
@@ -818,7 +888,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 const img = document.createElement('img');
-                img.src = `Cards/${droneData.fileName}`;
+                img.src = `Cards/${droneData.category}/${droneData.fileName}`;
                 img.alt = droneData.fileName;
                 cardItem.appendChild(img);
 
@@ -909,8 +979,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const card = unit[category];
                         html += '<div style="width: 180px; border: 1px solid #ddd; border-radius: 10px; position: relative; background-color: #fafafa; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 270px;">';
                         if (card) {
-                            html += `<img src="Cards/${card.fileName}" style="width: 100%; height: auto; display: block; border-radius: 10px;" />`;
+                                                    if (card) {
+                            html += `<img src="Cards/${card.category}/${card.fileName}" style="width: 100%; height: auto; display: block; border-radius: 10px;" />`;
                             html += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${card.points || 0}</div>`;
+                            if (card.drop) {
+                                // Assume the dropped card is in the same category as the parent card
+                                html += '<div style="height: 5px; width: 80%; background-color: #ccc; margin: 5px 0; border-radius: 2px;"></div>';
+                                html += `<img src="Cards/${card.category}/${card.drop}" style="width: 100%; height: auto; display: block; border-radius: 10px;" />`;
+                            }
+                        } else {
+                            html += `<span style="font-weight: bold; color: #65676b;">${category}</span>`;
+                        }
+                            if (card.drop) {
+                                const droppedCardData = allCards.byFileName.get(card.drop);
+                                if (droppedCardData) {
+                                    html += '<div style="height: 5px; width: 80%; background-color: #ccc; margin: 5px 0; border-radius: 2px;"></div>';
+                                    html += `<img src="Cards/${droppedCardData.category}/${droppedCardData.fileName}" style="width: 100%; height: auto; display: block; border-radius: 10px;" />`;
+                                }
+                            }
                         } else {
                             html += `<span style="font-weight: bold; color: #65676b;">${category}</span>`;
                         }
@@ -928,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rosterState.drones.forEach(drone => {
                     if (drone.rosterId && typeof drone.rosterId === 'string' && drone.rosterId.startsWith('sub-drone-')) return;
                     html += '<div style="position: relative; width: 200px;">';
-                    html += `<img src="Cards/${drone.fileName}" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
+                    html += `<img src="Cards/${drone.category}/${drone.fileName}" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
                     html += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${drone.points || 0}</div>`;
                     html += '</div>';
                 });
@@ -936,18 +1022,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // 3. Collect and Render All Sub-Cards
-            const unitSubCards = Object.values(rosterState.units).flatMap(unit => Object.values(unit).filter(Boolean).flatMap(p => p.subCards || []));
-            const droneSubCards = rosterState.drones.flatMap(d => d.subCards || []);
-            const allSubCardNames = [...new Set([...unitSubCards, ...droneSubCards])];
+            const allCardsInRoster = [];
+            Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+            allCardsInRoster.push(...rosterState.drones);
+            const otherSubCards = new Set();
+            allCardsInRoster.forEach(card => {
+                if (card && card.subCards) {
+                    card.subCards.forEach(subCardFileName => {
+                        const subCardData = allCards.byFileName.get(subCardFileName);
+                        if (subCardData && subCardData.category !== 'Drone') {
+                            otherSubCards.add(subCardFileName);
+                        }
+                    });
+                }
+            });
 
-            if (allSubCardNames.length > 0) {
+            if (otherSubCards.size > 0) {
                 html += '<h3 style="margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">서브 카드</h3>';
                 html += '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: flex-start; margin-top: 15px;">';
-                allSubCardNames.forEach(fileName => {
+                otherSubCards.forEach(fileName => {
                     const card = allCards.byFileName.get(fileName);
                     if (card) {
                         html += '<div style="position: relative; width: 200px;">';
-                        html += `<img src="Cards/${card.fileName}" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
+                        html += `<img src="Cards/${card.category}/${card.fileName}" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
                         html += '</div>';
                     }
                 });
@@ -980,8 +1077,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Event Listeners ---
     addUnitButton.addEventListener('click', () => {
         if (isGameMode) return;
-        allRosters[activeRosterName].units[nextUnitId] = {};
-        createUnitElement(nextUnitId, {});
+        allRosters[activeRosterName].units[nextUnitId++] = {};
+        calculateNextIds(); // Recalculate to be safe
+        renderRoster();
         saveAllRosters();
     });
     addDroneButton.addEventListener('click', openDroneModal);
@@ -1059,4 +1157,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .catch(error => console.log('Service Worker: Registration failed', error));
         });
     }
+
+    // --- Prevent Image Download ---
+    document.addEventListener('contextmenu', (event) => {
+        const target = event.target;
+        // Check if the right-clicked element is an image inside a card container
+        if (target.tagName === 'IMG' && (target.closest('.unit-row') || target.closest('#drones-container') || target.closest('.modal-image-container') || target.closest('.sub-cards-container'))) {
+            event.preventDefault();
+        }
+    });
 });
