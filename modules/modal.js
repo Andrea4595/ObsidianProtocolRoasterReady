@@ -65,6 +65,7 @@ export const openModal = (unitId, category, isBack = false) => {
 
     dom.modalImageContainer.appendChild(createDeselectOption());
     factionFilteredCards.forEach(cardData => {
+        if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addCardToUnit));
     });
 
