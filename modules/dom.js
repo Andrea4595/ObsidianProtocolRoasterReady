@@ -1,0 +1,35 @@
+export const appTitle = document.getElementById('app-title');
+export const unitsContainer = document.getElementById('units-container');
+
+const dronesContainerElement = document.createElement('div');
+dronesContainerElement.style.display = 'flex';
+dronesContainerElement.style.flexWrap = 'wrap';
+dronesContainerElement.style.justifyContent = 'center';
+dronesContainerElement.style.gap = '20px';
+dronesContainerElement.style.alignItems = 'flex-start';
+dronesContainerElement.style.marginTop = '20px';
+dronesContainerElement.style.width = '90%';
+dronesContainerElement.style.marginLeft = 'auto';
+dronesContainerElement.style.marginRight = 'auto';
+dronesContainerElement.id = 'drones-container';
+unitsContainer.after(dronesContainerElement);
+export const dronesContainer = dronesContainerElement;
+
+export const totalPointsSpan = document.getElementById('total-points');
+export const rosterSelect = document.getElementById('roster-select');
+export const renameRosterBtn = document.getElementById('rename-roster-btn');
+export const deleteRosterBtn = document.getElementById('delete-roster-btn');
+export const exportImageBtn = document.getElementById('export-image-btn');
+export const gameModeBtn = document.getElementById('game-mode-btn');
+export const exitGameModeBtn = document.getElementById('exit-game-mode-btn');
+export const addUnitButton = document.getElementById('add-unit-button');
+export const addDroneButton = document.getElementById('add-drone-button');
+export const modalOverlay = document.getElementById('modal-overlay');
+export const modalClose = document.getElementById('modal-close');
+export const modalTitle = document.getElementById('modal-title');
+export const modalImageContainer = document.getElementById('modal-image-container');
+export const rosterControls = document.getElementById('roster-controls');
+export const rosterSummary = document.getElementById('roster-summary');
+export const gameModeHeader = document.getElementById('game-mode-header');
+export const addButtonContainer = document.querySelector('.add-button-container');
+export const factionSelect = document.getElementById('faction-select');

@@ -193,91 +193,6 @@
         "faction": "Public"
     },
     {
-        "fileName": "Drone_PL_LD5A_Front.jpg",
-        "points": 48,
-        "category": "Drone",
-        "faction": "Public"
-    },
-    {
-        "fileName": "Drone_PL_LD5B_Front.jpg",
-        "points": 45,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 4,
-		"subCards": [
-			"Projectile_PL_FG33_Front.jpg"
-		]
-    },
-    {
-        "fileName": "Drone_PL_LD5M_Front.jpg",
-        "points": 42,
-        "category": "Drone",
-        "faction": "Public"
-    },
-    {
-        "fileName": "Drone_PL_LD5S_Front.jpg",
-        "points": 48,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 2,
-		"subCards": [
-			"Projectile_PL_FG33_Front.jpg",
-			"Projectile_PL_RMA_Front.jpg"
-		]
-    },
-    {
-        "fileName": "Drone_PL_MD4A_Front.png",
-        "points": 90,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 6,
-		"intercept": 2,
-		"frame": true,
-		"subCards": [
-			"Projectile_PL_FGM25_Front.png"
-		]
-    },
-    {
-        "fileName": "Drone_PL_MD4B_Front.png",
-        "points": 114,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 1,
-		"frame": true
-    },
-    {
-        "fileName": "Drone_PL_MD4C_Front.png",
-        "points": 99,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 6,
-		"frame": true,
-		"subCards": [
-			"Projectile_PL_FGM25_Front.png"
-		]
-    },
-    {
-        "fileName": "Drone_PL_MD4D_Front.png",
-        "points": 105,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 1,
-		"intercept": 2,
-		"frame": true
-    },
-    {
-        "fileName": "Drone_PL_MD4E_Front.png",
-        "points": 90,
-        "category": "Drone",
-        "faction": "Public",
-		"ammunition": 2,
-		"frame": true,
-		"subCards": [
-			"Projectile_PL_AS3A_Front.png",
-			"Projectile_PL_AS3B_Front.png"
-		]
-    },
-    {
         "fileName": "Drone_RDL_DTG30M_Front.jpg",
         "points": 42,
         "category": "Drone",
@@ -351,6 +266,91 @@
         "faction": "UN"
     },
     {
+        "fileName": "Drone_PL_MD4A_Front.png",
+        "points": 90,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 6,
+		"intercept": 2,
+		"frame": true,
+		"subCards": [
+			"Projectile_PL_FGM25_Front.png"
+		]
+    },
+    {
+        "fileName": "Drone_PL_MD4B_Front.png",
+        "points": 114,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 1,
+		"frame": true
+    },
+    {
+        "fileName": "Drone_PL_MD4C_Front.png",
+        "points": 99,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 6,
+		"frame": true,
+		"subCards": [
+			"Projectile_PL_FGM25_Front.png"
+		]
+    },
+    {
+        "fileName": "Drone_PL_MD4D_Front.png",
+        "points": 105,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 1,
+		"intercept": 2,
+		"frame": true
+    },
+    {
+        "fileName": "Drone_PL_MD4E_Front.png",
+        "points": 90,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 2,
+		"frame": true,
+		"subCards": [
+			"Projectile_PL_AS3A_Front.png",
+			"Projectile_PL_AS3B_Front.png"
+		]
+    },
+    {
+        "fileName": "Drone_PL_LD5A_Front.jpg",
+        "points": 48,
+        "category": "Drone",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Drone_PL_LD5B_Front.jpg",
+        "points": 45,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 4,
+		"subCards": [
+			"Projectile_PL_FG33_Front.jpg"
+		]
+    },
+    {
+        "fileName": "Drone_PL_LD5M_Front.jpg",
+        "points": 42,
+        "category": "Drone",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Drone_PL_LD5S_Front.jpg",
+        "points": 48,
+        "category": "Drone",
+        "faction": "Public",
+		"ammunition": 2,
+		"subCards": [
+			"Projectile_PL_FG33_Front.jpg",
+			"Projectile_PL_RMA_Front.jpg"
+		]
+    },
+    {
         "fileName": "Drone_WD_ACE001_Defense_Front.jpg",
         "points": 0,
         "category": "Drone",
@@ -394,36 +394,17 @@
 		"intercept": 3
     },
     {
-        "fileName": "Part_RDL_Back_AMS193_Front.png",
-        "points": 27,
+        "fileName": "Part_RDL_Back_ML34_Front.jpg",
+        "points": 39,
         "category": "Back",
         "faction": "RDL",
-		"intercept": 3
-    },
-    {
-        "fileName": "Part_RDL_Back_CP3_Front.jpg",
-        "points": 36,
-        "category": "Back",
-        "faction": "RDL",
-		"ammunition": 1,
+		"ammunition": 4,
 		"subCards": [
-			"Projectile_RDL_B31_Front.jpg",
-			"Projectile_RDL_B32_Front.jpg",
-			"Projectile_RDL_B33_Front.jpg"
+			"Projectile_RDL_MC3_Front.jpg"
 		]
     },
     {
-        "fileName": "Part_RDL_Back_CP4_Front.png",
-        "points": 36,
-        "category": "Back",
-        "faction": "RDL",
-		"ammunition": 2,
-		"subCards": [
-			"Projectile_RDL_MD1_Front.png"
-		]
-    },
-    {
-        "fileName": "Part_RDL_Back_ECS2_Front.jpg",
+        "fileName": "Part_RDL_Back_LGP80_Front.jpg",
         "points": 33,
         "category": "Back",
         "faction": "RDL"
@@ -438,26 +419,34 @@
 		]
     },
     {
-        "fileName": "Part_RDL_Back_HD2_Front.png",
-        "points": 24,
-        "category": "Back",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Back_LGP80_Front.jpg",
+        "fileName": "Part_RDL_Back_MUD1_Front.jpg",
         "points": 33,
         "category": "Back",
         "faction": "RDL"
     },
     {
-        "fileName": "Part_RDL_Back_ML34_Front.jpg",
-        "points": 39,
+        "fileName": "Part_RDL_Back_CP3_Front.jpg",
+        "points": 36,
         "category": "Back",
         "faction": "RDL",
-		"ammunition": 4,
+		"ammunition": 1,
 		"subCards": [
-			"Projectile_RDL_MC3_Front.jpg"
+			"Projectile_RDL_B31_Front.jpg",
+			"Projectile_RDL_B32_Front.jpg",
+			"Projectile_RDL_B33_Front.jpg"
 		]
+    },
+    {
+        "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
+        "points": 30,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_TB600_Front.jpg",
+        "points": 48,
+        "category": "Back",
+        "faction": "RDL"
     },
     {
         "fileName": "Part_RDL_Back_ML92_Front.jpg",
@@ -470,6 +459,25 @@
 		]
     },
     {
+        "fileName": "Part_RDL_Back_SH15_Front.jpg",
+        "points": 30,
+        "category": "Back",
+        "faction": "RDL",
+		"ammunition": 1
+    },
+    {
+        "fileName": "Part_RDL_Back_ECS2_Front.jpg",
+        "points": 33,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_HD2_Front.png",
+        "points": 24,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
         "fileName": "Part_RDL_Back_ML94_Front.png",
         "points": 48,
         "category": "Back",
@@ -480,29 +488,21 @@
 		]
     },
     {
-        "fileName": "Part_RDL_Back_MUD1_Front.jpg",
-        "points": 33,
-        "category": "Back",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
-        "points": 30,
-        "category": "Back",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Back_SH15_Front.jpg",
-        "points": 30,
+        "fileName": "Part_RDL_Back_CP4_Front.png",
+        "points": 36,
         "category": "Back",
         "faction": "RDL",
-		"ammunition": 1
+		"ammunition": 2,
+		"subCards": [
+			"Projectile_RDL_MD1_Front.png"
+		]
     },
     {
-        "fileName": "Part_RDL_Back_TB600_Front.jpg",
-        "points": 48,
+        "fileName": "Part_RDL_Back_AMS193_Front.png",
+        "points": 27,
         "category": "Back",
-        "faction": "RDL"
+        "faction": "RDL",
+		"intercept": 3
     },
     {
         "fileName": "Part_RDL_Chassis_RL06_Front.jpg",
@@ -520,7 +520,8 @@
         "fileName": "Part_RDL_Chassis_RL08_Front.jpg",
         "points": 30,
         "category": "Chassis",
-        "faction": "RDL"
+        "faction": "RDL",
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
@@ -532,26 +533,81 @@
         "fileName": "Part_RDL_Chassis_RL06MS_Front.png",
         "points": 24,
         "category": "Chassis",
-        "faction": "RDL"
+        "faction": "RDL",
+		"freehand": true
     },
     {
         "fileName": "Part_RDL_Chassis_RL08MII_Front.png",
         "points": 45,
         "category": "Chassis",
+        "faction": "RDL",
+		"frame": true
+    },
+    {
+        "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
+        "points": 54,
+        "category": "Left",
         "faction": "RDL"
     },
     {
-        "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
-        "points": 63,
+        "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
+        "points": 33,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_AH21_CC50_Dropped.png"
+		"ammunition": 2,
+		"subCards": [
+			"Projectile_RDL_MC3_Front.jpg"
+		],
+		"freehand": true
+    },
+    {
+        "fileName": "Part_RDL_Left_R20_Front.jpg",
+        "points": 51,
+        "category": "Left",
+        "faction": "RDL",
+		"freehand": true
+    },
+    {
+        "fileName": "Part_RDL_Left_Type77_Front.jpg",
+        "points": 50,
+        "category": "Left",
+        "faction": "RDL",
+        "drop": "Part_RDL_Left_Type77_Dropped.jpg"
+    },
+    {
+        "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
+        "points": 42,
+        "category": "Left",
+        "faction": "RDL",
+		"freehand": true
+    },
+    {
+        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.jpg",
+        "points": 51,
+        "category": "Left",
+        "faction": "RDL",
+        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.jpg",
+		"intercept": 1
+    },
+    {
+        "fileName": "Part_RDL_Left_Type79_Front.jpg",
+        "points": 56,
+        "category": "Left",
+        "faction": "RDL",
+		"freehand": true
     },
     {
         "fileName": "Part_RDL_Left_FCC12_Front.jpg",
         "points": 69,
         "category": "Left",
         "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
+        "points": 48,
+        "category": "Left",
+        "faction": "RDL",
+        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg"
     },
     {
         "fileName": "Part_RDL_Left_GAC6_Front.jpg",
@@ -565,54 +621,11 @@
 		]
     },
     {
-        "fileName": "Part_RDL_Left_L330_Type77B_Front.png",
-        "points": 56,
+        "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
+        "points": 63,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_L330_Type77B_Dropped.png",
-		"intercept": 1
-    },
-    {
-        "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
-        "points": 33,
-        "category": "Left",
-        "faction": "RDL",
-		"ammunition": 2,
-		"subCards": [
-			"Projectile_RDL_MC3_Front.jpg"
-		]
-    },
-    {
-        "fileName": "Part_RDL_Left_R20_Front.jpg",
-        "points": 51,
-        "category": "Left",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
-        "points": 42,
-        "category": "Left",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
-        "points": 54,
-        "category": "Left",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Left_Type55_Front.png",
-        "points": 30,
-        "category": "Left",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.jpg",
-        "points": 51,
-        "category": "Left",
-        "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.jpg",
-		"intercept": 1
+		"freehand": true
     },
     {
         "fileName": "Part_RDL_Left_Type55_MES_Front.jpg",
@@ -625,13 +638,6 @@
 		]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
-        "points": 48,
-        "category": "Left",
-        "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg"
-    },
-    {
         "fileName": "Part_RDL_Left_Type55_PC9K_Front.png",
         "points": 63,
         "category": "Left",
@@ -639,23 +645,26 @@
         "drop": "Part_RDL_Left_Type55_PC9K_Dropped.png"
     },
     {
-        "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
+        "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
         "points": 63,
         "category": "Left",
-        "faction": "RDL"
+        "faction": "RDL",
+        "drop": "Part_RDL_Left_AH21_CC50_Dropped.png"
     },
     {
-        "fileName": "Part_RDL_Left_Type77_Front.jpg",
-        "points": 50,
+        "fileName": "Part_RDL_Left_Type55_Front.png",
+        "points": 30,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type77_Dropped.jpg"
+		"freehand": true
     },
     {
-        "fileName": "Part_RDL_Left_Type79_Front.jpg",
+        "fileName": "Part_RDL_Left_L330_Type77B_Front.png",
         "points": 56,
         "category": "Left",
-        "faction": "RDL"
+        "faction": "RDL",
+        "drop": "Part_RDL_Left_L330_Type77B_Dropped.png",
+		"intercept": 1
     },
     {
         "fileName": "Part_RDL_Right_AC150_Front.jpg",
@@ -665,64 +674,8 @@
         "drop": "Part_RDL_Right_AC150_Dropped.jpg"
     },
     {
-        "fileName": "Part_RDL_Right_AC161_Front.jpg",
-        "points": 45,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC161_Dropped.jpg"
-    },
-    {
-        "fileName": "Part_RDL_Right_AC32_Front.jpg",
-        "points": 24,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32_Dropped.jpg"
-    },
-    {
-        "fileName": "Part_RDL_Right_AC32C_Front.png",
-        "points": 36,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32C_Dropped.png"
-    },
-    {
-        "fileName": "Part_RDL_Right_AC32M_Front.png",
-        "points": 33,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32M_Dropped.png"
-    },
-    {
-        "fileName": "Part_RDL_Right_AC39_Front.jpg",
-        "points": 45,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC39_Dropped.jpg"
-    },
-    {
-        "fileName": "Part_RDL_Right_ACX350_Front.jpg",
-        "points": 48,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_ACX350_Dropped.jpg"
-    },
-    {
-        "fileName": "Part_RDL_Right_AC35_Front.png",
+        "fileName": "Part_RDL_Right_R20_Front.jpg",
         "points": 51,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AC35_Dropped.png"
-    },
-    {
-        "fileName": "Part_RDL_Right_AH21_CC50_Front.png",
-        "points": 63,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_AH21_CC50_Dropped.png"
-    },
-    {
-        "fileName": "Part_RDL_Right_CC100_Front.jpg",
-        "points": 48,
         "category": "Right",
         "faction": "RDL"
     },
@@ -730,29 +683,15 @@
         "fileName": "Part_RDL_Right_CC4_Front.jpg",
         "points": 39,
         "category": "Right",
-        "faction": "RDL"
+        "faction": "RDL",
+		"freehand": true
     },
     {
-        "fileName": "Part_RDL_Right_L320_CC90_Front.jpg",
-        "points": 63,
+        "fileName": "Part_RDL_Right_ACX350_Front.jpg",
+        "points": 48,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_L320_CC90_Dropped.jpg",
-		"intercept": 1
-    },
-    {
-        "fileName": "Part_RDL_Right_L330_CC85_Front.png",
-        "points": 57,
-        "category": "Right",
-        "faction": "RDL",
-        "drop": "Part_RDL_Right_L330_CC85_Dropped.png",
-		"intercept": 1
-    },
-    {
-        "fileName": "Part_RDL_Right_R20_Front.jpg",
-        "points": 51,
-        "category": "Right",
-        "faction": "RDL"
+        "drop": "Part_RDL_Right_ACX350_Dropped.jpg"
     },
     {
         "fileName": "Part_RDL_Right_R35_Front.jpg",
@@ -780,6 +719,48 @@
 		]
     },
     {
+        "fileName": "Part_RDL_Right_L320_CC90_Front.jpg",
+        "points": 63,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_L320_CC90_Dropped.jpg",
+		"intercept": 1
+    },
+    {
+        "fileName": "Part_RDL_Right_CC100_Front.jpg",
+        "points": 48,
+        "category": "Right",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Right_AC39_Front.jpg",
+        "points": 45,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC39_Dropped.jpg"
+    },
+    {
+        "fileName": "Part_RDL_Right_Type63_CC20_Front.jpg",
+        "points": 66,
+        "category": "Right",
+        "faction": "RDL",
+		"freehand": true
+    },
+    {
+        "fileName": "Part_RDL_Right_AC161_Front.jpg",
+        "points": 45,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC161_Dropped.jpg"
+    },
+    {
+        "fileName": "Part_RDL_Right_AC32_Front.jpg",
+        "points": 24,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC32_Dropped.jpg"
+    },
+    {
         "fileName": "Part_RDL_Right_Type55_PC9K_Front.png",
         "points": 63,
         "category": "Right",
@@ -787,54 +768,61 @@
         "drop": "Part_RDL_Right_Type55_PC9K_Dropped.png"
     },
     {
-        "fileName": "Part_RDL_Right_Type63_CC20_Front.jpg",
-        "points": 66,
+        "fileName": "Part_RDL_Right_AH21_CC50_Front.png",
+        "points": 63,
         "category": "Right",
-        "faction": "RDL"
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AH21_CC50_Dropped.png"
+    },
+    {
+        "fileName": "Part_RDL_Right_AC35_Front.png",
+        "points": 51,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC35_Dropped.png"
+    },
+    {
+        "fileName": "Part_RDL_Right_AC32C_Front.png",
+        "points": 36,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC32C_Dropped.png"
+    },
+    {
+        "fileName": "Part_RDL_Right_L330_CC85_Front.png",
+        "points": 57,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_L330_CC85_Dropped.png",
+		"intercept": 1
+    },
+    {
+        "fileName": "Part_RDL_Right_AC32M_Front.png",
+        "points": 33,
+        "category": "Right",
+        "faction": "RDL",
+        "drop": "Part_RDL_Right_AC32M_Dropped.png"
     },
     {
         "fileName": "Part_RDL_Torso_RT06_Front.jpg",
         "points": 15,
         "category": "Torso",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Torso_RT06E_Front.png",
-        "points": 21,
-        "category": "Torso",
-        "faction": "RDL"
+        "faction": "RDL",
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Torso_RT07T_Front.jpg",
         "points": 62,
         "category": "Torso",
-        "faction": "RDL"
+        "faction": "RDL",
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Torso_RT08_Front.jpg",
         "points": 62,
         "category": "Torso",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Torso_RT09A_Front.jpg",
-        "points": 66,
-        "category": "Torso",
         "faction": "RDL",
-		"ammunition": 1,
-		"subCards": [
-			"Projectile_RDL_GS2_Front.jpg"
-		]
-    },
-    {
-        "fileName": "Part_RDL_Torso_RT09MII_Front.png",
-        "points": 66,
-        "category": "Torso",
-        "faction": "RDL",
-		"ammunition": 1,
-		"subCards": [
-			"Projectile_RDL_GS2_Front.jpg"
-		]
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
@@ -844,7 +832,15 @@
 		"ammunition": 1,
 		"subCards": [
 			"Projectile_RDL_GS2_Front.jpg"
-		]
+		],
+		"frame": true
+    },
+    {
+        "fileName": "Part_RDL_Torso_RT15EC_Front.jpg",
+        "points": 60,
+        "category": "Torso",
+        "faction": "RDL",
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
@@ -854,19 +850,19 @@
 		"ammunition": 1,
 		"subCards": [
 			"Projectile_RDL_GS2_Front.jpg"
-		]
+		],
+		"frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT15EC_Front.jpg",
-        "points": 60,
+        "fileName": "Part_RDL_Torso_RT09A_Front.jpg",
+        "points": 66,
         "category": "Torso",
-        "faction": "RDL"
-    },
-    {
-        "fileName": "Part_RDL_Torso_RT15S_Front.png",
-        "points": 60,
-        "category": "Torso",
-        "faction": "RDL"
+        "faction": "RDL",
+		"ammunition": 1,
+		"subCards": [
+			"Projectile_RDL_GS2_Front.jpg"
+		],
+		"frame": true
     },
     {
         "fileName": "Part_RDL_Torso_RT16B_Front.png",
@@ -876,7 +872,33 @@
 		"ammunition": 1,
 		"subCards": [
 			"Projectile_RDL_GS2_Front.jpg"
-		]
+		],
+		"frame": true
+    },
+    {
+        "fileName": "Part_RDL_Torso_RT15S_Front.png",
+        "points": 60,
+        "category": "Torso",
+        "faction": "RDL",
+		"frame": true
+    },
+    {
+        "fileName": "Part_RDL_Torso_RT06E_Front.png",
+        "points": 21,
+        "category": "Torso",
+        "faction": "RDL",
+		"frame": true
+    },
+    {
+        "fileName": "Part_RDL_Torso_RT09MII_Front.png",
+        "points": 66,
+        "category": "Torso",
+        "faction": "RDL",
+		"ammunition": 1,
+		"subCards": [
+			"Projectile_RDL_GS2_Front.jpg"
+		],
+		"frame": true
     },
     {
         "fileName": "Part_UN_Back_AMDS210_Front.png",
@@ -912,13 +934,6 @@
 		"charge": true
     },
     {
-        "fileName": "Part_UN_Back_EBSX40_TrialModel_Front.png",
-        "points": 39,
-        "category": "Back",
-        "faction": "UN",
-		"charge": true
-    },
-    {
         "fileName": "Part_UN_Back_EC50_Front.png",
         "points": 42,
         "category": "Back",
@@ -944,7 +959,8 @@
         "fileName": "Part_UN_Back_MSH2_Front.png",
         "points": 24,
         "category": "Back",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Back_OCSP_Front.png",
@@ -960,13 +976,20 @@
 		"ammunition": 2
     },
     {
-        "fileName": "Part_UN_Chassis_LM210S_Front.png",
+        "fileName": "Part_UN_Back_EBSX40_TrialModel_Front.png",
         "points": 39,
+        "category": "Back",
+        "faction": "UN",
+		"charge": true
+    },
+    {
+        "fileName": "Part_UN_Chassis_LM231_Front.png",
+        "points": 27,
         "category": "Chassis",
         "faction": "UN"
     },
     {
-        "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+        "fileName": "Part_UN_Chassis_LM210S_Front.png",
         "points": 39,
         "category": "Chassis",
         "faction": "UN"
@@ -978,8 +1001,8 @@
         "faction": "UN"
     },
     {
-        "fileName": "Part_UN_Chassis_LM231_Front.png",
-        "points": 27,
+        "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+        "points": 39,
         "category": "Chassis",
         "faction": "UN"
     },
@@ -998,25 +1021,22 @@
         "fileName": "Part_UN_Left_K7_S10_Front.png",
         "points": 54,
         "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Left_K9_Front.png",
         "points": 42,
         "category": "Left",
-        "faction": "UN"
-    },
-    {
-        "fileName": "Part_UN_Left_K9_Trial_Front.png",
-        "points": 42,
-        "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Left_M3S_Front.png",
         "points": 42,
         "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Left_M4_Grenade_Front.png",
@@ -1026,25 +1046,29 @@
 		"ammunition": 3,
 		"subCards": [
 			"Projectile_UN_M7_Front.png"
-		]
+		],
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Left_MDXS_R6_Front.png",
         "points": 45,
         "category": "Left",
-        "faction": "UN"
-    },
-    {
-        "fileName": "Part_UN_Left_MSH1_Front.png",
-        "points": 24,
-        "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+        "drop": "Part_UN_Left_MDXS_R6_Dropped.png"
     },
     {
         "fileName": "Part_UN_Left_MX82_Front.png",
         "points": 48,
         "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
+    },
+    {
+        "fileName": "Part_UN_Left_MSH1_Front.png",
+        "points": 24,
+        "category": "Left",
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Left_RH21_M3_Front.png",
@@ -1093,7 +1117,15 @@
         "fileName": "Part_UN_Left_S9_M5_Front.png",
         "points": 57,
         "category": "Left",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
+    },
+    {
+        "fileName": "Part_UN_Left_K9_Trial_Front.png",
+        "points": 42,
+        "category": "Left",
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Right_G6_M5_Front.png",
@@ -1118,22 +1150,11 @@
 		"charge": true
     },
     {
-        "fileName": "Part_UN_Right_K9_Trial_Front.png",
-        "points": 42,
-        "category": "Right",
-        "faction": "UN"
-    },
-    {
-        "fileName": "Part_UN_Right_M15BO_Front.png",
-        "points": 81,
-        "category": "Right",
-        "faction": "UN"
-    },
-    {
         "fileName": "Part_UN_Right_M3S_Front.png",
         "points": 42,
         "category": "Right",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Right_M4_Grenade_Front.png",
@@ -1143,7 +1164,15 @@
 		"ammunition": 3,
 		"subCards": [
 			"Projectile_UN_M7_Front.png"
-		]
+		],
+		"freehand": true
+    },
+    {
+        "fileName": "Part_UN_Right_M15BO_Front.png",
+        "points": 81,
+        "category": "Right",
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Right_MDXS_R6_Front.png",
@@ -1156,7 +1185,8 @@
         "fileName": "Part_UN_Right_R33_Front.png",
         "points": 39,
         "category": "Right",
-        "faction": "UN"
+        "faction": "UN",
+		"freehand": true
     },
     {
         "fileName": "Part_UN_Right_R6_Front.png",
@@ -1205,6 +1235,13 @@
         "faction": "UN"
     },
     {
+        "fileName": "Part_UN_Right_K9_Trial_Front.png",
+        "points": 42,
+        "category": "Right",
+        "faction": "UN",
+		"freehand": true
+    },
+    {
         "fileName": "Part_UN_Torso_TM31C_Front.png",
         "points": 45,
         "category": "Torso",
@@ -1212,45 +1249,52 @@
 		"ammunition": 1,
 		"subCards": [
 			"Projectile_UN_M9_Front.png"
-		]
+		],
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM31R_Front.png",
         "points": 54,
         "category": "Torso",
-        "faction": "UN"
+        "faction": "UN",
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM35B_Front.png",
         "points": 72,
         "category": "Torso",
         "faction": "UN",
-		"charge": true
+		"charge": true,
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM35N_Front.png",
         "points": 72,
         "category": "Torso",
         "faction": "UN",
-		"charge": true
+		"charge": true,
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM39_Front.png",
         "points": 63,
         "category": "Torso",
-        "faction": "UN"
+        "faction": "UN",
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM641_Front.png",
         "points": 81,
         "category": "Torso",
-        "faction": "UN"
+        "faction": "UN",
+		"frame": true
     },
     {
         "fileName": "Part_UN_Torso_TM641O_Trial_Front.png",
         "points": 81,
         "category": "Torso",
-        "faction": "UN"
+        "faction": "UN",
+		"frame": true
     },
     {
         "fileName": "Part_WD_Back_ACE001_Front.jpg",
@@ -1272,13 +1316,15 @@
         "fileName": "Part_WD_Left_ACE001_Front.jpg",
         "points": 57,
         "category": "Left",
-        "faction": "Public"
+        "faction": "Public",
+		"freehand": true
     },
     {
         "fileName": "Part_WD_Right_ACE001_Front.jpg",
         "points": 72,
         "category": "Right",
-        "faction": "Public"
+        "faction": "Public",
+		"freehand": true
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",
@@ -1288,7 +1334,8 @@
 		"visible" : false,
 		"changes": [
 			"Part_WD_Torso_ACE001_Front.jpg"
-		]
+		],
+		"frame": true
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Front.jpg",
@@ -1297,7 +1344,8 @@
         "faction": "Public",
 		"changes": [
 			"Part_WD_Torso_ACE001_Cruise_Front.jpg"
-		]
+		],
+		"frame": true
     },
     {
         "fileName": "Projectile_PL_AS3A_Front.png",
