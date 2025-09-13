@@ -163,7 +163,7 @@ export const handleExportImage = async () => {
         const allDronesToRender = [];
         const processedDrones = new Set();
         rosterState.drones.forEach(drone => {
-            if (drone && !processedDrones.has(drone.fileName)) {
+            if (drone) {
                 allDronesToRender.push(drone);
                 processedDrones.add(drone.fileName);
             }
