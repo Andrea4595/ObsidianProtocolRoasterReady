@@ -1484,5 +1484,53 @@
         "points": 0,
         "category": "Projectile",
         "faction": "UN"
+    },
+    {
+        "fileName": "1_추가_명령.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
+    },
+    {
+        "fileName": "2_전장_회복.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
+    },
+    {
+        "fileName": "3_치고_빠지기.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
+    },
+    {
+        "fileName": "4_시스템_복구.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
+    },
+    {
+        "fileName": "5_전술적_배치.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
+    },
+    {
+        "fileName": "6_원격_재가동.png",
+        "points": 30,
+        "category": "Tactical",
+        "faction": "Public",
+		"hidden": true,
+		"hiddenTitle": "tacticalTitle.png"
     }
 ]

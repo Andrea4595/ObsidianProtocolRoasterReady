@@ -1,21 +1,85 @@
 import * as state from './state.js';
 import { updateTotalPoints } from './ui.js';
-import { categoryOrder } from './constants.js';
+import { categoryOrder, CARD_DIMENSIONS } from './constants.js';
 import { exportImageBtn } from './dom.js';
+
+// --- Custom Confirmation Modal ---
+const showHiddenCardConfirmation = () => {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000;';
+
+        const modal = document.createElement('div');
+        modal.style.cssText = 'background-color: #fff; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);';
+
+        const message = document.createElement('p');
+        message.textContent = '비공개 카드를 숨기시겠습니까?';
+        message.style.cssText = 'margin: 0 0 20px; font-size: 18px;';
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = 'display: flex; gap: 15px; justify-content: center;';
+
+        const hideBtn = document.createElement('button');
+        hideBtn.textContent = '비공개 숨김';
+        hideBtn.style.cssText = 'padding: 10px 20px; border-radius: 8px; border: 1px solid #6c757d; background-color: #6c757d; color: white; font-size: 16px; cursor: pointer;';
+
+        const revealBtn = document.createElement('button');
+        revealBtn.textContent = '모두 공개';
+        revealBtn.style.cssText = 'padding: 10px 20px; border-radius: 8px; border: 1px solid #17a2b8; background-color: #17a2b8; color: white; font-size: 16px; cursor: pointer;';
+
+        hideBtn.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(true);
+        };
+
+        revealBtn.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(false);
+        };
+
+        buttonContainer.appendChild(hideBtn);
+        buttonContainer.appendChild(revealBtn);
+        modal.appendChild(message);
+        modal.appendChild(buttonContainer);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    });
+};
+
 
 // --- HTML Generation Helpers ---
 
-const generateUnitHtml = (unit) => {
+const generateCardHtml = (card, shouldHide, imgStyle) => {
+    if (!card) return '';
+    const defaultStyle = 'width: 100%; height: auto; border-radius: 10px; display: block;';
+    const style = imgStyle || defaultStyle;
+
+    let cardHtml = '<div style="position: relative;">';
+    cardHtml += `<img src="Cards/${card.category}/${card.fileName}" style="${style}" />`;
+    
+    if (shouldHide && card.hidden) {
+        cardHtml += '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgb(80, 80, 80); border-radius: 10px;">';
+        if (card.hiddenTitle) {
+            cardHtml += `<img src="icons/${card.hiddenTitle}" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); height: 100px; width: auto; box-shadow: none;" />`;
+        }
+        cardHtml += '<img src="icons/unknown.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50%; height: auto; opacity: 0.8;" />';
+        cardHtml += '</div>';
+    } else {
+        const points = card.points || 0;
+        cardHtml += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${points}</div>`;
+    }
+
+    cardHtml += '</div>';
+    return cardHtml;
+};
+
+const generateUnitHtml = (unit, shouldHide) => {
     let unitHtml = '<div style="display: flex; gap: 10px; background-color: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); align-items: flex-start;">';
     for (const category of categoryOrder) {
         const card = unit[category];
         unitHtml += '<div style="width: 180px; border: 1px solid #ddd; border-radius: 10px; background-color: #fafafa; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 270px; gap: 5px; padding: 5px;">';
         if (card) {
-            const points = card.points || 0;
-            unitHtml += '<div style="position: relative; width: 100%;">';
-            unitHtml += `<img src="Cards/${card.category}/${card.fileName}" style="width: 100%; height: auto; border-radius: 10px; display: block;" />`;
-            unitHtml += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${points}</div>`;
-            unitHtml += '</div>';
+            unitHtml += generateCardHtml(card, shouldHide, 'width: 100%; height: auto; border-radius: 10px; display: block;');
 
             if (card.drop) {
                 unitHtml += '<div style="height: 5px; width: 80%; background-color: #ccc; margin: 5px 0; border-radius: 2px;"></div>';
@@ -39,27 +103,19 @@ const generateUnitHtml = (unit) => {
     return unitHtml;
 };
 
-const generateDroneEntryHtml = (drone) => {
+const generateDroneEntryHtml = (drone, shouldHide) => {
     let droneHtml = '<div style="display: flex; align-items: flex-start; gap: 10px; background-color: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">';
 
     // Column for the drone and its 'changes' cards
     droneHtml += '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">';
-    const points = drone.points || 0;
-    droneHtml += '<div style="position: relative; width: fit-content;">';
-    droneHtml += `<img src="Cards/${drone.category}/${drone.fileName}" style="height: 270px; width: auto; border-radius: 10px; display: block;" />`;
-    droneHtml += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${points}</div>`;
-    droneHtml += '</div>';
+    droneHtml += generateCardHtml(drone, shouldHide, 'height: 270px; width: auto; border-radius: 10px; display: block;');
 
     if (drone.changes) {
         drone.changes.forEach(changeFileName => {
             const changedCardData = state.allCards.byFileName.get(changeFileName);
             if (changedCardData) {
-                const changedPoints = changedCardData.points || 0;
                 droneHtml += '<div style="height: 5px; width: 80%; background-color: #ccc; margin: 5px 0; border-radius: 2px;"></div>';
-                droneHtml += '<div style="position: relative; width: fit-content;">';
-                droneHtml += `<img src="Cards/${changedCardData.category}/${changedCardData.fileName}" style="height: 270px; width: auto; border-radius: 10px; display: block;" />`;
-                droneHtml += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${changedPoints}</div>`;
-                droneHtml += '</div>';
+                droneHtml += generateCardHtml(changedCardData, shouldHide, 'height: 270px; width: auto; border-radius: 10px; display: block;');
             }
         });
     }
@@ -68,17 +124,20 @@ const generateDroneEntryHtml = (drone) => {
     // Column for the backCard
     if (drone.backCard) {
         const backCard = drone.backCard;
-        const backCardPoints = backCard.points || 0;
         droneHtml += '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">';
-        droneHtml += '<div style="position: relative; width: fit-content;">';
-        droneHtml += `<img src="Cards/${backCard.category}/${backCard.fileName}" style="height: 270px; width: auto; border-radius: 10px; display: block;" />`;
-        droneHtml += `<div style="position: absolute; top: 5px; left: 5px; padding: 3px 6px; background-color: rgba(24, 119, 242, 0.9); color: #fff; font-size: 14px; font-weight: bold; border-radius: 8px; border: 1px solid #fff;">${backCardPoints}</div>`;
-        droneHtml += '</div>';
+        droneHtml += generateCardHtml(backCard, shouldHide, 'height: 270px; width: auto; border-radius: 10px; display: block;');
         droneHtml += '</div>';
     }
 
     droneHtml += '</div>';
     return droneHtml;
+};
+
+const generateTacticalCardHtml = (card, shouldHide) => {
+    let cardHtml = '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px; background-color: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 270px;">';
+    cardHtml += generateCardHtml(card, shouldHide, 'width: 100%; height: auto; border-radius: 10px; display: block;');
+    cardHtml += '</div>';
+    return cardHtml;
 };
 
 const generateSubCardsHtml = (subCardFileNames) => {
@@ -90,7 +149,7 @@ const generateSubCardsHtml = (subCardFileNames) => {
         const card = state.allCards.byFileName.get(fileName);
         if (card) {
             html += '<div style="position: relative; width: fit-content;">';
-            html += `<img src="Cards/${card.category}/${card.fileName}" style="height: 270px; width: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
+            html += `<img src="Cards/${card.category}/${card.fileName}" style="height: ${CARD_DIMENSIONS.UNIT_CARD_HEIGHT}; width: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block;" />`;
             html += '</div>';
         }
     });
@@ -132,6 +191,20 @@ export const handleExportImage = async () => {
         const rosterState = state.getActiveRoster();
         if (!rosterState) return;
 
+        // Check for hidden cards
+        const allCardsInRosterForCheck = [];
+        Object.values(rosterState.units).forEach(unit => allCardsInRosterForCheck.push(...Object.values(unit)));
+        allCardsInRosterForCheck.push(...rosterState.drones);
+        if (rosterState.tacticalCards) {
+            allCardsInRosterForCheck.push(...rosterState.tacticalCards);
+        }
+        const hasHiddenCards = allCardsInRosterForCheck.some(card => card && card.hidden);
+
+        let shouldHide = false;
+        if (hasHiddenCards) {
+            shouldHide = await showHiddenCardConfirmation();
+        }
+
         const exportContainer = document.createElement('div');
         document.body.appendChild(exportContainer);
 
@@ -150,7 +223,7 @@ export const handleExportImage = async () => {
             html += '<h3 style="margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">유닛</h3>';
             html += '<div style="display: flex; flex-direction: column; gap: 20px;">';
             for (const unitId in rosterState.units) {
-                html += generateUnitHtml(rosterState.units[unitId]);
+                html += generateUnitHtml(rosterState.units[unitId], shouldHide);
             }
             html += '</div>';
         }
@@ -197,12 +270,22 @@ export const handleExportImage = async () => {
             html += '<h3 style="margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">드론</h3>';
             html += '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">';
             allDronesToRender.forEach(drone => {
-                html += generateDroneEntryHtml(drone);
+                html += generateDroneEntryHtml(drone, shouldHide);
             });
             html += '</div>';
         }
 
-        // 4. Render Sub-Cards
+        // 4. Render Tactical Cards
+        if (rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
+            html += '<h3 style="margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">전술 카드</h3>';
+            html += '<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">';
+            rosterState.tacticalCards.forEach(card => {
+                html += generateTacticalCardHtml(card, shouldHide);
+            });
+            html += '</div>';
+        }
+
+        // 5. Render Sub-Cards
         html += generateSubCardsHtml(otherSubCards);
 
         exportContainer.innerHTML = html;

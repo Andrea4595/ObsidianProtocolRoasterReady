@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal, openModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect } from './ui.js';
@@ -16,6 +16,10 @@ export function setupEventListeners() {
     });
 
     dom.addDroneButton.addEventListener('click', openDroneModal);
+
+    dom.addTacticalCardButton.addEventListener('click', openTacticalCardModal);
+
+    
 
     dom.modalClose.addEventListener('click', closeModal);
     dom.modalOverlay.addEventListener('click', (event) => {

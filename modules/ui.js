@@ -2,7 +2,7 @@ import * as dom from './dom.js';
 import * as state from './state.js';
 import { openModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
-import { categoryOrder, CSS_CLASSES } from './constants.js';
+import { categoryOrder, CSS_CLASSES, CARD_DIMENSIONS } from './constants.js';
 
 export const updateTotalPoints = () => {
     const rosterState = state.getActiveRoster();
@@ -19,6 +19,9 @@ export const updateTotalPoints = () => {
             if (drone.backCard) total += drone.backCard.points || 0;
         }
     });
+    rosterState.tacticalCards.forEach(card => {
+        if (card) total += card.points || 0; // Add points from tactical cards
+    });
     dom.totalPointsSpan.textContent = total;
     return total;
 };
@@ -26,6 +29,7 @@ export const updateTotalPoints = () => {
 export const renderRoster = () => {
     dom.unitsContainer.innerHTML = '';
     dom.dronesContainer.innerHTML = '';
+    dom.tacticalCardsContainer.innerHTML = '';
     document.querySelectorAll(`.${CSS_CLASSES.SUB_CARDS_CONTAINER}`).forEach(el => el.remove());
 
     const rosterState = state.isGameMode ? state.gameRoster : state.getActiveRoster();
@@ -38,9 +42,18 @@ export const renderRoster = () => {
 
     rosterState.drones.forEach((droneData) => {
         if (droneData.rosterId == null) {
-            droneData.rosterId = `d_${state.nextDroneId++}`;
+            droneData.rosterId = `d_${state.nextDroneId}`;
+            state.setNextDroneId(state.nextDroneId + 1);
         }
         addDroneElement(droneData);
+    });
+
+    rosterState.tacticalCards.forEach((cardData) => {
+        if (cardData.rosterId == null) {
+            cardData.rosterId = `t_${state.nextTacticalCardId}`;
+            state.setNextTacticalCardId(state.nextTacticalCardId + 1);
+        }
+        addTacticalCardElement(cardData);
     });
 
     if (state.isGameMode) {
@@ -71,7 +84,7 @@ export const renderRoster = () => {
         });
 
         if (subProjectilesContainer.hasChildNodes()) {
-            dom.dronesContainer.after(subProjectilesContainer);
+            dom.tacticalCardsContainer.after(subProjectilesContainer);
         }
     }
 
@@ -243,7 +256,14 @@ const createCardElement = (cardData, isInteractive = true) => {
     wrapper.className = CSS_CLASSES.CARD_WRAPPER;
 
     const card = document.createElement('div');
-    card.className = CSS_CLASSES.DRONE_CARD;
+    card.className = CSS_CLASSES.DISPLAY_CARD;
+
+    if (cardData.category === 'Drone' || cardData.category === 'Projectile') {
+        card.classList.add(CSS_CLASSES.DRONE_DISPLAY_CARD);
+        card.classList.add('drone-card');
+    } else if (cardData.category === 'Tactical') {
+        card.classList.add(CSS_CLASSES.TACTICAL_DISPLAY_CARD);
+    }
     card.style.position = 'relative';
 
     if (state.isGameMode) {
@@ -255,18 +275,74 @@ const createCardElement = (cardData, isInteractive = true) => {
         }
         card.appendChild(img);
 
-        if (isInteractive) {
-            let tokenSrc = null;
-            const isDrone = cardData.category === 'Drone';
-            if (cardData.cardStatus === 1) tokenSrc = isDrone ? 'icons/warning_drone.png' : 'icons/warning.png';
-            if (cardData.cardStatus === 2) tokenSrc = isDrone ? 'icons/destroyed_drone.png' : 'icons/destroyed.png';
-            if (cardData.cardStatus === 3 && !isDrone) tokenSrc = 'icons/repaired.png';
+        const isHiddenTacticalCard = cardData.category === 'Tactical' && cardData.hidden === true;
 
-            if (tokenSrc) {
-                const tokenImg = document.createElement('img');
-                tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
-                tokenImg.src = tokenSrc;
-                card.appendChild(tokenImg);
+        
+
+        if (isHiddenTacticalCard && cardData.isRevealedInGameMode !== true) {
+            const overlay = document.createElement('div');
+            overlay.className = CSS_CLASSES.HIDDEN_CARD_OVERLAY;
+            overlay.style.backgroundColor = CARD_DIMENSIONS.HIDDEN_OVERLAY_BACKGROUND_COLOR;
+
+            if (cardData.hiddenTitle) {
+                const hiddenTitleImg = document.createElement('img');
+                hiddenTitleImg.className = CSS_CLASSES.HIDDEN_TITLE_IMAGE;
+                hiddenTitleImg.src = `icons/${cardData.hiddenTitle}`;
+                hiddenTitleImg.style.height = CARD_DIMENSIONS.HIDDEN_TITLE_HEIGHT;
+                hiddenTitleImg.style.width = 'auto';
+                overlay.appendChild(hiddenTitleImg);
+            }
+
+            const unknownIcon = document.createElement('img');
+            unknownIcon.className = CSS_CLASSES.UNKNOWN_ICON_IMAGE;
+            unknownIcon.src = 'icons/unknown.png';
+            unknownIcon.style.width = CARD_DIMENSIONS.UNKNOWN_ICON_WIDTH;
+            unknownIcon.style.opacity = CARD_DIMENSIONS.UNKNOWN_ICON_OPACITY;
+            overlay.appendChild(unknownIcon);
+
+            card.appendChild(overlay);
+
+            // Click listener to reveal/hide the card
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                performActionAndPreserveScroll(() => {
+                    cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode;
+                }, e.target);
+            });
+
+        } else { // If not a hidden tactical card or it's revealed, apply normal game mode interactive logic
+            const isRevealedHiddenTactical = cardData.category === 'Tactical' && cardData.hidden === true && cardData.isRevealedInGameMode === true;
+
+            if (isInteractive) {
+                let tokenSrc = null;
+                const isDrone = cardData.category === 'Drone';
+                // Prevent status tokens for revealed hidden tactical cards
+                if (!isRevealedHiddenTactical) {
+                    if (cardData.cardStatus === 1) tokenSrc = isDrone ? 'icons/warning_drone.png' : 'icons/warning.png';
+                    if (cardData.cardStatus === 2) tokenSrc = isDrone ? 'icons/destroyed_drone.png' : 'icons/destroyed.png';
+                    if (cardData.cardStatus === 3 && !isDrone) tokenSrc = 'icons/repaired.png';
+                }
+
+                if (tokenSrc) {
+                    const tokenImg = document.createElement('img');
+                    tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
+                    tokenImg.src = tokenSrc;
+                    card.appendChild(tokenImg);
+                }
+            }
+
+            // Add toggle listener for revealed hidden tactical cards
+            if (isRevealedHiddenTactical) {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    performActionAndPreserveScroll(() => {
+                        cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode;
+                    }, e.target);
+                });
+            } else if (isInteractive) { // Original click listener for advanceCardStatus for other interactive cards
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
             }
         }
     } else {
@@ -277,26 +353,31 @@ const createCardElement = (cardData, isInteractive = true) => {
         points.className = CSS_CLASSES.CARD_POINTS;
         points.textContent = cardData.points || 0;
         card.appendChild(points);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = CSS_CLASSES.DELETE_DRONE_BUTTON;
-        deleteButton.textContent = '-';
-        deleteButton.addEventListener('click', () => {
-            state.allRosters[state.activeRosterName].drones = state.allRosters[state.activeRosterName].drones.filter(d => d.rosterId !== cardData.rosterId);
-            renderRoster();
-            state.saveAllRosters();
-        });
-        card.appendChild(deleteButton);
     }
-    wrapper.appendChild(card);
+    wrapper.appendChild(card); // Append card to wrapper first
+
+    // Create and append delete button to wrapper if it's a drone or tactical card
+    if (!state.isGameMode && (cardData.category === 'Drone' || cardData.category === 'Tactical')) {
+        const deleteButton = document.createElement('button');
+        deleteButton.className = CSS_CLASSES.DELETE_DRONE_BUTTON; // Reusing this class
+        deleteButton.textContent = '-';
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            performActionAndPreserveScroll(() => {
+                if (cardData.category === 'Drone') {
+                    state.allRosters[state.activeRosterName].drones = state.allRosters[state.activeRosterName].drones.filter(d => d.rosterId !== cardData.rosterId);
+                } else if (cardData.category === 'Tactical') {
+                    state.allRosters[state.activeRosterName].tacticalCards = state.allRosters[state.activeRosterName].tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
+                }
+            }, e.target);
+        });
+        wrapper.appendChild(deleteButton); // Append to wrapper
+    }
 
     if (state.isGameMode && isInteractive) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
-
-        wrapper.appendChild(createTokenArea(cardData));
         wrapper.insertBefore(createActionButtons(cardData), card);
     }
+    
     mainContainer.appendChild(wrapper);
 
     const hasFreight = cardData.special && cardData.special.includes('freight_back');
@@ -306,14 +387,19 @@ const createCardElement = (cardData, isInteractive = true) => {
         backCardWrapper.className = CSS_CLASSES.CARD_WRAPPER;
 
         const backSlot = document.createElement('div');
-        backSlot.className = (state.isGameMode && backCardData) ? CSS_CLASSES.DRONE_CARD : CSS_CLASSES.CARD_SLOT;
-        backSlot.style.position = 'relative';
+        backSlot.className = CSS_CLASSES.CARD_SLOT;
 
         if (backCardData) {
             const isDestroyed = state.isGameMode && backCardData.cardStatus === 2;
             const img = document.createElement('img');
             img.src = `Cards/${backCardData.category}/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
             if (isDestroyed) img.style.filter = 'brightness(50%)';
+            // Ensure the image covers the slot, consistent with other cards
+            if (!state.isGameMode) {
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover'; // Changed from 'contain' for consistency
+            }
             backSlot.appendChild(img);
 
             if (state.isGameMode) {
@@ -334,7 +420,8 @@ const createCardElement = (cardData, isInteractive = true) => {
                 points.textContent = backCardData.points || 0;
                 backSlot.appendChild(points);
             }
-        } else {
+        }
+        else {
             const label = document.createElement('span');
             label.className = CSS_CLASSES.SLOT_LABEL;
             label.textContent = 'Back';
@@ -342,14 +429,19 @@ const createCardElement = (cardData, isInteractive = true) => {
         }
         backCardWrapper.appendChild(backSlot);
 
-        if (state.isGameMode && backCardData) {
-            backSlot.style.cursor = 'pointer';
-            backSlot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
+        if (state.isGameMode) {
+            if (backCardData) {
+                // backSlot.style.cursor = 'pointer'; // Removed cursor change for non-interactive
+                // backSlot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target)); // Removed listener
 
-            backCardWrapper.appendChild(createTokenArea(backCardData));
-            backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
-
-        } else if (!state.isGameMode) {
+                backCardWrapper.appendChild(createTokenArea(backCardData));
+                backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
+            } else {
+                const placeholder = document.createElement('div');
+                placeholder.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
+                backCardWrapper.insertBefore(placeholder, backSlot);
+            }
+        } else if (!state.isGameMode) { // Roster builder mode for backCardData
             backSlot.style.cursor = 'pointer';
             backSlot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
         }
@@ -466,4 +558,8 @@ const createUnitElement = (unitId, unitData) => {
 
 const addDroneElement = (droneData) => {
     dom.dronesContainer.appendChild(createCardElement(droneData));
+};
+
+const addTacticalCardElement = (cardData) => {
+    dom.tacticalCardsContainer.appendChild(createCardElement(cardData));
 };
