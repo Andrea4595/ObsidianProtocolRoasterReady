@@ -1219,7 +1219,8 @@
         "fileName": "Part_UN_Right_RH21_M3_Front.png",
         "points": 45,
         "category": "Right",
-        "faction": "UN"
+        "faction": "UN",
+		"drop": "Part_UN_Right_RH21_Dropped_Front.png"
     },
     {
         "fileName": "Part_UN_Right_RHX23_Front.png",
