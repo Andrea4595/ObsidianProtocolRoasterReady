@@ -8,7 +8,7 @@ export class Roster {
     }
 
     serialize() {
-        const serialized = { faction: this.faction, units: {}, drones: [], tacticalCards: [] };
+        const serialized = { version: 1, faction: this.faction, units: {}, drones: [], tacticalCards: [] };
 
         for (const unitId in this.units) {
             const unit = this.units[unitId];
