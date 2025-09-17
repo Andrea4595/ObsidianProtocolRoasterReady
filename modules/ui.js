@@ -3,6 +3,7 @@ import * as state from './state.js';
 import { openModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
 import { categoryOrder, CSS_CLASSES, CARD_DIMENSIONS } from './constants.js';
+import { applyUnitRules, applyDroneRules } from './rules.js';
 
 export const updateTotalPoints = () => {
     const rosterState = state.getActiveRoster();
@@ -34,6 +35,12 @@ export const renderRoster = () => {
 
     const rosterState = state.isGameMode ? state.gameRoster : state.getActiveRoster();
     if (!rosterState) return;
+
+    // Apply special rules before rendering, only in builder mode
+    if (!state.isGameMode) {
+        Object.values(rosterState.units).forEach(unit => applyUnitRules(unit));
+        rosterState.drones.forEach(drone => applyDroneRules(drone));
+    }
 
     Object.keys(rosterState.units).forEach(unitId => {
         const unitElement = createUnitElement(parseInt(unitId), rosterState.units[unitId]);
@@ -288,16 +295,12 @@ const createCardElement = (cardData, isInteractive = true) => {
                 const hiddenTitleImg = document.createElement('img');
                 hiddenTitleImg.className = CSS_CLASSES.HIDDEN_TITLE_IMAGE;
                 hiddenTitleImg.src = `icons/${cardData.hiddenTitle}`;
-                hiddenTitleImg.style.height = CARD_DIMENSIONS.HIDDEN_TITLE_HEIGHT;
-                hiddenTitleImg.style.width = 'auto';
                 overlay.appendChild(hiddenTitleImg);
             }
 
             const unknownIcon = document.createElement('img');
             unknownIcon.className = CSS_CLASSES.UNKNOWN_ICON_IMAGE;
             unknownIcon.src = 'icons/unknown.png';
-            unknownIcon.style.width = CARD_DIMENSIONS.UNKNOWN_ICON_WIDTH;
-            unknownIcon.style.opacity = CARD_DIMENSIONS.UNKNOWN_ICON_OPACITY;
             overlay.appendChild(unknownIcon);
 
             card.appendChild(overlay);
@@ -380,7 +383,7 @@ const createCardElement = (cardData, isInteractive = true) => {
     
     mainContainer.appendChild(wrapper);
 
-    const hasFreight = cardData.special && cardData.special.includes('freight_back');
+    const hasFreight = cardData.hasFreightBack === true;
     if (hasFreight) {
         const backCardData = cardData.backCard;
         const backCardWrapper = document.createElement('div');

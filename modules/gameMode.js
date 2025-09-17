@@ -1,19 +1,13 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { renderRoster } from './ui.js';
+import { applyUnitRules, applyDroneRules } from './rules.js';
 
 export function advanceCardStatus(card, unit) {
     if (!card) return;
     let currentStatus = card.cardStatus || 0;
     
-    let hasFrame = card.frame === true;
-    // Special rule for '앙세르' pilot
-    if (unit && card.category === 'Chassis') {
-        const pilot = unit.Pilot;
-        if (pilot && pilot.special && pilot.special.includes('chassis_have_frame')) {
-            hasFrame = true;
-        }
-    }
+    const hasFrame = card.frame === true;
 
     const isDrone = card.category === 'Drone';
 
@@ -79,6 +73,10 @@ const createGameRosterState = (roster) => {
             });
         }
     });
+
+    // Apply special rules before initializing for game mode
+    Object.values(gameRoster.units).forEach(unit => applyUnitRules(unit));
+    gameRoster.drones.forEach(drone => applyDroneRules(drone));
 
     // --- Initialize all cards for game mode ---
     const allCardsInGame = [];

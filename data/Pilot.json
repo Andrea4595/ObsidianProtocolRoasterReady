@@ -1,0 +1,197 @@
+[
+    {
+        "fileName": "Dial_RDL_01_Misty_Front.png",
+        "points": 15,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_02_Spike_Front.png",
+        "points": 15,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_03_Wu_Front.png",
+        "points": 12,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_04_Hammerhead_Front.png",
+        "points": 10,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_05_Anser_Front.png",
+        "points": 15,
+        "category": "Pilot",
+        "faction": "RDL",
+        "special": [
+            "chassis_have_frame"
+        ]
+    },
+    {
+        "fileName": "Dial_RDL_06_Keyhole_Front.png",
+        "points": 12,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.png",
+        "points": 12,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_09_ShockTroop_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_10_ShockTroop_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_11_ShockTroop_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_12_ShockTroop_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_13_ShockTrooper_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_14_ Scout_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_15_Scount_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_16_Scout_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_17_Scout_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_RDL_18_Scout_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Dial_UNPilot_19_Quartz_Front.png",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_20_Panzer_Front.png",
+        "points": 15,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_21_Firefly_Front.png",
+        "points": 18,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_22_Yoyu_Front.png",
+        "points": 21,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_23_Onyx_Front.png",
+        "points": 21,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_24_Sealock_Front.png",
+        "points": 21,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_27_Rifleman_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_28_Rifleman_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_29_Rifleman_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_30_Rifleman_Front.png",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_31_Charger_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_32_Charger_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_33_Charger_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_UNPilot_34_Charger_Front.png",
+        "points": 6,
+        "category": "Pilot",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Dial_WD_ACE001_KarlFried_Front.png",
+        "points": 15,
+        "category": "Pilot",
+        "faction": "Public"
+    }
+]

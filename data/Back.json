@@ -1,0 +1,212 @@
+[
+    {
+        "fileName": "Part_RDL_Back_AMS190_Front.jpg",
+        "points": 27,
+        "category": "Back",
+        "faction": "RDL",
+        "intercept": 3
+    },
+    {
+        "fileName": "Part_RDL_Back_ML34_Front.jpg",
+        "points": 39,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 4,
+        "subCards": [
+            "Projectile_RDL_MC3_Front.jpg"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_LGP80_Front.jpg",
+        "points": 33,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_GLP15_Front.jpg",
+        "points": 30,
+        "category": "Back",
+        "faction": "RDL",
+        "subCards": [
+            "Projectile_RDL_GM35_Front.jpg"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_MUD1_Front.jpg",
+        "points": 33,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_CP3_Front.jpg",
+        "points": 36,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 1,
+        "subCards": [
+            "Projectile_RDL_B31_Front.jpg",
+            "Projectile_RDL_B32_Front.jpg",
+            "Projectile_RDL_B33_Front.jpg"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
+        "points": 30,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_TB600_Front.jpg",
+        "points": 48,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_ML92_Front.jpg",
+        "points": 20,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 2,
+        "subCards": [
+            "Projectile_RDL_MR9_Front.jpg"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_SH15_Front.jpg",
+        "points": 30,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 1
+    },
+    {
+        "fileName": "Part_RDL_Back_ECS2_Front.jpg",
+        "points": 33,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_HD2_Front.png",
+        "points": 24,
+        "category": "Back",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Back_ML94_Front.png",
+        "points": 48,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 4,
+        "subCards": [
+            "Projectile_RDL_MR10_Front.png"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_CP4_Front.png",
+        "points": 36,
+        "category": "Back",
+        "faction": "RDL",
+        "ammunition": 2,
+        "subCards": [
+            "Projectile_RDL_MD1_Front.png"
+        ]
+    },
+    {
+        "fileName": "Part_RDL_Back_AMS193_Front.png",
+        "points": 27,
+        "category": "Back",
+        "faction": "RDL",
+        "intercept": 3
+    },
+    {
+        "fileName": "Part_UN_Back_AMDS210_Front.png",
+        "points": 30,
+        "category": "Back",
+        "faction": "UN",
+        "ammunition": 1,
+        "subCards": [
+            "Projectile_UN_AMDS210_Front.png"
+        ]
+    },
+    {
+        "fileName": "Part_UN_Back_CSC60_Front.png",
+        "points": 27,
+        "category": "Back",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Back_DBP_Front.png",
+        "points": 39,
+        "category": "Back",
+        "faction": "UN",
+        "ammunition": 1,
+        "subCards": [
+            "Projectile_UN_DBP_Front.png"
+        ]
+    },
+    {
+        "fileName": "Part_UN_Back_EBSX40_Front.png",
+        "points": 39,
+        "category": "Back",
+        "faction": "UN",
+        "charge": true
+    },
+    {
+        "fileName": "Part_UN_Back_EC50_Front.png",
+        "points": 42,
+        "category": "Back",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Back_GSD-2A_Front.png",
+        "points": 21,
+        "category": "Back",
+        "faction": "UN",
+        "ammunition": 3,
+        "subCards": [
+            "Projectile_UN_SMG9_Front.png"
+        ]
+    },
+    {
+        "fileName": "Part_UN_Back_JP1_Front.png",
+        "points": 57,
+        "category": "Back",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Back_MSH2_Front.png",
+        "points": 24,
+        "category": "Back",
+        "faction": "UN",
+        "freehand": true
+    },
+    {
+        "fileName": "Part_UN_Back_OCSP_Front.png",
+        "points": 49,
+        "category": "Back",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Back_RKG70_Front.png",
+        "points": 21,
+        "category": "Back",
+        "faction": "UN",
+        "ammunition": 2
+    },
+    {
+        "fileName": "Part_UN_Back_EBSX40_TrialModel_Front.png",
+        "points": 39,
+        "category": "Back",
+        "faction": "UN",
+        "charge": true
+    },
+    {
+        "fileName": "Part_WD_Back_ACE001_Front.jpg",
+        "points": 60,
+        "category": "Back",
+        "faction": "Public",
+        "ammunition": 1,
+        "subCards": [
+            "Drone_WD_ACE001_Defense_Front.jpg"
+        ]
+    }
+]
