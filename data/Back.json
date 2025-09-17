@@ -163,7 +163,8 @@
         "faction": "UN",
         "ammunition": 3,
         "subCards": [
-            "Projectile_UN_SMG9_Front.png"
+            "Projectile_UN_SGM2_Front.png",
+			"Projectile_UN_SGM2_Unfolded_Front.png"
         ]
     },
     {

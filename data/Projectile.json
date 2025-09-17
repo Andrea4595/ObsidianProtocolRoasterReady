@@ -39,7 +39,8 @@
         "fileName": "Projectile_RDL_B32_Front.jpg",
         "points": 0,
         "category": "Projectile",
-        "faction": "RDL"
+        "faction": "RDL",
+		"frame": true
     },
     {
         "fileName": "Projectile_RDL_B33_Front.jpg",
