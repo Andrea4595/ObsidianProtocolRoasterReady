@@ -358,46 +358,18 @@ export const handleExportImage = async () => {
             exportContainer.appendChild(unitsContainer);
         }
 
-        const allCardsInRoster = [];
-        Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-        allCardsInRoster.push(...rosterState.drones);
-        rosterState.drones.forEach(drone => {
-            if (drone && drone.backCard) {
-                allCardsInRoster.push(drone.backCard);
-            }
-        });
+        // 2. Prepare Drone and Sub-card data
+        const otherSubCards = state.getAllSubCards(rosterState);
 
-        const allDronesToRender = [];
-        const processedDrones = new Set();
-        rosterState.drones.forEach(drone => {
-            if (drone) {
-                allDronesToRender.push(drone);
-                processedDrones.add(drone.fileName);
-            }
-        });
-        allCardsInRoster.forEach(card => {
-            if (card && card.subCards) {
-                card.subCards.forEach(subCardFileName => {
-                    const subCardData = state.allCards.byFileName.get(subCardFileName);
-                    if (subCardData && subCardData.category === 'Drone' && !processedDrones.has(subCardFileName)) {
-                        allDronesToRender.push(subCardData);
-                        processedDrones.add(subCardFileName);
-                    }
-                });
-            }
-        });
+        const allSubCards = state.getAllSubCards(rosterState, { includeDrones: true });
+        const subDrones = [...allSubCards]
+            .map(fileName => state.allCards.byFileName.get(fileName))
+            .filter(card => card && card.category === 'Drone');
+
+        const mainDrones = new Set(rosterState.drones.map(d => d.fileName));
+        const uniqueSubDrones = subDrones.filter(subDrone => !mainDrones.has(subDrone.fileName));
         
-        const otherSubCards = new Set();
-        allCardsInRoster.forEach(card => {
-            if (card && card.subCards) {
-                card.subCards.forEach(subCardFileName => {
-                    const subCardData = state.allCards.byFileName.get(subCardFileName);
-                    if (subCardData && subCardData.category !== 'Drone') {
-                        otherSubCards.add(subCardFileName);
-                    }
-                });
-            }
-        });
+        const allDronesToRender = [...rosterState.drones, ...uniqueSubDrones];
 
         if (allDronesToRender.length > 0) {
             const dronesTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });

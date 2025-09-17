@@ -77,26 +77,7 @@ const renderSubProjectiles = (rosterState) => {
     const subProjectilesContainer = document.createElement('div');
     subProjectilesContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
 
-    const allCardsInRoster = [];
-    Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-    allCardsInRoster.push(...rosterState.drones);
-    rosterState.drones.forEach(drone => {
-        if (drone && drone.backCard) {
-            allCardsInRoster.push(drone.backCard);
-        }
-    });
-
-    const projectileSubCards = new Set();
-    allCardsInRoster.forEach(card => {
-        if (card && card.subCards) {
-            card.subCards.forEach(subCardFileName => {
-                const subCardData = state.allCards.byFileName.get(subCardFileName);
-                if (subCardData && subCardData.category !== 'Drone') {
-                    projectileSubCards.add(subCardFileName);
-                }
-            });
-        }
-    });
+    const projectileSubCards = state.getAllSubCards(rosterState);
 
     projectileSubCards.forEach(fileName => {
         const cardData = state.allCards.byFileName.get(fileName);

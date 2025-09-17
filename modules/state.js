@@ -106,6 +106,32 @@ export const switchActiveRoster = (rosterName) => {
     saveAllRosters();
 };
 
+export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
+    const allCardsInRoster = [];
+    Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+    allCardsInRoster.push(...rosterState.drones);
+    rosterState.drones.forEach(drone => {
+        if (drone && drone.backCard) {
+            allCardsInRoster.push(drone.backCard);
+        }
+    });
+
+    const subCards = new Set();
+    allCardsInRoster.forEach(card => {
+        if (card && card.subCards) {
+            card.subCards.forEach(subCardFileName => {
+                const subCardData = allCards.byFileName.get(subCardFileName);
+                if (subCardData) {
+                    if (includeDrones || subCardData.category !== 'Drone') {
+                        subCards.add(subCardFileName);
+                    }
+                }
+            });
+        }
+    });
+    return subCards;
+};
+
 // --- Initialization ---
 
 async function loadImageData() {
