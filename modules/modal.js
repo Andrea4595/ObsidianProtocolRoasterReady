@@ -50,6 +50,12 @@ const createCardItem = (cardData, clickHandler) => {
     const img = document.createElement('img');
     img.src = `Cards/${cardData.category}/${cardData.fileName}`;
     cardItem.appendChild(img);
+
+    const points = document.createElement('div');
+    points.className = CSS_CLASSES.CARD_POINTS;
+    points.textContent = cardData.points || 0;
+    cardItem.appendChild(points);
+
     cardItem.addEventListener('click', () => clickHandler(cardData));
     return cardItem;
 };
