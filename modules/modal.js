@@ -1,6 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { renderRoster } from './ui.js';
+import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 
 let currentUnitId = null;
@@ -14,14 +15,16 @@ export const closeModal = () => {
 };
 
 const addCardToUnit = (cardData) => {
-    const roster = state.getActiveRoster();
-    if (isBackCard) {
-        const drone = roster.drones.find(d => d.rosterId === currentUnitId);
-        if (drone) drone.backCard = cardData;
-    } else {
-        roster.units[currentUnitId][currentCategory] = cardData;
-    }
-    renderRoster();
+    performActionAndPreserveScroll(() => {
+        const roster = state.getActiveRoster();
+        if (isBackCard) {
+            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
+            if (drone) drone.backCard = cardData;
+        } else {
+            roster.units[currentUnitId][currentCategory] = cardData;
+        }
+    });
+
     state.saveAllRosters();
     closeModal();
 };

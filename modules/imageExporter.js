@@ -361,6 +361,11 @@ export const handleExportImage = async () => {
         const allCardsInRoster = [];
         Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
         allCardsInRoster.push(...rosterState.drones);
+        rosterState.drones.forEach(drone => {
+            if (drone && drone.backCard) {
+                allCardsInRoster.push(drone.backCard);
+            }
+        });
 
         const allDronesToRender = [];
         const processedDrones = new Set();
