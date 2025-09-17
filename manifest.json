@@ -1,11 +1,11 @@
 {
-  "name": "유닛 조합기",
-  "short_name": "유닛 조합기",
+  "name": "로스터 빌더",
+  "short_name": "로스터 빌더",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#1c1e21",
-  "description": "유닛 파츠를 조합하여 구성을 만드는 애플리케이션입니다.",
+  "description": "옵시디언 프로토콜 게임의 로스터를 빌드할 수 있는 툴입니다.",
   "icons": [
     {
       "src": "icons/icon-192x192.png",
