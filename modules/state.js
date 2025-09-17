@@ -1,10 +1,10 @@
-import { categoryOrder } from './constants.js';
+import { Roster } from './Roster.js';
 import { renderRoster, updateRosterSelect } from './ui.js';
 import { factionSelect } from './dom.js';
 
-// State Variables
+// --- State Variables ---
 export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: new Map() };
-export let allRosters = {};
+export let allRosters = {}; // This will store Roster instances
 export let activeRosterName = '';
 export let nextUnitId = 0;
 export let nextDroneId = 0;
@@ -12,91 +12,7 @@ export let nextTacticalCardId = 0;
 export let isGameMode = false;
 export let gameRoster = {};
 
-const prepareRostersForSaving = (rosters) => {
-    const savableRosters = JSON.parse(JSON.stringify(rosters));
-    for (const rosterName in savableRosters) {
-        const roster = savableRosters[rosterName];
-        if (roster.units) {
-            for (const unitId in roster.units) {
-                const unit = roster.units[unitId];
-                for (const category in unit) {
-                    if (unit[category]) {
-                        unit[category] = unit[category].fileName;
-                    }
-                }
-            }
-        }
-        roster.drones = (roster.drones || []).map(drone => {
-            if (!drone) return null;
-            if (drone.backCard && drone.backCard.fileName) {
-                return {
-                    fileName: drone.fileName,
-                    backCardFileName: drone.backCard.fileName
-                };
-            } else {
-                return drone.fileName;
-            }
-        }).filter(Boolean);
-        roster.tacticalCards = (roster.tacticalCards || []).map(card => card ? card.fileName : null).filter(Boolean);
-    }
-    return savableRosters;
-};
-
-const reconstructRostersFromSave = (savedRosters, allCardsMap) => {
-    const reconstructedRosters = JSON.parse(JSON.stringify(savedRosters));
-    for (const rosterName in reconstructedRosters) {
-        const roster = reconstructedRosters[rosterName];
-        if (!roster.faction) roster.faction = 'RDL';
-
-        if (roster.units) {
-            for (const unitId in roster.units) {
-                const unit = roster.units[unitId];
-                for (const category in unit) {
-                    const savedItem = unit[category];
-                    let fileName = null;
-                    if (typeof savedItem === 'string') {
-                        fileName = savedItem;
-                    } else if (savedItem && typeof savedItem === 'object' && savedItem.fileName) {
-                        fileName = savedItem.fileName;
-                    }
-                    unit[category] = fileName && allCardsMap.has(fileName) ? { ...allCardsMap.get(fileName) } : null;
-                }
-            }
-        }
-
-        roster.drones = (roster.drones || []).map(item => {
-            let mainFileName = null;
-            let backCardFileName = null;
-
-            if (typeof item === 'string') {
-                mainFileName = item;
-            } else if (item && typeof item === 'object') {
-                mainFileName = item.fileName;
-                if (item.backCardFileName) {
-                    backCardFileName = item.backCardFileName;
-                } else if (item.backCard && item.backCard.fileName) {
-                    backCardFileName = item.backCard.fileName;
-                }
-            }
-
-            if (mainFileName && allCardsMap.has(mainFileName)) {
-                const reconstructedDrone = { ...allCardsMap.get(mainFileName) };
-                if (backCardFileName && allCardsMap.has(backCardFileName)) {
-                    reconstructedDrone.backCard = { ...allCardsMap.get(backCardFileName) };
-                }
-                return reconstructedDrone;
-            }
-            return null;
-        }).filter(Boolean);
-
-        roster.tacticalCards = (roster.tacticalCards || []).map(item => {
-            const fileName = typeof item === 'string' ? item : (item && item.fileName);
-            return fileName && allCardsMap.has(fileName) ? { ...allCardsMap.get(fileName) } : null;
-        }).filter(Boolean);
-    }
-    return reconstructedRosters;
-};
-
+// --- Getters and Setters ---
 export function getActiveRoster() {
     return allRosters[activeRosterName];
 }
@@ -125,18 +41,23 @@ export function setGameMode(mode) {
     isGameMode = mode;
 }
 
+// --- Roster Management ---
+
+export const createNewRoster = (name) => new Roster({ name });
+
 export const saveAllRosters = () => {
     if (isGameMode) return;
-    const savableRosters = prepareRostersForSaving(allRosters);
+    const savableRosters = {};
+    for (const rosterName in allRosters) {
+        savableRosters[rosterName] = allRosters[rosterName].serialize();
+    }
     localStorage.setItem('rosters', JSON.stringify(savableRosters));
     localStorage.setItem('activeRosterName', activeRosterName);
 };
 
-export const getNewRosterState = () => ({ units: {}, drones: [], tacticalCards: [], faction: 'RDL' });
-
 export const calculateNextIds = () => {
-    const rosterState = allRosters[activeRosterName];
-    if (!rosterState) {
+    const roster = getActiveRoster();
+    if (!roster) {
         nextUnitId = 0;
         nextDroneId = 0;
         nextTacticalCardId = 0;
@@ -144,8 +65,8 @@ export const calculateNextIds = () => {
     }
 
     let maxUnitId = -1;
-    if (rosterState.units && Object.keys(rosterState.units).length > 0) {
-        const unitIds = Object.keys(rosterState.units).map(id => parseInt(id)).filter(id => !isNaN(id));
+    if (roster.units && Object.keys(roster.units).length > 0) {
+        const unitIds = Object.keys(roster.units).map(id => parseInt(id)).filter(id => !isNaN(id));
         if(unitIds.length > 0) {
              maxUnitId = Math.max(...unitIds);
         }
@@ -153,8 +74,8 @@ export const calculateNextIds = () => {
     nextUnitId = maxUnitId + 1;
 
     let maxDroneId = -1;
-    if (rosterState.drones && rosterState.drones.length > 0) {
-        const droneIds = rosterState.drones
+    if (roster.drones && roster.drones.length > 0) {
+        const droneIds = roster.drones
             .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
             .filter(id => !isNaN(id));
         if (droneIds.length > 0) {
@@ -164,8 +85,8 @@ export const calculateNextIds = () => {
     nextDroneId = maxDroneId + 1;
 
     let maxTacticalCardId = -1;
-    if (rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
-        const tacticalCardIds = rosterState.tacticalCards
+    if (roster.tacticalCards && roster.tacticalCards.length > 0) {
+        const tacticalCardIds = roster.tacticalCards
             .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
             .filter(id => !isNaN(id));
         if (tacticalCardIds.length > 0) {
@@ -178,12 +99,14 @@ export const calculateNextIds = () => {
 export const switchActiveRoster = (rosterName) => {
     if (!allRosters[rosterName] || isGameMode) return;
     activeRosterName = rosterName;
-    factionSelect.value = allRosters[activeRosterName].faction || 'RDL';
+    factionSelect.value = getActiveRoster().faction || 'RDL';
     calculateNextIds();
     renderRoster();
     updateRosterSelect();
     saveAllRosters();
 };
+
+// --- Initialization ---
 
 async function loadImageData() {
     try {
@@ -239,16 +162,18 @@ export const initializeApp = async () => {
     const savedActiveName = localStorage.getItem('activeRosterName');
 
     if (savedRosters && Object.keys(savedRosters).length > 0) {
-        allRosters = reconstructRostersFromSave(savedRosters, allCards.byFileName);
+        for (const rosterName in savedRosters) {
+            allRosters[rosterName] = Roster.deserialize(rosterName, savedRosters[rosterName], allCards.byFileName);
+        }
         activeRosterName = savedActiveName && allRosters[savedActiveName] ? savedActiveName : Object.keys(allRosters)[0];
-        saveAllRosters(); // Immediately save to migrate data to the new format
     } else {
         activeRosterName = '기본 로스터';
-        allRosters[activeRosterName] = getNewRosterState();
+        allRosters[activeRosterName] = createNewRoster(activeRosterName);
     }
 
-    factionSelect.value = allRosters[activeRosterName].faction || 'RDL';
+    factionSelect.value = getActiveRoster().faction || 'RDL';
     calculateNextIds();
     updateRosterSelect();
     renderRoster();
+    saveAllRosters(); // Save to migrate any old data format
 };

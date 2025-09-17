@@ -29,7 +29,7 @@ export function setupEventListeners() {
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
         if (name && !state.allRosters[name]) {
-            state.allRosters[name] = state.getNewRosterState();
+            state.allRosters[name] = state.createNewRoster(name);
             state.switchActiveRoster(name);
         } else if (name && state.allRosters[name]) {
             alert('이미 존재하는 이름입니다.');
@@ -52,6 +52,7 @@ export function setupEventListeners() {
         const newName = prompt('새로운 이름을 입력하세요:', oldName);
         if (newName && newName !== oldName && !state.allRosters[newName]) {
             state.allRosters[newName] = state.allRosters[oldName];
+            state.allRosters[newName].name = newName; // Update the name property within the Roster object
             delete state.allRosters[oldName];
             state.setActiveRosterName(newName);
             updateRosterSelect();

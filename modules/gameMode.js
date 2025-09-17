@@ -3,23 +3,31 @@ import * as state from './state.js';
 import { renderRoster } from './ui.js';
 import { applyUnitRules, applyDroneRules } from './rules.js';
 
-export function advanceCardStatus(card, unit) {
+const cardStatusTransitions = {
+    drone: {
+        0: (hasFrame) => hasFrame ? 1 : 2,
+        1: () => 2,
+        2: () => 0,
+    },
+    unit: {
+        0: (hasFrame) => hasFrame ? 1 : 2,
+        1: () => 2,
+        2: () => 3,
+        3: () => 0,
+    }
+};
+
+export function advanceCardStatus(card) {
     if (!card) return;
-    let currentStatus = card.cardStatus || 0;
     
+    const currentStatus = card.cardStatus || 0;
+    const cardType = card.category === 'Drone' ? 'drone' : 'unit';
     const hasFrame = card.frame === true;
 
-    const isDrone = card.category === 'Drone';
-
-    if (isDrone) {
-        if (currentStatus === 0) { card.cardStatus = hasFrame ? 1 : 2; }
-        else if (currentStatus === 1) { card.cardStatus = 2; }
-        else if (currentStatus === 2) { card.cardStatus = 0; }
-    } else {
-        if (currentStatus === 0) { card.cardStatus = hasFrame ? 1 : 2; }
-        else if (currentStatus === 1) { card.cardStatus = 2; }
-        else if (currentStatus === 2) { card.cardStatus = 3; }
-        else if (currentStatus === 3) { card.cardStatus = 0; }
+    const nextStateFn = cardStatusTransitions[cardType][currentStatus];
+    
+    if (nextStateFn) {
+        card.cardStatus = nextStateFn(hasFrame);
     }
 }
 
