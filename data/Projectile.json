@@ -1,0 +1,141 @@
+[
+    {
+        "fileName": "Projectile_PL_AS3A_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Projectile_PL_AS3B_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Projectile_PL_FG33_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Projectile_PL_FGM25_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Projectile_PL_RMA_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
+        "fileName": "Projectile_RDL_B31_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_B32_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL",
+		"frame": true
+    },
+    {
+        "fileName": "Projectile_RDL_B33_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_GM35_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_GS2_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_MC3_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_MD1_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_MES_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_MR10_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_MR9_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_RDL_RA81_Front.jpg",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Projectile_UN_AMDS210_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_DBP_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_M7_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_M9_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_RKG70_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_SGM2_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Projectile_UN_SGM2_Unfolded_Front.png",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "UN"
+    }
+]

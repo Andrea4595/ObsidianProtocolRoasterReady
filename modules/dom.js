@@ -2,18 +2,16 @@ export const appTitle = document.getElementById('app-title');
 export const unitsContainer = document.getElementById('units-container');
 
 const dronesContainerElement = document.createElement('div');
-dronesContainerElement.style.display = 'flex';
-dronesContainerElement.style.flexWrap = 'wrap';
-dronesContainerElement.style.justifyContent = 'center';
-dronesContainerElement.style.gap = '20px';
-dronesContainerElement.style.alignItems = 'flex-start';
-dronesContainerElement.style.marginTop = '20px';
-dronesContainerElement.style.width = '90%';
-dronesContainerElement.style.marginLeft = 'auto';
-dronesContainerElement.style.marginRight = 'auto';
 dronesContainerElement.id = 'drones-container';
 unitsContainer.after(dronesContainerElement);
 export const dronesContainer = dronesContainerElement;
+
+const tacticalCardsContainerElement = document.createElement('div');
+tacticalCardsContainerElement.id = 'tactical-cards-container';
+dronesContainerElement.after(tacticalCardsContainerElement);
+export const tacticalCardsContainer = tacticalCardsContainerElement;
+
+
 
 export const totalPointsSpan = document.getElementById('total-points');
 export const rosterSelect = document.getElementById('roster-select');
@@ -24,6 +22,7 @@ export const gameModeBtn = document.getElementById('game-mode-btn');
 export const exitGameModeBtn = document.getElementById('exit-game-mode-btn');
 export const addUnitButton = document.getElementById('add-unit-button');
 export const addDroneButton = document.getElementById('add-drone-button');
+export const addTacticalCardButton = document.getElementById('add-tactical-card-button');
 export const modalOverlay = document.getElementById('modal-overlay');
 export const modalClose = document.getElementById('modal-close');
 export const modalTitle = document.getElementById('modal-title');

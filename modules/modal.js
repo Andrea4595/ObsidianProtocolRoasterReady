@@ -1,6 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { renderRoster } from './ui.js';
+import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 
 let currentUnitId = null;
@@ -14,14 +15,16 @@ export const closeModal = () => {
 };
 
 const addCardToUnit = (cardData) => {
-    const roster = state.getActiveRoster();
-    if (isBackCard) {
-        const drone = roster.drones.find(d => d.rosterId === currentUnitId);
-        if (drone) drone.backCard = cardData;
-    } else {
-        roster.units[currentUnitId][currentCategory] = cardData;
-    }
-    renderRoster();
+    performActionAndPreserveScroll(() => {
+        const roster = state.getActiveRoster();
+        if (isBackCard) {
+            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
+            if (drone) drone.backCard = cardData;
+        } else {
+            roster.units[currentUnitId][currentCategory] = cardData;
+        }
+    });
+
     state.saveAllRosters();
     closeModal();
 };
@@ -35,12 +38,27 @@ const addDroneToRoster = (cardData) => {
     closeModal();
 };
 
+const addTacticalCardToRoster = (cardData) => {
+    const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
+    state.setNextTacticalCardId(state.nextTacticalCardId + 1);
+    state.getActiveRoster().tacticalCards.push(newTacticalCard);
+    renderRoster();
+    state.saveAllRosters();
+    closeModal();
+};
+
 const createCardItem = (cardData, clickHandler) => {
     const cardItem = document.createElement('div');
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
     const img = document.createElement('img');
     img.src = `Cards/${cardData.category}/${cardData.fileName}`;
     cardItem.appendChild(img);
+
+    const points = document.createElement('div');
+    points.className = CSS_CLASSES.CARD_POINTS;
+    points.textContent = cardData.points || 0;
+    cardItem.appendChild(points);
+
     cardItem.addEventListener('click', () => clickHandler(cardData));
     return cardItem;
 };
@@ -48,7 +66,7 @@ const createCardItem = (cardData, clickHandler) => {
 const createDeselectOption = () => {
     const deselect = document.createElement('div');
     deselect.className = CSS_CLASSES.DESELECT_OPTION;
-    deselect.textContent = '선택 안함';
+    deselect.textContent = '선택 해제';
     deselect.addEventListener('click', () => addCardToUnit(null));
     return deselect;
 };
@@ -82,6 +100,23 @@ export const openDroneModal = () => {
     factionFilteredDrones.forEach(cardData => {
         if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addDroneToRoster));
+    });
+
+    dom.modalOverlay.style.display = 'flex';
+};
+
+export const openTacticalCardModal = () => {
+    dom.modalTitle.textContent = '전술 카드 선택';
+    dom.modalImageContainer.classList.remove(CSS_CLASSES.DRONE_VIEW);
+    dom.modalImageContainer.classList.add(CSS_CLASSES.TACTICAL_CARD_VIEW);
+
+    const faction = state.getActiveRoster().faction;
+    const tacticalCards = state.allCards.tactical || [];
+    const factionFilteredTacticalCards = tacticalCards.filter(c => c.faction === faction || c.faction === 'Public');
+
+    factionFilteredTacticalCards.forEach(cardData => {
+        if (cardData.visible === false) return;
+        dom.modalImageContainer.appendChild(createCardItem(cardData, addTacticalCardToRoster)); // Tactical cards are added using addTacticalCardToRoster
     });
 
     dom.modalOverlay.style.display = 'flex';

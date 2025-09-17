@@ -3,6 +3,9 @@ import * as state from './state.js';
 import { openModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
 import { categoryOrder, CSS_CLASSES } from './constants.js';
+import { applyUnitRules, applyDroneRules } from './rules.js';
+
+// --- Main Render Functions ---
 
 export const updateTotalPoints = () => {
     const rosterState = state.getActiveRoster();
@@ -19,6 +22,9 @@ export const updateTotalPoints = () => {
             if (drone.backCard) total += drone.backCard.points || 0;
         }
     });
+    rosterState.tacticalCards.forEach(card => {
+        if (card) total += card.points || 0;
+    });
     dom.totalPointsSpan.textContent = total;
     return total;
 };
@@ -26,10 +32,16 @@ export const updateTotalPoints = () => {
 export const renderRoster = () => {
     dom.unitsContainer.innerHTML = '';
     dom.dronesContainer.innerHTML = '';
+    dom.tacticalCardsContainer.innerHTML = '';
     document.querySelectorAll(`.${CSS_CLASSES.SUB_CARDS_CONTAINER}`).forEach(el => el.remove());
 
     const rosterState = state.isGameMode ? state.gameRoster : state.getActiveRoster();
     if (!rosterState) return;
+
+    if (!state.isGameMode) {
+        Object.values(rosterState.units).forEach(unit => applyUnitRules(unit));
+        rosterState.drones.forEach(drone => applyDroneRules(drone));
+    }
 
     Object.keys(rosterState.units).forEach(unitId => {
         const unitElement = createUnitElement(parseInt(unitId), rosterState.units[unitId]);
@@ -38,45 +50,44 @@ export const renderRoster = () => {
 
     rosterState.drones.forEach((droneData) => {
         if (droneData.rosterId == null) {
-            droneData.rosterId = `d_${state.nextDroneId++}`;
+            droneData.rosterId = `d_${state.nextDroneId}`;
+            state.setNextDroneId(state.nextDroneId + 1);
         }
         addDroneElement(droneData);
     });
 
-    if (state.isGameMode) {
-        const subProjectilesContainer = document.createElement('div');
-        subProjectilesContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
-
-        const allCardsInRoster = [];
-        Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-        allCardsInRoster.push(...rosterState.drones);
-
-        const projectileSubCards = new Set();
-        allCardsInRoster.forEach(card => {
-            if (card && card.subCards) {
-                card.subCards.forEach(subCardFileName => {
-                    const subCardData = state.allCards.byFileName.get(subCardFileName);
-                    if (subCardData && subCardData.category !== 'Drone') {
-                        projectileSubCards.add(subCardFileName);
-                    }
-                });
-            }
-        });
-
-        projectileSubCards.forEach(fileName => {
-            const cardData = state.allCards.byFileName.get(fileName);
-            if (cardData) {
-                subProjectilesContainer.appendChild(createCardElement(cardData, false));
-            }
-        });
-
-        if (subProjectilesContainer.hasChildNodes()) {
-            dom.dronesContainer.after(subProjectilesContainer);
+    rosterState.tacticalCards.forEach((cardData) => {
+        if (cardData.rosterId == null) {
+            cardData.rosterId = `t_${state.nextTacticalCardId}`;
+            state.setNextTacticalCardId(state.nextTacticalCardId + 1);
         }
+        addTacticalCardElement(cardData);
+    });
+
+    if (state.isGameMode) {
+        renderSubProjectiles(rosterState);
     }
 
     if (!state.isGameMode) {
         updateTotalPoints();
+    }
+};
+
+const renderSubProjectiles = (rosterState) => {
+    const subProjectilesContainer = document.createElement('div');
+    subProjectilesContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
+
+    const projectileSubCards = state.getAllSubCards(rosterState);
+
+    projectileSubCards.forEach(fileName => {
+        const cardData = state.allCards.byFileName.get(fileName);
+        if (cardData) {
+            subProjectilesContainer.appendChild(createCardElement(cardData, false));
+        }
+    });
+
+    if (subProjectilesContainer.hasChildNodes()) {
+        dom.tacticalCardsContainer.after(subProjectilesContainer);
     }
 };
 
@@ -95,6 +106,8 @@ export const updateRosterSelect = () => {
     newRosterOption.textContent = '< 새 로스터 추가 >';
     dom.rosterSelect.appendChild(newRosterOption);
 };
+
+// --- UI Element Creation Helpers ---
 
 const createTokenArea = (cardData) => {
     const tokenArea = document.createElement('div');
@@ -149,19 +162,17 @@ const createActionButtons = (cardData, unitData) => {
 
     if (cardData.drop) {
         const dropButton = document.createElement('button');
-        dropButton.className = CSS_CLASSES.ACTION_BUTTON + ' ' + CSS_CLASSES.DROP_BUTTON;
+        dropButton.className = `${CSS_CLASSES.ACTION_BUTTON} ${CSS_CLASSES.DROP_BUTTON}`;
         dropButton.classList.toggle(CSS_CLASSES.DROPPED, cardData.isDropped === true);
         dropButton.textContent = cardData.isDropped ? '버리기 취소' : '버리기';
         dropButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            performActionAndPreserveScroll(() => {
-                cardData.isDropped = !cardData.isDropped;
-            }, e.target);
+            performActionAndPreserveScroll(() => { cardData.isDropped = !cardData.isDropped; }, e.target);
         });
         actionButtonWrapper.appendChild(dropButton);
     } else if (cardData.changes && cardData.changes.length > 0) {
         const changeButton = document.createElement('button');
-        changeButton.className = CSS_CLASSES.ACTION_BUTTON + ' ' + CSS_CLASSES.CHANGE_BUTTON;
+        changeButton.className = `${CSS_CLASSES.ACTION_BUTTON} ${CSS_CLASSES.CHANGE_BUTTON}`;
         changeButton.textContent = '변경';
         changeButton.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -169,8 +180,7 @@ const createActionButtons = (cardData, unitData) => {
                 const currentCard = unitData ? unitData[cardData.category] : cardData;
                 const cycle = [currentCard.fileName, ...(currentCard.changes || [])];
                 const currentIndex = cycle.indexOf(currentCard.fileName);
-                const nextIndex = (currentIndex + 1) % cycle.length;
-                const nextCardFileName = cycle[nextIndex];
+                const nextCardFileName = cycle[(currentIndex + 1) % cycle.length];
                 const newCardData = state.allCards.byFileName.get(nextCardFileName);
 
                 if (!newCardData) return;
@@ -184,9 +194,7 @@ const createActionButtons = (cardData, unitData) => {
                     isBlackbox: currentCard.isBlackbox
                 };
 
-                for (const key in currentCard) {
-                    delete currentCard[key];
-                }
+                for (const key in currentCard) { delete currentCard[key]; }
                 Object.assign(currentCard, newCardData, propsToPreserve);
             }, e.target);
         });
@@ -199,33 +207,22 @@ const createResourceTracker = (cardData, resourceType) => {
     const maxCount = cardData[resourceType];
     const container = document.createElement('div');
     container.className = CSS_CLASSES.RESOURCE_CONTAINER;
-    container.style.display = 'flex';
-    container.style.flexWrap = 'wrap';
-    container.style.gap = '4px';
-    container.style.justifyContent = 'center';
-    container.style.maxWidth = '180px';
-    container.style.marginTop = '5px';
+    Object.assign(container.style, { display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center', maxWidth: '180px', marginTop: '5px' });
 
     const currentProp = `current${resourceType.charAt(0).toUpperCase() + resourceType.slice(1)}`;
-    const iconFileName = resourceType;
 
     for (let i = 1; i <= maxCount; i++) {
         const icon = document.createElement('img');
         icon.className = CSS_CLASSES.RESOURCE_ICON;
-        icon.style.width = '24px';
-        icon.style.height = '24px';
-        icon.style.cursor = 'pointer';
-        icon.src = i <= cardData[currentProp] ? `icons/${iconFileName}_on.png` : `icons/${iconFileName}_off.png`;
+        Object.assign(icon.style, { width: '24px', height: '24px', cursor: 'pointer' });
+        icon.src = i <= cardData[currentProp] ? `icons/${resourceType}_on.png` : `icons/${resourceType}_off.png`;
         icon.dataset.index = i;
 
         icon.addEventListener('click', (e) => {
             e.stopPropagation();
-            const clickedIndex = i;
-            cardData[currentProp] = (cardData[currentProp] === clickedIndex) ? clickedIndex - 1 : clickedIndex;
-            const allIcons = container.querySelectorAll(`.${CSS_CLASSES.RESOURCE_ICON}`);
-            allIcons.forEach(ic => {
-                const iconIndex = parseInt(ic.dataset.index);
-                ic.src = iconIndex <= cardData[currentProp] ? `icons/${iconFileName}_on.png` : `icons/${iconFileName}_off.png`;
+            cardData[currentProp] = (cardData[currentProp] === i) ? i - 1 : i;
+            container.querySelectorAll(`.${CSS_CLASSES.RESOURCE_ICON}`).forEach(ic => {
+                ic.src = ic.dataset.index <= cardData[currentProp] ? `icons/${resourceType}_on.png` : `icons/${resourceType}_off.png`;
             });
         });
         container.appendChild(icon);
@@ -233,127 +230,196 @@ const createResourceTracker = (cardData, resourceType) => {
     return container;
 };
 
-const createCardElement = (cardData, isInteractive = true) => {
+// --- Card Element Creators ---
+
+const createCardBase = (cardData) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+
+    const card = document.createElement('div');
+    card.className = CSS_CLASSES.DISPLAY_CARD;
+    card.style.position = 'relative';
+
+    if (cardData.category === 'Drone' || cardData.category === 'Projectile') {
+        card.classList.add(CSS_CLASSES.DRONE_DISPLAY_CARD, 'drone-card');
+    } else if (cardData.category === 'Tactical') {
+        card.classList.add(CSS_CLASSES.TACTICAL_DISPLAY_CARD);
+    }
+    
+    wrapper.appendChild(card);
+    return { wrapper, card };
+};
+
+const createBuilderModeCard = (card, cardData) => {
+    const img = document.createElement('img');
+    img.src = `Cards/${cardData.category}/${cardData.fileName}`;
+    card.appendChild(img);
+
+    const points = document.createElement('div');
+    points.className = CSS_CLASSES.CARD_POINTS;
+    points.textContent = cardData.points || 0;
+    card.appendChild(points);
+};
+
+const createGameModeCard = (card, cardData, isInteractive) => {
+    const isDestroyed = isInteractive && cardData.cardStatus === 2;
+    const img = document.createElement('img');
+    img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
+    if (isDestroyed) {
+        img.style.filter = 'brightness(50%)';
+    }
+    card.appendChild(img);
+
+    const isHiddenTacticalCard = cardData.category === 'Tactical' && cardData.hidden === true;
+    const isRevealedHiddenTactical = isHiddenTacticalCard && cardData.isRevealedInGameMode === true;
+
+    if (isHiddenTacticalCard && !isRevealedHiddenTactical) {
+        card.appendChild(createHiddenCardOverlay(cardData));
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            performActionAndPreserveScroll(() => { cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode; }, e.target);
+        });
+    } else {
+        if (isInteractive && !isRevealedHiddenTactical) {
+            appendStatusToken(card, cardData);
+        }
+
+        if (isRevealedHiddenTactical) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                performActionAndPreserveScroll(() => { cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode; }, e.target);
+            });
+        } else if (isInteractive) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
+        }
+    }
+};
+
+const createHiddenCardOverlay = (cardData) => {
+    const overlay = document.createElement('div');
+    overlay.className = CSS_CLASSES.HIDDEN_CARD_OVERLAY;
+    overlay.style.backgroundColor = 'rgb(80, 80, 80)';
+
+    if (cardData.hiddenTitle) {
+        const hiddenTitleImg = document.createElement('img');
+        hiddenTitleImg.className = CSS_CLASSES.HIDDEN_TITLE_IMAGE;
+        hiddenTitleImg.src = `icons/${cardData.hiddenTitle}`;
+        overlay.appendChild(hiddenTitleImg);
+    }
+
+    const unknownIcon = document.createElement('img');
+    unknownIcon.className = CSS_CLASSES.UNKNOWN_ICON_IMAGE;
+    unknownIcon.src = 'icons/unknown.png';
+    overlay.appendChild(unknownIcon);
+
+    return overlay;
+};
+
+const appendStatusToken = (card, cardData) => {
+    let tokenSrc = null;
+    const isDrone = cardData.category === 'Drone';
+    if (cardData.cardStatus === 1) tokenSrc = isDrone ? 'icons/warning_drone.png' : 'icons/warning.png';
+    if (cardData.cardStatus === 2) tokenSrc = isDrone ? 'icons/destroyed_drone.png' : 'icons/destroyed.png';
+    if (cardData.cardStatus === 3 && !isDrone) tokenSrc = 'icons/repaired.png';
+
+    if (tokenSrc) {
+        const tokenImg = document.createElement('img');
+        tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
+        tokenImg.src = tokenSrc;
+        card.appendChild(tokenImg);
+    }
+};
+
+const createFreightBackCardSlot = (cardData) => {
+    const backCardWrapper = document.createElement('div');
+    backCardWrapper.className = CSS_CLASSES.CARD_WRAPPER;
+
+    const backSlot = document.createElement('div');
+    backSlot.className = CSS_CLASSES.CARD_SLOT;
+
+    const backCardData = cardData.backCard;
+    if (backCardData) {
+        if (state.isGameMode) {
+            const isDestroyed = backCardData.cardStatus === 2;
+            const img = document.createElement('img');
+            img.src = `Cards/${backCardData.category}/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
+            if (isDestroyed) img.style.filter = 'brightness(50%)';
+            backSlot.appendChild(img);
+            appendStatusToken(backSlot, backCardData);
+        } else {
+            const img = document.createElement('img');
+            img.src = `Cards/${backCardData.category}/${backCardData.fileName}`;
+            Object.assign(img.style, { width: '100%', height: '100%', objectFit: 'cover' });
+            backSlot.appendChild(img);
+
+            const points = document.createElement('div');
+            points.className = CSS_CLASSES.CARD_POINTS;
+            points.textContent = backCardData.points || 0;
+            backSlot.appendChild(points);
+        }
+    } else {
+        const label = document.createElement('span');
+        label.className = CSS_CLASSES.SLOT_LABEL;
+        label.textContent = 'Back';
+        backSlot.appendChild(label);
+    }
+    backCardWrapper.appendChild(backSlot);
+
+    if (state.isGameMode) {
+        if (backCardData) {
+            backCardWrapper.appendChild(createTokenArea(backCardData));
+            backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
+        } else {
+            backCardWrapper.insertBefore(createActionButtons(null), backSlot);
+        }
+    } else {
+        backSlot.style.cursor = 'pointer';
+        backSlot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
+    }
+    return backCardWrapper;
+};
+
+export const createCardElement = (cardData, isInteractive = true) => {
     const mainContainer = document.createElement('div');
     mainContainer.style.display = 'flex';
     mainContainer.style.gap = '0px';
     mainContainer.style.alignItems = 'flex-start';
 
-    const wrapper = document.createElement('div');
-    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
-
-    const card = document.createElement('div');
-    card.className = CSS_CLASSES.DRONE_CARD;
-    card.style.position = 'relative';
+    const { wrapper, card } = createCardBase(cardData);
 
     if (state.isGameMode) {
-        const isDestroyed = isInteractive && cardData.cardStatus === 2;
-        const img = document.createElement('img');
-        img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
-        if (isDestroyed) {
-            img.style.filter = 'brightness(50%)';
-        }
-        card.appendChild(img);
-
-        if (isInteractive) {
-            let tokenSrc = null;
-            const isDrone = cardData.category === 'Drone';
-            if (cardData.cardStatus === 1) tokenSrc = isDrone ? 'icons/warning_drone.png' : 'icons/warning.png';
-            if (cardData.cardStatus === 2) tokenSrc = isDrone ? 'icons/destroyed_drone.png' : 'icons/destroyed.png';
-            if (cardData.cardStatus === 3 && !isDrone) tokenSrc = 'icons/repaired.png';
-
-            if (tokenSrc) {
-                const tokenImg = document.createElement('img');
-                tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
-                tokenImg.src = tokenSrc;
-                card.appendChild(tokenImg);
-            }
-        }
+        createGameModeCard(card, cardData, isInteractive);
     } else {
-        const img = document.createElement('img');
-        img.src = `Cards/${cardData.category}/${cardData.fileName}`;
-        card.appendChild(img);
-        const points = document.createElement('div');
-        points.className = CSS_CLASSES.CARD_POINTS;
-        points.textContent = cardData.points || 0;
-        card.appendChild(points);
-
+        createBuilderModeCard(card, cardData);
+    }
+    
+    if (!state.isGameMode && (cardData.category === 'Drone' || cardData.category === 'Tactical')) {
         const deleteButton = document.createElement('button');
         deleteButton.className = CSS_CLASSES.DELETE_DRONE_BUTTON;
         deleteButton.textContent = '-';
-        deleteButton.addEventListener('click', () => {
-            state.allRosters[state.activeRosterName].drones = state.allRosters[state.activeRosterName].drones.filter(d => d.rosterId !== cardData.rosterId);
-            renderRoster();
-            state.saveAllRosters();
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            performActionAndPreserveScroll(() => {
+                if (cardData.category === 'Drone') {
+                    state.getActiveRoster().drones = state.getActiveRoster().drones.filter(d => d.rosterId !== cardData.rosterId);
+                } else if (cardData.category === 'Tactical') {
+                    state.getActiveRoster().tacticalCards = state.getActiveRoster().tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
+                }
+            }, e.target);
         });
-        card.appendChild(deleteButton);
+        wrapper.appendChild(deleteButton);
     }
-    wrapper.appendChild(card);
 
     if (state.isGameMode && isInteractive) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
-
-        wrapper.appendChild(createTokenArea(cardData));
         wrapper.insertBefore(createActionButtons(cardData), card);
     }
+    
     mainContainer.appendChild(wrapper);
 
-    const hasFreight = cardData.special && cardData.special.includes('freight_back');
-    if (hasFreight) {
-        const backCardData = cardData.backCard;
-        const backCardWrapper = document.createElement('div');
-        backCardWrapper.className = CSS_CLASSES.CARD_WRAPPER;
-
-        const backSlot = document.createElement('div');
-        backSlot.className = (state.isGameMode && backCardData) ? CSS_CLASSES.DRONE_CARD : CSS_CLASSES.CARD_SLOT;
-        backSlot.style.position = 'relative';
-
-        if (backCardData) {
-            const isDestroyed = state.isGameMode && backCardData.cardStatus === 2;
-            const img = document.createElement('img');
-            img.src = `Cards/${backCardData.category}/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
-            if (isDestroyed) img.style.filter = 'brightness(50%)';
-            backSlot.appendChild(img);
-
-            if (state.isGameMode) {
-                let tokenSrc = null;
-                if (backCardData.cardStatus === 1) tokenSrc = 'icons/warning.png';
-                if (backCardData.cardStatus === 2) tokenSrc = 'icons/destroyed.png';
-                if (backCardData.cardStatus === 3) tokenSrc = 'icons/repaired.png';
-
-                if (tokenSrc) {
-                    const tokenImg = document.createElement('img');
-                    tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
-                    tokenImg.src = tokenSrc;
-                    backSlot.appendChild(tokenImg);
-                }
-            } else {
-                const points = document.createElement('div');
-                points.className = CSS_CLASSES.CARD_POINTS;
-                points.textContent = backCardData.points || 0;
-                backSlot.appendChild(points);
-            }
-        } else {
-            const label = document.createElement('span');
-            label.className = CSS_CLASSES.SLOT_LABEL;
-            label.textContent = 'Back';
-            backSlot.appendChild(label);
-        }
-        backCardWrapper.appendChild(backSlot);
-
-        if (state.isGameMode && backCardData) {
-            backSlot.style.cursor = 'pointer';
-            backSlot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
-
-            backCardWrapper.appendChild(createTokenArea(backCardData));
-            backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
-
-        } else if (!state.isGameMode) {
-            backSlot.style.cursor = 'pointer';
-            backSlot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
-        }
-        mainContainer.appendChild(backCardWrapper);
+    if (cardData.hasFreightBack === true) {
+        mainContainer.appendChild(createFreightBackCardSlot(cardData));
     }
 
     return mainContainer;
@@ -380,16 +446,8 @@ const createUnitCardSlot = (category, unitData, unitId) => {
             points.textContent = cardData.points || 0;
             slot.appendChild(points);
         } else {
-            let tokenSrc = null;
-            if (cardData.cardStatus === 1) tokenSrc = 'icons/warning.png';
-            if (cardData.cardStatus === 2) tokenSrc = 'icons/destroyed.png';
-            if (cardData.cardStatus === 3) tokenSrc = 'icons/repaired.png';
-
-            if (tokenSrc && category !== 'Pilot') {
-                const tokenImg = document.createElement('img');
-                tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
-                tokenImg.src = tokenSrc;
-                slot.appendChild(tokenImg);
+            if (category !== 'Pilot') {
+                appendStatusToken(slot, cardData);
             }
         }
     } else {
@@ -404,20 +462,13 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (cardData) {
             if (category !== 'Pilot') {
                 slot.style.cursor = 'pointer';
-                slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
+                slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
             }
-
             wrapper.appendChild(createTokenArea(cardData));
             wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
-
         } else {
-            const placeholder = document.createElement('div');
-            placeholder.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
-            wrapper.insertBefore(placeholder, slot);
-
-            const tokenArea = document.createElement('div');
-            tokenArea.className = CSS_CLASSES.TOKEN_AREA;
-            wrapper.appendChild(tokenArea);
+            wrapper.insertBefore(createActionButtons(null, unitData), slot);
+            wrapper.appendChild(createTokenArea(null));
         }
     } else {
         slot.style.cursor = 'pointer';
@@ -466,4 +517,8 @@ const createUnitElement = (unitId, unitData) => {
 
 const addDroneElement = (droneData) => {
     dom.dronesContainer.appendChild(createCardElement(droneData));
+};
+
+const addTacticalCardElement = (cardData) => {
+    dom.tacticalCardsContainer.appendChild(createCardElement(cardData));
 };

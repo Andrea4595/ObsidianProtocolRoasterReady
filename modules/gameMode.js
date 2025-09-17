@@ -1,31 +1,33 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { renderRoster } from './ui.js';
+import { applyUnitRules, applyDroneRules } from './rules.js';
 
-export function advanceCardStatus(card, unit) {
-    if (!card) return;
-    let currentStatus = card.cardStatus || 0;
-    
-    let hasFrame = card.frame === true;
-    // Special rule for '앙세르' pilot
-    if (unit && card.category === 'Chassis') {
-        const pilot = unit.Pilot;
-        if (pilot && pilot.special && pilot.special.includes('chassis_have_frame')) {
-            hasFrame = true;
-        }
+const cardStatusTransitions = {
+    drone: {
+        0: (hasFrame) => hasFrame ? 1 : 2,
+        1: () => 2,
+        2: () => 0,
+    },
+    unit: {
+        0: (hasFrame) => hasFrame ? 1 : 2,
+        1: () => 2,
+        2: () => 3,
+        3: () => 0,
     }
+};
 
-    const isDrone = card.category === 'Drone';
+export function advanceCardStatus(card) {
+    if (!card) return;
+    
+    const currentStatus = card.cardStatus || 0;
+    const cardType = card.category === 'Drone' ? 'drone' : 'unit';
+    const hasFrame = card.frame === true;
 
-    if (isDrone) {
-        if (currentStatus === 0) { card.cardStatus = hasFrame ? 1 : 2; }
-        else if (currentStatus === 1) { card.cardStatus = 2; }
-        else if (currentStatus === 2) { card.cardStatus = 0; }
-    } else {
-        if (currentStatus === 0) { card.cardStatus = hasFrame ? 1 : 2; }
-        else if (currentStatus === 1) { card.cardStatus = 2; }
-        else if (currentStatus === 2) { card.cardStatus = 3; }
-        else if (currentStatus === 3) { card.cardStatus = 0; }
+    const nextStateFn = cardStatusTransitions[cardType][currentStatus];
+    
+    if (nextStateFn) {
+        card.cardStatus = nextStateFn(hasFrame);
     }
 }
 
@@ -60,53 +62,53 @@ export function performActionAndPreserveScroll(action, eventTarget) {
 const createGameRosterState = (roster) => {
     const gameRoster = JSON.parse(JSON.stringify(roster));
 
-    const allCardsInRoster = [];
-    Object.values(gameRoster.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-    allCardsInRoster.push(...gameRoster.drones);
+    // --- Handle Sub-Drones ---
+    const allUnitAndDroneCards = [];
+    Object.values(gameRoster.units).forEach(unit => allUnitAndDroneCards.push(...Object.values(unit)));
+    allUnitAndDroneCards.push(...gameRoster.drones);
 
     const processedSubDrones = new Set(gameRoster.drones.map(d => d.fileName));
-
-    allCardsInRoster.forEach(card => {
+    allUnitAndDroneCards.forEach(card => {
         if (card && card.subCards) {
             card.subCards.forEach(subCardFileName => {
                 const subCardData = state.allCards.byFileName.get(subCardFileName);
-                if (subCardData && subCardData.category === 'Drone') {
-                    if (!processedSubDrones.has(subCardFileName)) {
-                        const subDroneInstance = JSON.parse(JSON.stringify(subCardData));
-                        subDroneInstance.rosterId = `sub-drone-${subCardFileName}`;
-                        gameRoster.drones.push(subDroneInstance);
-                        processedSubDrones.add(subCardFileName);
-                    }
+                if (subCardData && subCardData.category === 'Drone' && !processedSubDrones.has(subCardFileName)) {
+                    const subDroneInstance = JSON.parse(JSON.stringify(subCardData));
+                    subDroneInstance.rosterId = `sub-drone-${subCardFileName}`;
+                    gameRoster.drones.push(subDroneInstance);
+                    processedSubDrones.add(subCardFileName);
                 }
             });
         }
     });
 
-    Object.values(gameRoster.units).forEach(unit => {
-        Object.values(unit).forEach(card => {
-            if (!card) return;
-            card.cardStatus = 0;
-            if (card.ammunition > 0) card.currentAmmunition = card.ammunition;
-            if (card.intercept > 0) card.currentIntercept = card.intercept;
-            if (card.charge) card.isCharged = false;
-            card.isBlackbox = false;
-        });
+    // Apply special rules before initializing for game mode
+    Object.values(gameRoster.units).forEach(unit => applyUnitRules(unit));
+    gameRoster.drones.forEach(drone => applyDroneRules(drone));
+
+    // --- Initialize all cards for game mode ---
+    const allCardsInGame = [];
+    Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
+    allCardsInGame.push(...gameRoster.drones);
+    if (gameRoster.tacticalCards) {
+        allCardsInGame.push(...gameRoster.tacticalCards);
+    }
+    // Add back cards from drones
+    gameRoster.drones.forEach(drone => {
+        if (drone.backCard) {
+            allCardsInGame.push(drone.backCard);
+        }
     });
 
-    gameRoster.drones.forEach(drone => {
-        drone.cardStatus = 0;
-        if (drone.ammunition > 0) drone.currentAmmunition = drone.ammunition;
-        if (drone.intercept > 0) drone.currentIntercept = drone.intercept;
-        if (drone.charge) drone.isCharged = false;
-        drone.isBlackbox = false;
-
-        if (drone.backCard) {
-            const backCard = drone.backCard;
-            backCard.cardStatus = 0;
-            if (backCard.ammunition > 0) backCard.currentAmmunition = backCard.ammunition;
-            if (backCard.intercept > 0) backCard.currentIntercept = backCard.intercept;
-            if (backCard.charge) backCard.isCharged = false;
-            backCard.isBlackbox = false;
+    allCardsInGame.forEach(card => {
+        if (!card) return;
+        card.cardStatus = 0;
+        if (card.ammunition > 0) card.currentAmmunition = card.ammunition;
+        if (card.intercept > 0) card.currentIntercept = card.intercept;
+        if (card.charge) card.isCharged = false;
+        card.isBlackbox = false;
+        if (card.hidden) {
+            card.isConcealed = true;
         }
     });
 

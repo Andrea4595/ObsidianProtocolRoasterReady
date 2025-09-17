@@ -1,0 +1,71 @@
+[
+    {
+        "fileName": "Part_RDL_Chassis_RL06_Front.jpg",
+        "points": 18,
+        "category": "Chassis",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Chassis_RL03D_Front.jpg",
+        "points": 42,
+        "category": "Chassis",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Chassis_RL08_Front.jpg",
+        "points": 30,
+        "category": "Chassis",
+        "faction": "RDL",
+        "frame": true
+    },
+    {
+        "fileName": "Part_RDL_Chassis_RL06M_Front.png",
+        "points": 18,
+        "category": "Chassis",
+        "faction": "RDL"
+    },
+    {
+        "fileName": "Part_RDL_Chassis_RL06MS_Front.png",
+        "points": 24,
+        "category": "Chassis",
+        "faction": "RDL",
+        "freehand": true
+    },
+    {
+        "fileName": "Part_RDL_Chassis_RL08MII_Front.png",
+        "points": 45,
+        "category": "Chassis",
+        "faction": "RDL",
+        "frame": true
+    },
+    {
+        "fileName": "Part_UN_Chassis_LM231_Front.png",
+        "points": 27,
+        "category": "Chassis",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Chassis_LM210S_Front.png",
+        "points": 39,
+        "category": "Chassis",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Chassis_LM213B_Front.png",
+        "points": 57,
+        "category": "Chassis",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+        "points": 39,
+        "category": "Chassis",
+        "faction": "UN"
+    },
+    {
+        "fileName": "Part_WD_Chassis_ACE001_Front.jpg",
+        "points": 24,
+        "category": "Chassis",
+        "faction": "Public"
+    }
+]

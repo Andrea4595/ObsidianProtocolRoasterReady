@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal, openModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect } from './ui.js';
@@ -17,6 +17,10 @@ export function setupEventListeners() {
 
     dom.addDroneButton.addEventListener('click', openDroneModal);
 
+    dom.addTacticalCardButton.addEventListener('click', openTacticalCardModal);
+
+    
+
     dom.modalClose.addEventListener('click', closeModal);
     dom.modalOverlay.addEventListener('click', (event) => {
         if (event.target === dom.modalOverlay) closeModal();
@@ -25,7 +29,7 @@ export function setupEventListeners() {
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
         if (name && !state.allRosters[name]) {
-            state.allRosters[name] = state.getNewRosterState();
+            state.allRosters[name] = state.createNewRoster(name);
             state.switchActiveRoster(name);
         } else if (name && state.allRosters[name]) {
             alert('이미 존재하는 이름입니다.');
@@ -48,6 +52,7 @@ export function setupEventListeners() {
         const newName = prompt('새로운 이름을 입력하세요:', oldName);
         if (newName && newName !== oldName && !state.allRosters[newName]) {
             state.allRosters[newName] = state.allRosters[oldName];
+            state.allRosters[newName].name = newName; // Update the name property within the Roster object
             delete state.allRosters[oldName];
             state.setActiveRosterName(newName);
             updateRosterSelect();
