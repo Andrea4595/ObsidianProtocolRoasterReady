@@ -404,17 +404,34 @@ export const handleExportImage = async () => {
 
         const canvas = await html2canvas(exportContainer, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#f0f2f5' });
 
-        const dataUrl = canvas.toDataURL('image/png');
-        const newTab = window.open();
-        newTab.document.write(`
-            <html style="height: 100%; margin: 0; padding: 0;">
-                <head><title>${state.activeRosterName}</title></head>
-                <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
-                    <img src="${dataUrl}" style="max-width: 100%; max-height: 100%;" />
-                </body>
-            </html>
-        `);
-        newTab.document.close();
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], `${state.activeRosterName}.png`, { type: 'image/png' });
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: state.activeRosterName,
+                    text: 'Roster Image',
+                });
+            } catch (error) {
+                console.error('Sharing failed', error);
+                // Fallback to old method if sharing fails
+                const newTab = window.open();
+                newTab.document.write(`<img src="${dataUrl}" style="max-width: 100%;"/>`);
+            }
+        } else {
+            const newTab = window.open();
+            newTab.document.write(`
+                <html style="height: 100%; margin: 0; padding: 0;">
+                    <head><title>${state.activeRosterName}</title></head>
+                    <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
+                        <img src="${dataUrl}" style="max-width: 100%; max-height: 100%;" />
+                    </body>
+                </html>
+            `);
+            newTab.document.close();
+        }
 
         document.body.removeChild(exportContainer);
 
