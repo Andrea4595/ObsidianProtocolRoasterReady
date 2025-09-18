@@ -135,8 +135,26 @@ const generateUnitHtml = (unit, shouldHide) => {
         borderRadius: '12px',
         padding: '15px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        position: 'relative' // Added for absolute positioning of unit points
     });
+
+    const unitPoints = Object.values(unit).reduce((sum, card) => sum + (card ? card.points : 0), 0);
+
+    const unitPointsDisplay = createElementWithStyles('div', {
+        position: 'absolute',
+        top: '10px',
+        left: '10px',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        color: 'white',
+        padding: '2px 8px',
+        borderRadius: '6px',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        zIndex: '10'
+    });
+    unitPointsDisplay.textContent = `${unitPoints}`;
+    unitContainer.appendChild(unitPointsDisplay);
 
     for (const category of categoryOrder) {
         const card = unit[category];

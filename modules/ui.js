@@ -113,6 +113,10 @@ const createTokenArea = (cardData) => {
     const tokenArea = document.createElement('div');
     tokenArea.className = CSS_CLASSES.TOKEN_AREA;
 
+    if (!cardData) {
+        return tokenArea;
+    }
+
     if (cardData.ammunition > 0) {
         tokenArea.appendChild(createResourceTracker(cardData, 'ammunition'));
     }
@@ -150,6 +154,13 @@ const createTokenArea = (cardData) => {
 };
 
 const createActionButtons = (cardData, unitData) => {
+    // 비어있는 슬롯을 placeholder로 표시
+    if (!cardData) {
+        const placeholder = document.createElement('div');
+        placeholder.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
+        return placeholder;
+    }
+
     const hasButton = (cardData.drop || (cardData.changes && cardData.changes.length > 0));
     if (!hasButton) {
         const placeholder = document.createElement('div');
@@ -414,6 +425,7 @@ export const createCardElement = (cardData, isInteractive = true) => {
 
     if (state.isGameMode && isInteractive) {
         wrapper.insertBefore(createActionButtons(cardData), card);
+        wrapper.appendChild(createTokenArea(cardData));
     }
     
     mainContainer.appendChild(wrapper);
@@ -485,12 +497,15 @@ const createUnitElement = (unitId, unitData) => {
 
     const unitRow = document.createElement('div');
     unitRow.className = CSS_CLASSES.UNIT_ROW;
+    unitRow.style.position = 'relative'; // Set unitRow as the positioning context
     if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
     categoryOrder.forEach(category => {
         const cardSlot = createUnitCardSlot(category, unitData, unitId);
         unitRow.appendChild(cardSlot);
     });
+
+    unitEntry.appendChild(unitRow);
 
     if (!state.isGameMode) {
         const deleteButton = document.createElement('button');
@@ -502,9 +517,25 @@ const createUnitElement = (unitId, unitData) => {
             state.saveAllRosters();
         });
         unitRow.appendChild(deleteButton);
+
+        const unitPoints = Object.values(unitData).reduce((sum, card) => sum + (card ? card.points : 0), 0);
+        const pointsDisplay = document.createElement('div');
+        pointsDisplay.className = 'unit-points-overlay';
+        pointsDisplay.textContent = `${unitPoints}`;
+        Object.assign(pointsDisplay.style, {
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '2px 8px',
+            borderRadius: '6px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            zIndex: '10'
+        });
+        unitRow.appendChild(pointsDisplay); // Append to unitRow
     }
-    
-    unitEntry.appendChild(unitRow);
 
     const tokenAreas = Array.from(unitRow.querySelectorAll(`.${CSS_CLASSES.TOKEN_AREA}`));
     if (tokenAreas.some(area => area.hasChildNodes())) {
