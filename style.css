@@ -408,6 +408,19 @@ div.hidden-card-overlay > img.hidden-title-image {
     pointer-events: none; /* So it doesn't interfere with the click */
 }
 
+.unit-points-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10;
+}
+
 /* Scrollbar styles */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
