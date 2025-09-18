@@ -425,6 +425,7 @@ export const createCardElement = (cardData, isInteractive = true) => {
 
     if (state.isGameMode && isInteractive) {
         wrapper.insertBefore(createActionButtons(cardData), card);
+        wrapper.appendChild(createTokenArea(cardData));
     }
     
     mainContainer.appendChild(wrapper);
