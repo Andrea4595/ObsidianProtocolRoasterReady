@@ -56,7 +56,8 @@
         "fileName": "Part_RDL_Left_FCC12_Front.jpg",
         "points": 69,
         "category": "Left",
-        "faction": "RDL"
+        "faction": "RDL",
+        "freehand": true
     },
     {
         "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
