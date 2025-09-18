@@ -496,12 +496,15 @@ const createUnitElement = (unitId, unitData) => {
 
     const unitRow = document.createElement('div');
     unitRow.className = CSS_CLASSES.UNIT_ROW;
+    unitRow.style.position = 'relative'; // Set unitRow as the positioning context
     if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
     categoryOrder.forEach(category => {
         const cardSlot = createUnitCardSlot(category, unitData, unitId);
         unitRow.appendChild(cardSlot);
     });
+
+    unitEntry.appendChild(unitRow);
 
     if (!state.isGameMode) {
         const deleteButton = document.createElement('button');
@@ -513,9 +516,25 @@ const createUnitElement = (unitId, unitData) => {
             state.saveAllRosters();
         });
         unitRow.appendChild(deleteButton);
+
+        const unitPoints = Object.values(unitData).reduce((sum, card) => sum + (card ? card.points : 0), 0);
+        const pointsDisplay = document.createElement('div');
+        pointsDisplay.className = 'unit-points-overlay';
+        pointsDisplay.textContent = `${unitPoints}`;
+        Object.assign(pointsDisplay.style, {
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '2px 8px',
+            borderRadius: '6px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            zIndex: '10'
+        });
+        unitRow.appendChild(pointsDisplay); // Append to unitRow
     }
-    
-    unitEntry.appendChild(unitRow);
 
     const tokenAreas = Array.from(unitRow.querySelectorAll(`.${CSS_CLASSES.TOKEN_AREA}`));
     if (tokenAreas.some(area => area.hasChildNodes())) {
