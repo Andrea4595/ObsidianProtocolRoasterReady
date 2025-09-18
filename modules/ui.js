@@ -113,6 +113,10 @@ const createTokenArea = (cardData) => {
     const tokenArea = document.createElement('div');
     tokenArea.className = CSS_CLASSES.TOKEN_AREA;
 
+    if (!cardData) {
+        return tokenArea;
+    }
+
     if (cardData.ammunition > 0) {
         tokenArea.appendChild(createResourceTracker(cardData, 'ammunition'));
     }
@@ -150,6 +154,13 @@ const createTokenArea = (cardData) => {
 };
 
 const createActionButtons = (cardData, unitData) => {
+    // 비어있는 슬롯을 placeholder로 표시
+    if (!cardData) {
+        const placeholder = document.createElement('div');
+        placeholder.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
+        return placeholder;
+    }
+
     const hasButton = (cardData.drop || (cardData.changes && cardData.changes.length > 0));
     if (!hasButton) {
         const placeholder = document.createElement('div');
