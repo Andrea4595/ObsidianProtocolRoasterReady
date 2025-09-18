@@ -128,12 +128,6 @@ const generateCardHtml = (card, shouldHide, imgStyles) => {
 };
 
 const generateUnitHtml = (unit, shouldHide) => {
-    const unitWrapper = createElementWithStyles('div', {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-    });
-
     const unitContainer = createElementWithStyles('div', {
         display: 'flex',
         gap: '10px',
@@ -197,34 +191,7 @@ const generateUnitHtml = (unit, shouldHide) => {
         }
         unitContainer.appendChild(cardSlot);
     }
-
-    // Add unit points display
-    const unitPointsDisplay = createElementWithStyles('div', {
-        textAlign: 'center',
-        marginBottom: '10px',
-        padding: '8px 16px',
-        backgroundColor: '#e3f2fd',
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: '600',
-        color: '#1565c0',
-        border: '2px solid #bbdefb',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-        width: 'fit-content',
-        marginLeft: 'auto',
-        marginRight: 'auto'
-    });
-    
-    let unitPoints = 0;
-    Object.values(unit).forEach(card => {
-        if (card) unitPoints += card.points || 0;
-    });
-    unitPointsDisplay.textContent = `유닛 포인트: ${unitPoints}`;
-
-    unitWrapper.appendChild(unitPointsDisplay);
-    unitWrapper.appendChild(unitContainer);
-    
-    return unitWrapper;
+    return unitContainer;
 };
 
 const generateDroneEntryHtml = (drone, shouldHide) => {

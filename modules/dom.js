@@ -3,35 +3,13 @@ export const unitsContainer = document.getElementById('units-container');
 
 const dronesContainerElement = document.createElement('div');
 dronesContainerElement.id = 'drones-container';
-dronesContainerElement.className = 'section-container';
-
-const dronesTitle = document.createElement('h3');
-dronesTitle.textContent = '드론';
-dronesTitle.className = 'section-title';
-dronesContainerElement.appendChild(dronesTitle);
-
-const dronesCardsContainer = document.createElement('div');
-dronesCardsContainer.className = 'cards-container';
-dronesContainerElement.appendChild(dronesCardsContainer);
-
 unitsContainer.after(dronesContainerElement);
-export const dronesContainer = dronesCardsContainer;
+export const dronesContainer = dronesContainerElement;
 
 const tacticalCardsContainerElement = document.createElement('div');
 tacticalCardsContainerElement.id = 'tactical-cards-container';
-tacticalCardsContainerElement.className = 'section-container';
-
-const tacticalTitle = document.createElement('h3');
-tacticalTitle.textContent = '전술카드';
-tacticalTitle.className = 'section-title';
-tacticalCardsContainerElement.appendChild(tacticalTitle);
-
-const tacticalCardsCardsContainer = document.createElement('div');
-tacticalCardsCardsContainer.className = 'cards-container';
-tacticalCardsContainerElement.appendChild(tacticalCardsCardsContainer);
-
 dronesContainerElement.after(tacticalCardsContainerElement);
-export const tacticalCardsContainer = tacticalCardsCardsContainer;
+export const tacticalCardsContainer = tacticalCardsContainerElement;
 
 
 
