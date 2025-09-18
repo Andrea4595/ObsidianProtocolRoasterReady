@@ -382,14 +382,61 @@ div.hidden-card-overlay > img.hidden-title-image {
 }
 
 #roster-summary h2 {
-    margin: 0;
+    margin: 0 0 8px 0;
     font-size: 22px;
     color: #1c1e21;
+}
+
+.points-breakdown {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
 }
 
 #total-points {
     color: #1877f2;
     font-weight: bold;
+}
+
+.unit-points-display {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background-color: #e3f2fd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1565c0;
+    border: 2px solid #bbdefb;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #1c1e21;
+    text-align: center;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+}
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 /* Card-specific points display */

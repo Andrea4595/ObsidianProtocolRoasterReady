@@ -29,6 +29,20 @@ export const updateTotalPoints = () => {
     return total;
 };
 
+/**
+ * 개별 유닛 포인트 합계 계산
+ * @author SpookyJelly <zang9412@gmail.com>
+ * @param {Object} unitData 
+ * @returns {number} 개별 유닛 포인트 합계
+ */
+export const calculateUnitPoints = (unitData) => {
+    let unitTotal = 0;
+    Object.values(unitData).forEach(card => {
+        if (card) unitTotal += card.points || 0;
+    });
+    return unitTotal;
+};
+
 export const renderRoster = () => {
     dom.unitsContainer.innerHTML = '';
     dom.dronesContainer.innerHTML = '';
@@ -478,10 +492,26 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     return wrapper;
 };
 
+/**
+ * 개별 유닛 포인트 합계 디스플레이에 표시 
+ * @author SpookyJelly <zang9412@gmail.com>
+ * @param {number} unitId
+ * @param {Object} unitData 
+ * @returns {HTMLElement} 개별 유닛 포인트 합계 디스플레이 요소 
+ */
 const createUnitElement = (unitId, unitData) => {
     const unitEntry = document.createElement('div');
     unitEntry.className = CSS_CLASSES.UNIT_ENTRY;
     unitEntry.dataset.unitId = unitId;
+
+    // Add unit points display at the top
+    if (!state.isGameMode) {
+        const unitPointsDisplay = document.createElement('div');
+        unitPointsDisplay.className = 'unit-points-display';
+        const unitPoints = calculateUnitPoints(unitData);
+        unitPointsDisplay.textContent = `유닛 포인트: ${unitPoints}`;
+        unitEntry.appendChild(unitPointsDisplay);
+    }
 
     const unitRow = document.createElement('div');
     unitRow.className = CSS_CLASSES.UNIT_ROW;
