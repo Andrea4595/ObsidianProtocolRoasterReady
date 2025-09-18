@@ -15,18 +15,27 @@ const appShellUrls = [
 // Caches all card images robustly
 const cacheCardImages = async (cache) => {
   try {
-    const response = await fetch('image-list.json');
-    if (!response.ok) {
-      throw new Error('Failed to fetch image list for caching');
-    }
-    const imageFiles = await response.json();
-    // NOTE: Using relative paths to exactly match the requests from script.js
-    const cardImageUrls = imageFiles.map(fileName => `Cards/${fileName}`);
+    const categoryFiles = [
+      'Pilot.json', 'Drone.json', 'Back.json', 'Chassis.json',
+      'Left.json', 'Right.json', 'Torso.json', 'Projectile.json', 'Tactical.json'
+    ];
+
+    const fetchPromises = categoryFiles.map(file =>
+      fetch(`data/${file}?v=${new Date().getTime()}`).then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status} for file ${file}`);
+        return res.json();
+      })
+    );
+
+    const arraysOfCards = await Promise.all(fetchPromises);
+    const allCardData = arraysOfCards.flat();
+
+    const cardImageUrls = allCardData.map(card => `Cards/${card.category}/${card.fileName}`);
     console.log(`Service Worker: Attempting to cache ${cardImageUrls.length} card images.`);
-    
+
     let successfullyCached = 0;
     await Promise.all(
-      cardImageUrls.map(url => 
+      cardImageUrls.map(url =>
         cache.add(url).then(() => {
           successfullyCached++;
         }).catch(err => {
