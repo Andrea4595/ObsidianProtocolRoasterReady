@@ -128,7 +128,7 @@
         "points": 75,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_G6_Dropped_Front.png",
+        "drop": "Part_UN_Left_G6_Dropped.png",
         "ammunition": 3,
         "subCards": [
             "Projectile_UN_M7_Front.png"
