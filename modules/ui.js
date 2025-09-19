@@ -71,6 +71,15 @@ export const renderRoster = () => {
     if (!state.isGameMode) {
         updateTotalPoints();
     }
+
+    // 렌더링 후 오버레이 너비 조정
+    document.querySelectorAll('.unit-out-overlay').forEach(overlay => {
+        const unitRow = overlay.parentElement;
+        // 가로 스크롤이 발생할 때만 너비를 scrollWidth로 조정
+        if (unitRow && unitRow.scrollWidth > unitRow.clientWidth) {
+            overlay.style.width = `${unitRow.scrollWidth}px`;
+        }
+    });
 };
 
 const renderSubProjectiles = (rosterState) => {
@@ -498,6 +507,29 @@ const calculateUnitStats = (unitData) => {
     return stats;
 };
 
+const isUnitOut = (unitData) => {
+    if (!unitData) return false;
+
+    // 1. 토르소 파괴 여부 확인 (즉시 파괴 조건)
+    if (unitData.Torso && unitData.Torso.cardStatus === 2) {
+        return true;
+    }
+
+    // 2. 남은 부품 수 확인
+    let remainingPartsCount = 0;
+    const relevantPartCategories = ['Torso', 'Chassis', 'Left', 'Right', 'Back'];
+
+    for (const category of relevantPartCategories) {
+        const part = unitData[category];
+        // 부품이 존재하고, 파괴되지 않았으면 "남은 부품"으로 간주
+        if (part && part.cardStatus !== 2) {
+            remainingPartsCount++;
+        }
+    }
+
+    return remainingPartsCount <= 2;
+};
+
 const createUnitCardSlot = (category, unitData, unitId) => {
     const cardData = unitData ? unitData[category] : null;
     const wrapper = document.createElement('div');
@@ -604,6 +636,23 @@ const createUnitElement = (unitId, unitData) => {
     if (tokenAreas.some(area => area.hasChildNodes())) {
         const resourceAreaHeight = '58px';
         tokenAreas.forEach(area => area.style.minHeight = resourceAreaHeight);
+    }
+
+    // 유닛 파괴 조건 충족 시 오버레이 추가
+    if (isUnitOut(unitData)) {
+        const overlay = document.createElement('div');
+        overlay.className = 'unit-out-overlay'; // 식별용 클래스 추가
+        Object.assign(overlay.style, {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.15)',
+            zIndex: 20,
+            pointerEvents: 'none'
+        });
+        unitRow.appendChild(overlay);
     }
 
     return unitEntry;

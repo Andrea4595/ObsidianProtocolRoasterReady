@@ -95,7 +95,10 @@ const createGameRosterState = (roster) => {
     });
 
     // Apply special rules before initializing for game mode
-    Object.values(gameRoster.units).forEach(unit => applyUnitRules(unit));
+    Object.values(gameRoster.units).forEach(unit => {
+        applyUnitRules(unit);
+        unit.isOut = false; // 유닛 파괴 상태 초기화
+    });
     gameRoster.drones.forEach(drone => applyDroneRules(drone));
 
     // --- Initialize all cards for game mode ---
