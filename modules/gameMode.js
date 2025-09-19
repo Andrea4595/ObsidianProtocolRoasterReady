@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { renderRoster } from './ui.js';
-import { applyUnitRules, applyDroneRules } from './rules.js';
+import { applyUnitRules, applyDroneRules, unitHasAbility } from './rules.js';
 
 const cardStatusTransitions = {
     drone: {
@@ -12,22 +12,34 @@ const cardStatusTransitions = {
     unit: {
         0: (hasFrame) => hasFrame ? 1 : 2,
         1: () => 2,
-        2: () => 3,
+        2: (unit) => unitHasAbility(unit, 'can_repair') ? 3 : 0, // 수리 가능 여부 확인
         3: () => 0,
     }
 };
 
-export function advanceCardStatus(card) {
+export function advanceCardStatus(card, unit) {
     if (!card) return;
-    
+
     const currentStatus = card.cardStatus || 0;
     const cardType = card.category === 'Drone' ? 'drone' : 'unit';
     const hasFrame = card.frame === true;
 
     const nextStateFn = cardStatusTransitions[cardType][currentStatus];
-    
+
     if (nextStateFn) {
-        card.cardStatus = nextStateFn(hasFrame);
+        let arg;
+        if (cardType === 'unit') {
+            if (currentStatus === 0) {
+                arg = hasFrame;
+            } else if (currentStatus === 2) {
+                arg = unit;
+            }
+        } else if (cardType === 'drone') {
+            if (currentStatus === 0) {
+                arg = hasFrame;
+            }
+        }
+        card.cardStatus = nextStateFn(arg);
     }
 }
 

@@ -474,7 +474,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (cardData) {
             if (category !== 'Pilot') {
                 slot.style.cursor = 'pointer';
-                slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
+                slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
             }
             wrapper.appendChild(createTokenArea(cardData));
             wrapper.insertBefore(createActionButtons(cardData, unitData), slot);

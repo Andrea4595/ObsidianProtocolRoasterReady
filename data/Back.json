@@ -76,7 +76,10 @@
         "points": 30,
         "category": "Back",
         "faction": "RDL",
-        "ammunition": 1
+        "ammunition": 1,
+		"special": [
+			"can_repair"
+		]
     },
     {
         "fileName": "Part_RDL_Back_ECS2_Front.jpg",
