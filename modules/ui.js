@@ -123,6 +123,9 @@ const createTokenArea = (cardData) => {
     if (cardData.intercept > 0) {
         tokenArea.appendChild(createResourceTracker(cardData, 'intercept'));
     }
+    if (cardData.link > 0) {
+        tokenArea.appendChild(createResourceTracker(cardData, 'link'));
+    }
     if (cardData.charge) {
         const chargeTokenImg = document.createElement('img');
         chargeTokenImg.className = CSS_CLASSES.CHARGE_TOKEN_IMG;
@@ -437,6 +440,27 @@ export const createCardElement = (cardData, isInteractive = true) => {
     return mainContainer;
 };
 
+const createPartStatusIndicator = (unitData) => {
+    const indicatorContainer = document.createElement('div');
+    indicatorContainer.className = CSS_CLASSES.ACTION_BUTTON_WRAPPER; // 동일한 스타일 재사용
+
+    const partsOrder = ['Torso', 'Chassis', 'Left', 'Right', 'Back'];
+
+    partsOrder.forEach(partName => {
+        const partCard = unitData ? unitData[partName] : null;
+        const isOff = !partCard || partCard.cardStatus === 2;
+        
+        const icon = document.createElement('img');
+        icon.src = `icons/parts_${partName.toLowerCase()}_${isOff ? 'off' : 'on'}.png`;
+        icon.className = 'part-status-icon'; // 스타일링을 위한 클래스 추가
+        Object.assign(icon.style, { width: '24px', height: '24px' }); // 다른 토큰과 동일한 크기
+
+        indicatorContainer.appendChild(icon);
+    });
+
+    return indicatorContainer;
+};
+
 const createUnitCardSlot = (category, unitData, unitId) => {
     const cardData = unitData ? unitData[category] : null;
     const wrapper = document.createElement('div');
@@ -472,12 +496,14 @@ const createUnitCardSlot = (category, unitData, unitId) => {
 
     if (state.isGameMode) {
         if (cardData) {
+            wrapper.appendChild(createTokenArea(cardData));
             if (category !== 'Pilot') {
                 slot.style.cursor = 'pointer';
                 slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
+                wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
+            } else {
+                wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
             }
-            wrapper.appendChild(createTokenArea(cardData));
-            wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
         } else {
             wrapper.insertBefore(createActionButtons(null, unitData), slot);
             wrapper.appendChild(createTokenArea(null));

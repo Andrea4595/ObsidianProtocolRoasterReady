@@ -117,6 +117,7 @@ const createGameRosterState = (roster) => {
         card.cardStatus = 0;
         if (card.ammunition > 0) card.currentAmmunition = card.ammunition;
         if (card.intercept > 0) card.currentIntercept = card.intercept;
+        if (card.link > 0) card.currentLink = card.link;
         if (card.charge) card.isCharged = false;
         card.isBlackbox = false;
         if (card.hidden) {
