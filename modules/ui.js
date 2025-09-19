@@ -109,7 +109,7 @@ export const updateRosterSelect = () => {
 
 // --- UI Element Creation Helpers ---
 
-const createTokenArea = (cardData) => {
+const createTokenArea = (cardData, unitData) => {
     const tokenArea = document.createElement('div');
     tokenArea.className = CSS_CLASSES.TOKEN_AREA;
 
@@ -126,6 +126,25 @@ const createTokenArea = (cardData) => {
     if (cardData.link > 0) {
         tokenArea.appendChild(createResourceTracker(cardData, 'link'));
     }
+
+    // 파일럿 카드일 경우 유닛 스탯 표시
+    if (cardData.category === 'Pilot' && unitData) {
+        const stats = calculateUnitStats(unitData);
+        const statsContainer = document.createElement('div');
+        statsContainer.style.display = 'flex';
+        statsContainer.style.alignItems = 'center';
+        statsContainer.style.gap = '8px';
+        statsContainer.style.marginTop = '5px';
+
+        statsContainer.innerHTML = `
+            <img src="icons/stat_electronic.png" style="width: 24px; height: 24px;">
+            <span style="font-weight: bold; font-size: 16px;">${stats.electronic}</span>
+            <img src="icons/stat_mobility.png" style="width: 24px; height: 24px;">
+            <span style="font-weight: bold; font-size: 16px;">${stats.mobility}</span>
+        `;
+        tokenArea.appendChild(statsContainer);
+    }
+
     if (cardData.charge) {
         const chargeTokenImg = document.createElement('img');
         chargeTokenImg.className = CSS_CLASSES.CHARGE_TOKEN_IMG;
@@ -383,7 +402,7 @@ const createFreightBackCardSlot = (cardData) => {
 
     if (state.isGameMode) {
         if (backCardData) {
-            backCardWrapper.appendChild(createTokenArea(backCardData));
+            backCardWrapper.appendChild(createTokenArea(backCardData, null));
             backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
         } else {
             backCardWrapper.insertBefore(createActionButtons(null), backSlot);
@@ -428,7 +447,7 @@ export const createCardElement = (cardData, isInteractive = true) => {
 
     if (state.isGameMode && isInteractive) {
         wrapper.insertBefore(createActionButtons(cardData), card);
-        wrapper.appendChild(createTokenArea(cardData));
+        wrapper.appendChild(createTokenArea(cardData, null));
     }
     
     mainContainer.appendChild(wrapper);
@@ -459,6 +478,24 @@ const createPartStatusIndicator = (unitData) => {
     });
 
     return indicatorContainer;
+};
+
+const calculateUnitStats = (unitData) => {
+    const stats = { electronic: 0, mobility: 0 };
+    if (!unitData) return stats;
+
+    for (const part of Object.values(unitData)) {
+        if (part && part.cardStatus !== 2) { // 파괴되지 않은 부품만 계산
+            stats.electronic += part.electronic || 0;
+
+            if (part.isDropped && typeof part.dropMobility !== 'undefined') {
+                stats.mobility += part.dropMobility;
+            } else {
+                stats.mobility += part.mobility || 0;
+            }
+        }
+    }
+    return stats;
 };
 
 const createUnitCardSlot = (category, unitData, unitId) => {
@@ -496,7 +533,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
 
     if (state.isGameMode) {
         if (cardData) {
-            wrapper.appendChild(createTokenArea(cardData));
+            wrapper.appendChild(createTokenArea(cardData, unitData));
             if (category !== 'Pilot') {
                 slot.style.cursor = 'pointer';
                 slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
@@ -506,7 +543,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
             }
         } else {
             wrapper.insertBefore(createActionButtons(null, unitData), slot);
-            wrapper.appendChild(createTokenArea(null));
+            wrapper.appendChild(createTokenArea(null, unitData));
         }
     } else {
         slot.style.cursor = 'pointer';

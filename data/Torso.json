@@ -4,21 +4,24 @@
         "points": 15,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 2
     },
     {
         "fileName": "Part_RDL_Torso_RT07T_Front.jpg",
         "points": 62,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 3
     },
     {
         "fileName": "Part_RDL_Torso_RT08_Front.jpg",
         "points": 62,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 3
     },
     {
         "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
@@ -26,6 +29,7 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"electronic": 3,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
@@ -36,7 +40,8 @@
         "points": 60,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 3
     },
     {
         "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
@@ -44,6 +49,8 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"mobility": 1,
+		"electronic": 2,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
@@ -55,6 +62,7 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"electronic": 3,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
@@ -66,6 +74,8 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"mobility": 1,
+		"electronic": 3,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
@@ -76,14 +86,16 @@
         "points": 60,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 3
     },
     {
         "fileName": "Part_RDL_Torso_RT06E_Front.png",
         "points": 21,
         "category": "Torso",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"electronic": 3
     },
     {
         "fileName": "Part_RDL_Torso_RT09MII_Front.png",
@@ -91,6 +103,7 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"electronic": 3,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
@@ -102,6 +115,8 @@
         "category": "Torso",
         "faction": "UN",
         "ammunition": 1,
+		"mobility": 1,
+		"electronic": 3,
         "subCards": [
             "Projectile_UN_M9_Front.png"
         ],
@@ -112,7 +127,9 @@
         "points": 54,
         "category": "Torso",
         "faction": "UN",
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 4
     },
     {
         "fileName": "Part_UN_Torso_TM35B_Front.png",
@@ -120,7 +137,9 @@
         "category": "Torso",
         "faction": "UN",
         "charge": true,
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 4
     },
     {
         "fileName": "Part_UN_Torso_TM35N_Front.png",
@@ -128,28 +147,36 @@
         "category": "Torso",
         "faction": "UN",
         "charge": true,
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 4
     },
     {
         "fileName": "Part_UN_Torso_TM39_Front.png",
         "points": 63,
         "category": "Torso",
         "faction": "UN",
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 5
     },
     {
         "fileName": "Part_UN_Torso_TM641_Front.png",
         "points": 81,
         "category": "Torso",
         "faction": "UN",
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 5
     },
     {
         "fileName": "Part_UN_Torso_TM641O_Trial_Front.png",
         "points": 81,
         "category": "Torso",
         "faction": "UN",
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 5
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",
@@ -160,7 +187,9 @@
         "changes": [
             "Part_WD_Torso_ACE001_Front.jpg"
         ],
-        "frame": true
+        "frame": true,
+		"mobility": 4,
+		"electronic": 3
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Front.jpg",
@@ -170,6 +199,8 @@
         "changes": [
             "Part_WD_Torso_ACE001_Cruise_Front.jpg"
         ],
-        "frame": true
+        "frame": true,
+		"mobility": 1,
+		"electronic": 3
     }
 ]

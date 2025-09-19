@@ -4,7 +4,9 @@
         "points": 42,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC150_Dropped.jpg"
+        "drop": "Part_RDL_Right_AC150_Dropped.jpg",
+		"mobility": -2,
+		"dropMobility": 0
     },
     {
         "fileName": "Part_RDL_Right_R20_Front.jpg",
@@ -24,7 +26,9 @@
         "points": 48,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_ACX350_Dropped.jpg"
+        "drop": "Part_RDL_Right_ACX350_Dropped.jpg",
+		"mobility": -2,
+		"dropMobility": 0
     },
     {
         "fileName": "Part_RDL_Right_R35_Front.jpg",
@@ -112,7 +116,9 @@
         "points": 51,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC35_Dropped.png"
+        "drop": "Part_RDL_Right_AC35_Dropped.png",
+		"mobility": -2,
+		"dropMobility": 0
     },
     {
         "fileName": "Part_RDL_Right_AC32C_Front.png",
@@ -141,7 +147,8 @@
         "points": 69,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_G6_M5_Dropped.png"
+        "drop": "Part_UN_Right_G6_M5_Dropped.png",
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Right_IGX350_Front.png",
@@ -157,14 +164,17 @@
         "category": "Right",
         "faction": "UN",
         "charge": true,
-		"drop": "Part_UN_Right_IGX920_Dropped_Front.png"
+		"drop": "Part_UN_Right_IGX920_Dropped_Front.png",
+		"mobility": -2,
+		"dropMobility": 0
     },
     {
         "fileName": "Part_UN_Right_M3S_Front.png",
         "points": 42,
         "category": "Right",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Right_M4_Grenade_Front.png",
@@ -172,6 +182,7 @@
         "category": "Right",
         "faction": "UN",
         "ammunition": 3,
+		"mobility": 1,
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ],
@@ -182,14 +193,16 @@
         "points": 81,
         "category": "Right",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"mobility": 2
     },
     {
         "fileName": "Part_UN_Right_MDXS_R6_Front.png",
         "points": 45,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_MDXS_R6_Dropped.png"
+        "drop": "Part_UN_Right_MDXS_R6_Dropped.png",
+		"mobility": 2
     },
     {
         "fileName": "Part_UN_Right_R33_Front.png",
@@ -203,14 +216,16 @@
         "points": 54,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_R6_Dropped.png"
+        "drop": "Part_UN_Right_R6_Dropped.png",
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Right_R6SD_Front.png",
         "points": 60,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_R6SD_Dropped.png"
+        "drop": "Part_UN_Right_R6SD_Dropped.png",
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Right_R7_Front.png",
@@ -231,14 +246,16 @@
         "points": 45,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_RH21_Dropped_Front.png"
+        "drop": "Part_UN_Right_RH21_Dropped_Front.png",
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Right_RHX23_Front.png",
         "points": 57,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_RHX23_Dropped.png"
+        "drop": "Part_UN_Right_RHX23_Dropped.png",
+		"mobility": 2
     },
     {
         "fileName": "Part_UN_Right_S100R6SS_Front.png",

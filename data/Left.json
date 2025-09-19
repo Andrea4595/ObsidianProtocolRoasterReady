@@ -28,7 +28,9 @@
         "points": 50,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type77_Dropped.jpg"
+        "drop": "Part_RDL_Left_Type77_Dropped.jpg",
+		"mobility": -2,
+		"dropMobility": 0
     },
     {
         "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
@@ -130,6 +132,7 @@
         "faction": "UN",
         "drop": "Part_UN_Left_G6_Dropped.png",
         "ammunition": 3,
+		"mobility": 1,
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ]
@@ -153,7 +156,8 @@
         "points": 42,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Left_M4_Grenade_Front.png",
@@ -161,6 +165,7 @@
         "category": "Left",
         "faction": "UN",
         "ammunition": 3,
+		"mobility": 1,
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ],
@@ -171,14 +176,16 @@
         "points": 45,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_MDXS_R6_Dropped.png"
+        "drop": "Part_UN_Left_MDXS_R6_Dropped.png",
+		"mobility": 2
     },
     {
         "fileName": "Part_UN_Left_MX82_Front.png",
         "points": 48,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Left_MSH1_Front.png",
@@ -192,14 +199,16 @@
         "points": 45,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_RH21_M3_Dropped.png"
+        "drop": "Part_UN_Left_RH21_M3_Dropped.png",
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Left_RHX23_Front.png",
         "points": 57,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_RHX23_Dropped.png"
+        "drop": "Part_UN_Left_RHX23_Dropped.png",
+		"mobility": 2
     },
     {
         "fileName": "Part_UN_Left_RKG70_Front.png",
@@ -235,7 +244,8 @@
         "points": 57,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"mobility": 1
     },
     {
         "fileName": "Part_UN_Left_K9_Trial_Front.png",
