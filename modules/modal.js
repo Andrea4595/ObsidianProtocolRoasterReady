@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { renderRoster } from './ui.js';
+import { renderRoster, createBuilderModeImage } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 
@@ -50,8 +50,7 @@ const addTacticalCardToRoster = (cardData) => {
 const createCardItem = (cardData, clickHandler) => {
     const cardItem = document.createElement('div');
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
-    const img = document.createElement('img');
-    img.src = `Cards/${cardData.category}/${cardData.fileName}`;
+    const img = createBuilderModeImage(cardData);
     cardItem.appendChild(img);
 
     const points = document.createElement('div');

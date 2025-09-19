@@ -72,13 +72,21 @@ export const renderRoster = () => {
         updateTotalPoints();
     }
 
-    // 렌더링 후 오버레이 너비 조정
-    document.querySelectorAll('.unit-out-overlay').forEach(overlay => {
-        const unitRow = overlay.parentElement;
-        // 가로 스크롤이 발생할 때만 너비를 scrollWidth로 조정
-        if (unitRow && unitRow.scrollWidth > unitRow.clientWidth) {
-            overlay.style.width = `${unitRow.scrollWidth}px`;
-        }
+    adjustOverlayWidths();
+};
+
+export const adjustOverlayWidths = () => {
+    requestAnimationFrame(() => {
+        // 렌더링 후 오버레이 너비 조정
+        document.querySelectorAll('.unit-out-overlay').forEach(overlay => {
+            const unitRow = overlay.parentElement;
+            // 가로 스크롤이 발생할 때만 너비를 scrollWidth로 조정
+            if (unitRow && unitRow.scrollWidth > unitRow.clientWidth + 1) {
+                overlay.style.width = `${unitRow.scrollWidth}px`;
+            } else {
+                overlay.style.width = '100%'; // 스크롤 없을 땐 100%로 복원
+            }
+        });
     });
 };
 
@@ -293,8 +301,7 @@ const createCardBase = (cardData) => {
 };
 
 const createBuilderModeCard = (card, cardData) => {
-    const img = document.createElement('img');
-    img.src = `Cards/${cardData.category}/${cardData.fileName}`;
+    const img = createBuilderModeImage(cardData);
     card.appendChild(img);
 
     const points = document.createElement('div');
@@ -304,12 +311,7 @@ const createBuilderModeCard = (card, cardData) => {
 };
 
 const createGameModeCard = (card, cardData, isInteractive) => {
-    const isDestroyed = isInteractive && cardData.cardStatus === 2;
-    const img = document.createElement('img');
-    img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
-    if (isDestroyed) {
-        img.style.filter = 'brightness(50%)';
-    }
+    const img = createGameCardImage(cardData);
     card.appendChild(img);
 
     const isHiddenTacticalCard = cardData.category === 'Tactical' && cardData.hidden === true;
@@ -359,6 +361,22 @@ const createHiddenCardOverlay = (cardData) => {
     return overlay;
 };
 
+const createGameCardImage = (cardData) => {
+    const isDestroyed = cardData.cardStatus === 2;
+    const img = document.createElement('img');
+    img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
+    if (isDestroyed) {
+        img.style.filter = 'brightness(50%)';
+    }
+    return img;
+};
+
+export const createBuilderModeImage = (cardData) => {
+    const img = document.createElement('img');
+    img.src = `Cards/${cardData.category}/${cardData.fileName}`;
+    return img;
+};
+
 const appendStatusToken = (card, cardData) => {
     let tokenSrc = null;
     const isDrone = cardData.category === 'Drone';
@@ -384,10 +402,7 @@ const createFreightBackCardSlot = (cardData) => {
     const backCardData = cardData.backCard;
     if (backCardData) {
         if (state.isGameMode) {
-            const isDestroyed = backCardData.cardStatus === 2;
-            const img = document.createElement('img');
-            img.src = `Cards/${backCardData.category}/${backCardData.isDropped ? backCardData.drop : backCardData.fileName}`;
-            if (isDestroyed) img.style.filter = 'brightness(50%)';
+            const img = createGameCardImage(backCardData);
             backSlot.appendChild(img);
             appendStatusToken(backSlot, backCardData);
         } else {
@@ -539,10 +554,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     slot.className = CSS_CLASSES.CARD_SLOT;
     
     if (cardData) {
-        const isDestroyed = state.isGameMode && cardData.cardStatus === 2;
-        const img = document.createElement('img');
-        img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
-        if (isDestroyed) img.style.filter = 'brightness(50%)';
+        const img = state.isGameMode ? createGameCardImage(cardData) : createBuilderModeImage(cardData);
         slot.appendChild(img);
 
         if (!state.isGameMode) {

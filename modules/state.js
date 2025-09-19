@@ -109,6 +109,41 @@ export const switchActiveRoster = (rosterName) => {
     saveAllRosters();
 };
 
+export function addNewRoster(name) {
+    if (!name || allRosters[name]) {
+        return false; // 이름이 없거나 중복
+    }
+    allRosters[name] = createNewRoster(name);
+    switchActiveRoster(name);
+    return true;
+}
+
+export function renameActiveRoster(newName) {
+    if (!newName || allRosters[newName]) {
+        return false; // 새 이름이 없거나 중복
+    }
+    const oldName = activeRosterName;
+    allRosters[newName] = allRosters[oldName];
+    allRosters[newName].name = newName;
+    delete allRosters[oldName];
+    
+    setActiveRosterName(newName);
+    updateRosterSelect();
+    saveAllRosters();
+    return true;
+}
+
+export function deleteActiveRoster() {
+    if (Object.keys(allRosters).length <= 1) {
+        return false; // 마지막 로스터는 삭제 불가
+    }
+    const oldName = activeRosterName;
+    delete allRosters[oldName];
+    const newActiveName = Object.keys(allRosters)[0];
+    switchActiveRoster(newActiveName);
+    return true;
+}
+
 export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
     const allCardsInRoster = [];
     Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));

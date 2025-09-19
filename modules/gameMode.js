@@ -71,10 +71,7 @@ export function performActionAndPreserveScroll(action, eventTarget) {
     });
 }
 
-const createGameRosterState = (roster) => {
-    const gameRoster = JSON.parse(JSON.stringify(roster));
-
-    // --- Handle Sub-Drones ---
+const initializeSubDrones = (gameRoster) => {
     const allUnitAndDroneCards = [];
     Object.values(gameRoster.units).forEach(unit => allUnitAndDroneCards.push(...Object.values(unit)));
     allUnitAndDroneCards.push(...gameRoster.drones);
@@ -93,22 +90,15 @@ const createGameRosterState = (roster) => {
             });
         }
     });
+};
 
-    // Apply special rules before initializing for game mode
-    Object.values(gameRoster.units).forEach(unit => {
-        applyUnitRules(unit);
-        unit.isOut = false; // 유닛 파괴 상태 초기화
-    });
-    gameRoster.drones.forEach(drone => applyDroneRules(drone));
-
-    // --- Initialize all cards for game mode ---
+const initializeCardStates = (gameRoster) => {
     const allCardsInGame = [];
     Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
     allCardsInGame.push(...gameRoster.drones);
     if (gameRoster.tacticalCards) {
         allCardsInGame.push(...gameRoster.tacticalCards);
     }
-    // Add back cards from drones
     gameRoster.drones.forEach(drone => {
         if (drone.backCard) {
             allCardsInGame.push(drone.backCard);
@@ -127,6 +117,21 @@ const createGameRosterState = (roster) => {
             card.isConcealed = true;
         }
     });
+};
+
+const createGameRosterState = (roster) => {
+    const gameRoster = JSON.parse(JSON.stringify(roster));
+
+    initializeSubDrones(gameRoster);
+
+    // Apply special rules before initializing for game mode
+    Object.values(gameRoster.units).forEach(unit => {
+        applyUnitRules(unit);
+        unit.isOut = false; // 유닛 파괴 상태 초기화
+    });
+    gameRoster.drones.forEach(drone => applyDroneRules(drone));
+
+    initializeCardStates(gameRoster);
 
     return gameRoster;
 };
