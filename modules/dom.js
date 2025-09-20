@@ -1,14 +1,10 @@
 export const appTitle = document.getElementById('app-title');
 export const unitsContainer = document.getElementById('units-container');
 
-const dronesContainerElement = document.createElement('div');
-dronesContainerElement.id = 'drones-container';
-unitsContainer.after(dronesContainerElement);
+const dronesContainerElement = document.getElementById('drones-container');
 export const dronesContainer = dronesContainerElement;
 
-const tacticalCardsContainerElement = document.createElement('div');
-tacticalCardsContainerElement.id = 'tactical-cards-container';
-dronesContainerElement.after(tacticalCardsContainerElement);
+const tacticalCardsContainerElement = document.getElementById('tactical-cards-container');
 export const tacticalCardsContainer = tacticalCardsContainerElement;
 
 

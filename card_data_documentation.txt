@@ -37,6 +37,7 @@
 *   **역할:**
 	- chassis_have_frame : 유닛 카드 풀에 이 속성을 가진 카드가 있다면, Chassis 카드에게 "frame": true 값을 부여합니다.
 	- freight_back : 이 카드는 백팩 카드를 가집니다.
+	- can_repair : 이 키워드를 보유한 유닛은 카드에 수리 토큰을 올릴 수 있게 됩니다.
 *   **기본값:** []
 
 ### `intercept` (숫자, 선택 사항)

@@ -32,3 +32,14 @@ export function applyDroneRules(drone) {
         drone.hasFreightBack = true;
     }
 }
+
+/**
+ * 유닛이 특정 능력을 가진 카드를 포함하는지 확인합니다.
+ * @param {object} unit - 유닛 객체
+ * @param {string} ability - 확인할 능력 키워드 (예: 'can_repair')
+ * @returns {boolean} - 능력 보유 여부
+ */
+export function unitHasAbility(unit, ability) {
+    if (!unit || !ability) return false;
+    return Object.values(unit).some(card => card?.special?.includes(ability));
+}
