@@ -17,28 +17,6 @@ const cardStatusTransitions = {
     }
 };
 
-const getAllCardsInRoster = (roster) => {
-    const allCards = [];
-    if (!roster) return allCards;
-
-    if (roster.units) {
-        Object.values(roster.units).forEach(unit => allCards.push(...Object.values(unit)));
-    }
-    if (roster.drones) {
-        allCards.push(...roster.drones);
-        roster.drones.forEach(drone => {
-            if (drone && drone.backCard) {
-                allCards.push(drone.backCard);
-            }
-        });
-    }
-    if (roster.tacticalCards) {
-        allCards.push(...roster.tacticalCards);
-    }
-    
-    return allCards.filter(Boolean); // Filter out any null/undefined cards
-};
-
 export function advanceCardStatus(card, unit) {
     if (!card) return;
 
@@ -94,10 +72,12 @@ export function performActionAndPreserveScroll(action, eventTarget) {
 }
 
 const initializeSubDrones = (gameRoster) => {
-    const allCards = getAllCardsInRoster(gameRoster);
-    const processedSubDrones = new Set(gameRoster.drones.map(d => d.fileName));
+    const allUnitAndDroneCards = [];
+    Object.values(gameRoster.units).forEach(unit => allUnitAndDroneCards.push(...Object.values(unit)));
+    allUnitAndDroneCards.push(...gameRoster.drones);
 
-    allCards.forEach(card => {
+    const processedSubDrones = new Set(gameRoster.drones.map(d => d.fileName));
+    allUnitAndDroneCards.forEach(card => {
         if (card && card.subCards) {
             card.subCards.forEach(subCardFileName => {
                 const subCardData = state.allCards.byFileName.get(subCardFileName);
@@ -113,7 +93,17 @@ const initializeSubDrones = (gameRoster) => {
 };
 
 const initializeCardStates = (gameRoster) => {
-    const allCardsInGame = getAllCardsInRoster(gameRoster);
+    const allCardsInGame = [];
+    Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
+    allCardsInGame.push(...gameRoster.drones);
+    if (gameRoster.tacticalCards) {
+        allCardsInGame.push(...gameRoster.tacticalCards);
+    }
+    gameRoster.drones.forEach(drone => {
+        if (drone.backCard) {
+            allCardsInGame.push(drone.backCard);
+        }
+    });
 
     allCardsInGame.forEach(card => {
         if (!card) return;
