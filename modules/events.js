@@ -1,10 +1,19 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal, openTacticalCardModal, openModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
-import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
+import { renderRoster } from './ui.js';
 import { ROSTER_SELECT_ACTIONS } from './constants.js';
+
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -12,14 +21,12 @@ export function setupEventListeners() {
         state.getActiveRoster().units[state.nextUnitId] = {};
         state.calculateNextIds();
         renderRoster();
-        state.saveAllRosters();
+        state.saveCurrentState();
     });
 
     dom.addDroneButton.addEventListener('click', openDroneModal);
 
     dom.addTacticalCardButton.addEventListener('click', openTacticalCardModal);
-
-    
 
     dom.modalClose.addEventListener('click', closeModal);
     dom.modalOverlay.addEventListener('click', (event) => {
@@ -84,5 +91,5 @@ export function setupEventListeners() {
         }
     });
 
-    window.addEventListener('resize', adjustOverlayWidths);
+    window.addEventListener('resize', debounce(renderRoster, 150));
 }
