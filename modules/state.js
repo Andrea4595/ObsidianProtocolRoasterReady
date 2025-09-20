@@ -1,9 +1,6 @@
 import { Roster } from './Roster.js';
 import { renderRoster, updateRosterSelect } from './ui.js';
 import { factionSelect } from './dom.js';
-import { saveStateToStorage, loadStateFromStorage } from './storage.js';
-import { loadAllCardData } from './dataLoader.js';
-import { migrateRosters } from './migration.js';
 
 // --- State Variables ---
 export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: new Map() };
@@ -14,6 +11,9 @@ export let nextDroneId = 0;
 export let nextTacticalCardId = 0;
 export let isGameMode = false;
 export let gameRoster = {};
+
+// --- Save Versioning ---
+const CURRENT_SAVE_VERSION = 1;
 
 // --- Getters and Setters ---
 export function getActiveRoster() {
@@ -48,9 +48,14 @@ export function setGameMode(mode) {
 
 export const createNewRoster = (name) => new Roster({ name });
 
-export const saveCurrentState = () => {
+export const saveAllRosters = () => {
     if (isGameMode) return;
-    saveStateToStorage(allRosters, activeRosterName);
+    const savableRosters = {};
+    for (const rosterName in allRosters) {
+        savableRosters[rosterName] = allRosters[rosterName].serialize();
+    }
+    localStorage.setItem('rosters', JSON.stringify(savableRosters));
+    localStorage.setItem('activeRosterName', activeRosterName);
 };
 
 export const calculateNextIds = () => {
@@ -101,7 +106,7 @@ export const switchActiveRoster = (rosterName) => {
     calculateNextIds();
     renderRoster();
     updateRosterSelect();
-    saveCurrentState();
+    saveAllRosters();
 };
 
 export function addNewRoster(name) {
@@ -124,7 +129,7 @@ export function renameActiveRoster(newName) {
     
     setActiveRosterName(newName);
     updateRosterSelect();
-    saveCurrentState();
+    saveAllRosters();
     return true;
 }
 
@@ -165,19 +170,114 @@ export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
     return subCards;
 };
 
+// --- Data Migration ---
+function migrateFromVersion0ToVersion1(oldRosterData) {
+    const newRosterData = {
+        faction: oldRosterData.faction || 'RDL',
+        units: {},
+        drones: [],
+        tacticalCards: [],
+        version: CURRENT_SAVE_VERSION
+    };
+
+    // Migrate units
+    for (const unitId in oldRosterData.units) {
+        const oldUnit = oldRosterData.units[unitId];
+        newRosterData.units[unitId] = {};
+        for (const category in oldUnit) {
+            if (oldUnit[category] && oldUnit[category].fileName) {
+                newRosterData.units[unitId][category] = oldUnit[category].fileName;
+            } else {
+                newRosterData.units[unitId][category] = null; // Handle missing card gracefully
+            }
+        }
+    }
+
+    // Migrate drones
+    newRosterData.drones = oldRosterData.drones.map(oldDrone => {
+        if (!oldDrone) return null;
+        const newDrone = { fileName: oldDrone.fileName };
+        if (oldDrone.backCard && oldDrone.backCard.fileName) {
+            newDrone.backCardFileName = oldDrone.backCard.fileName;
+        }
+        return newDrone;
+    }).filter(Boolean);
+
+    // Migrate tacticalCards (assuming they were full objects in old format)
+    newRosterData.tacticalCards = (oldRosterData.tacticalCards || []).map(oldCard => {
+        return oldCard && oldCard.fileName ? oldCard.fileName : null;
+    }).filter(Boolean);
+
+    return newRosterData;
+}
+
 // --- Initialization ---
 
+async function loadImageData() {
+    try {
+        const categoryFiles = [
+            'Pilot.json', 'Drone.json', 'Back.json', 'Chassis.json',
+            'Left.json', 'Right.json', 'Torso.json', 'Projectile.json', 'Tactical.json'
+        ];
+
+        const fetchPromises = categoryFiles.map(file =>
+            fetch(`data/${file}?v=${new Date().getTime()}`).then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status} for file ${file}`);
+                return res.json();
+            })
+        );
+
+        const arraysOfCards = await Promise.all(fetchPromises);
+        const cardData = arraysOfCards.flat();
+
+        allCards.byCategory = {};
+        allCards.drones = [];
+        allCards.tactical = [];
+        allCards.byFileName = new Map();
+        
+        cardData.forEach(card => {
+            allCards.byFileName.set(card.fileName, card);
+
+            if (card.category === "Tactical" && card.hidden === true) {
+                card.isRevealedInGameMode = false;
+            } else {
+                card.isRevealedInGameMode = true;
+            }
+
+            if (card.category === "Drone") {
+                allCards.drones.push(card);
+            } else if (card.category === "Tactical") {
+                allCards.tactical.push(card);
+            } 
+
+            if (!allCards.byCategory[card.category]) {
+                allCards.byCategory[card.category] = [];
+            }
+            allCards.byCategory[card.category].push(card);
+        });
+    } catch (error) {
+        console.error("Could not load image data:", error);
+    }
+}
+
 export const initializeApp = async () => {
-    allCards = await loadAllCardData();
-    const { savedRosters, savedActiveName } = loadStateFromStorage();
+    await loadImageData();
+    const savedRostersRaw = localStorage.getItem('rosters');
+    let savedRosters = savedRostersRaw ? JSON.parse(savedRostersRaw) : null;
+    const savedActiveName = localStorage.getItem('activeRosterName');
 
     if (savedRosters && Object.keys(savedRosters).length > 0) {
-        const rostersToDeserialize = migrateRosters(savedRosters);
-        const deserializedRosters = {};
-        for (const rosterName in rostersToDeserialize) {
-            deserializedRosters[rosterName] = Roster.deserialize(rosterName, rostersToDeserialize[rosterName], allCards.byFileName);
+        const migratedRosters = {};
+        for (const rosterName in savedRosters) {
+            let rosterData = savedRosters[rosterName];
+            // Migration check: If 'version' is missing or not current, it's an old format
+            if (!rosterData.version || rosterData.version < CURRENT_SAVE_VERSION) {
+                console.warn(`Migrating old roster format for: ${rosterName}`);
+                rosterData = migrateFromVersion0ToVersion1(rosterData);
+            }
+            migratedRosters[rosterName] = Roster.deserialize(rosterName, rosterData, allCards.byFileName);
         }
-        allRosters = deserializedRosters;
+        allRosters = migratedRosters;
         activeRosterName = savedActiveName && allRosters[savedActiveName] ? savedActiveName : Object.keys(allRosters)[0];
     } else {
         activeRosterName = '기본 로스터';
@@ -188,5 +288,5 @@ export const initializeApp = async () => {
     calculateNextIds();
     updateRosterSelect();
     renderRoster();
-    saveCurrentState(); // Save in new format after migration
+    saveAllRosters(); // Save in new format after migration
 };
