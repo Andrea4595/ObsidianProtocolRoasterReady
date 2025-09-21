@@ -3,7 +3,9 @@
         "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
         "points": 54,
         "category": "Left",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Concussion", "PulseWeapon"],
+		"dropKeywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
@@ -14,14 +16,16 @@
         "subCards": [
             "Projectile_RDL_MC3_Front.jpg"
         ],
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
         "fileName": "Part_RDL_Left_R20_Front.jpg",
         "points": 51,
         "category": "Left",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Stationary", "ArmorPiercing(1)"]
     },
     {
         "fileName": "Part_RDL_Left_Type77_Front.jpg",
@@ -45,7 +49,9 @@
         "category": "Left",
         "faction": "RDL",
         "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.jpg",
-        "intercept": 1
+        "intercept": 1,
+		"keywords": ["Intercept(1)", "PulseWeapon"],
+		"dropKeywords": ["Intercept(1)", "Concussion"]
     },
     {
         "fileName": "Part_RDL_Left_Type79_Front.jpg",
@@ -59,14 +65,17 @@
         "points": 69,
         "category": "Left",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["OnHit", "Drag", "Disarm"]
     },
     {
         "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
         "points": 48,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg"
+        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg",
+		"keywords": ["ScatterShot"],
+		"dropKeywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Left_GAC6_Front.jpg",
@@ -77,14 +86,17 @@
         "ammunition": 2,
         "subCards": [
             "Projectile_RDL_RA81_Front.jpg"
-        ]
+        ],
+		"keywords": ["DirectFire"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["PulseWeapon"]
     },
     {
         "fileName": "Part_RDL_Left_Type55_MES_Front.jpg",
@@ -94,28 +106,34 @@
         "drop": "Part_RDL_Left_Type55_MES_Dropped.jpg",
         "subCards": [
             "Projectile_RDL_MES_Front.jpg"
-        ]
+        ],
+		"keywords": ["DirectFire", "Silence"]
     },
     {
         "fileName": "Part_RDL_Left_Type55_PC9K_Front.png",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9K_Dropped.png"
+        "drop": "Part_RDL_Left_Type55_PC9K_Dropped.png",
+		"keywords": ["OnHit", "KnockBack", "ScatterShot"],
+		"dropKeywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_AH21_CC50_Dropped.png"
+        "drop": "Part_RDL_Left_AH21_CC50_Dropped.png",
+		"keywords": ["OmniDirectionFiring"],
+		"dropKeywords": ["Mutilation"]
     },
     {
         "fileName": "Part_RDL_Left_Type55_Front.png",
         "points": 30,
         "category": "Left",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Left_L330_Type77B_Front.png",
@@ -123,7 +141,8 @@
         "category": "Left",
         "faction": "RDL",
         "drop": "Part_RDL_Left_L330_Type77B_Dropped.png",
-        "intercept": 1
+        "intercept": 1,
+		"keywords": ["Intercept(1)"]
     },
     {
         "fileName": "Part_UN_Left_G6_Front.png",
@@ -135,21 +154,25 @@
 		"mobility": 1,
         "subCards": [
             "Projectile_UN_M7_Front.png"
-        ]
+        ],
+		"keywords": ["LaserWeapon", "Vulnerable", "ScatterShot", "MeleeFiring", "Volley(3)", "IndirectFire"],
+		"dropKeywords": ["Volley(3)", "IndirectFire"]
     },
     {
         "fileName": "Part_UN_Left_K7_S10_Front.png",
         "points": 54,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Silence", "OnHit"]
     },
     {
         "fileName": "Part_UN_Left_K9_Front.png",
         "points": 42,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Silence", "OnHit"]
     },
     {
         "fileName": "Part_UN_Left_M3S_Front.png",
@@ -169,7 +192,8 @@
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ],
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Volley(3)", "IndirectFire"]
     },
     {
         "fileName": "Part_UN_Left_MDXS_R6_Front.png",
@@ -177,7 +201,9 @@
         "category": "Left",
         "faction": "UN",
         "drop": "Part_UN_Left_MDXS_R6_Dropped.png",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["LaserWeapon", "Stationary"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Left_MX82_Front.png",
@@ -185,7 +211,8 @@
         "category": "Left",
         "faction": "UN",
         "freehand": true,
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["OnHit", "Drag", "Immobilized"]
     },
     {
         "fileName": "Part_UN_Left_MSH1_Front.png",
@@ -200,7 +227,9 @@
         "category": "Left",
         "faction": "UN",
         "drop": "Part_UN_Left_RH21_M3_Dropped.png",
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["OmniDirectionFiring"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Left_RHX23_Front.png",
@@ -208,7 +237,9 @@
         "category": "Left",
         "faction": "UN",
         "drop": "Part_UN_Left_RHX23_Dropped.png",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["OmniDirectionFiring", "Suppression"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Left_RKG70_Front.png",
@@ -219,7 +250,9 @@
         "ammunition": 1,
         "subCards": [
             "Projectile_UN_RKG70_Front.png"
-        ]
+        ],
+		"keywords": ["DirectFire", "TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Left_S100_Front.png",
@@ -237,7 +270,9 @@
         "ammunition": 3,
         "subCards": [
             "Projectile_UN_M7_Front.png"
-        ]
+        ],
+		"keywords": ["Volley(3)", "IndirectFire"],
+		"dropKeywords": ["Volley(3)", "IndirectFire"]
     },
     {
         "fileName": "Part_UN_Left_S9_M5_Front.png",
@@ -245,20 +280,23 @@
         "category": "Left",
         "faction": "UN",
         "freehand": true,
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["Concussion", "Mutilation"]
     },
     {
         "fileName": "Part_UN_Left_K9_Trial_Front.png",
         "points": 42,
         "category": "Left",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Silence", "OnHit"]
     },
     {
         "fileName": "Part_WD_Left_ACE001_Front.jpg",
         "points": 57,
         "category": "Left",
         "faction": "Public",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["MeleeFiring", "OnHit", "Vulnerable"]
     }
 ]

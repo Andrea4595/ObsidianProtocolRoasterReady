@@ -56,7 +56,8 @@
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
-		"mobility": 4
+		"mobility": 4,
+		"keywords": ["Silence"]
     },
     {
         "fileName": "Part_UN_Chassis_LM213B_Front.png",
@@ -70,7 +71,8 @@
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
-		"mobility": 4
+		"mobility": 4,
+		"keywords": ["Silence"]
     },
     {
         "fileName": "Part_WD_Chassis_ACE001_Front.jpg",

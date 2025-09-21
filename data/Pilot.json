@@ -4,28 +4,32 @@
         "points": 15,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Misty"]
     },
     {
         "fileName": "Dial_RDL_02_Spike_Front.png",
         "points": 15,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Spike", "ArmorPiercing(1)"]
     },
     {
         "fileName": "Dial_RDL_03_Wu_Front.png",
         "points": 12,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Wu"]
     },
     {
         "fileName": "Dial_RDL_04_Hammerhead_Front.png",
         "points": 10,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Hammerhead"]
     },
     {
         "fileName": "Dial_RDL_05_Anser_Front.png",
@@ -35,21 +39,24 @@
 		"link": 4,
         "special": [
             "chassis_have_frame"
-        ]
+        ],
+		"keywords": ["Pilot_Anser"]
     },
     {
         "fileName": "Dial_RDL_06_Keyhole_Front.png",
         "points": 12,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Keyhole"]
     },
     {
         "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.png",
         "points": 12,
         "category": "Pilot",
         "faction": "RDL",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Keyhole_Different_1"]
     },
     {
         "fileName": "Dial_RDL_09_ShockTroop_Front.png",
@@ -126,42 +133,48 @@
         "points": 24,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Quartz"]
     },
     {
         "fileName": "Dial_UNPilot_20_Panzer_Front.png",
         "points": 15,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Panzer"]
     },
     {
         "fileName": "Dial_UNPilot_21_Firefly_Front.png",
         "points": 18,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Firefly"]
     },
     {
         "fileName": "Dial_UNPilot_22_Yoyu_Front.png",
         "points": 21,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Yoyu"]
     },
     {
         "fileName": "Dial_UNPilot_23_Onyx_Front.png",
         "points": 21,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Onyx"]
     },
     {
         "fileName": "Dial_UNPilot_24_Sealock_Front.png",
         "points": 21,
         "category": "Pilot",
         "faction": "UN",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_Sealock", "Vulnerable"]
     },
     {
         "fileName": "Dial_UNPilot_27_Rifleman_Front.png",
@@ -224,6 +237,7 @@
         "points": 15,
         "category": "Pilot",
         "faction": "Public",
-		"link": 4
+		"link": 4,
+		"keywords": ["Pilot_KarlFried"]
     }
 ]

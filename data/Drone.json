@@ -5,14 +5,16 @@
         "category": "Drone",
         "faction": "RDL",
         "intercept": 1,
-        "frame": true
+        "frame": true,
+		"keywords": ["Intercept(1)", "OmniDirectionFiring", "MeleeFiring"]
     },
     {
         "fileName": "Drone_RDL_DTG30R_Front.jpg",
         "points": 27,
         "category": "Drone",
         "faction": "RDL",
-        "frame": true
+        "frame": true,
+		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
         "fileName": "Drone_RDL_DTG30S_Front.jpg",
@@ -38,7 +40,8 @@
         "points": 30,
         "category": "Drone",
         "faction": "UN",
-        "frame": true
+        "frame": true,
+		"keywords": ["FireControlInterference"]
     },
     {
         "fileName": "Drone_UN_ADK30C_Front.png",
@@ -47,20 +50,23 @@
         "faction": "UN",
         "special": [
             "freight_back"
-        ]
+        ],
+		"keywords": ["Load"]
     },
     {
         "fileName": "Drone_UN_ADK30F_Front.png",
         "points": 33,
         "category": "Drone",
         "faction": "UN",
-        "intercept": 1
+        "intercept": 1,
+		"keywords": ["LaserWeapon", "Intercept(3)", "OmniDirectionFiring", "MeleeFiring"]
     },
     {
         "fileName": "Drone_UN_ADK60EC_Front.png",
         "points": 33,
         "category": "Drone",
-        "faction": "UN"
+        "faction": "UN",
+		"keywords": ["Repeater", "Strength+X"]
     },
     {
         "fileName": "Drone_UN_ADK60R_Front.png",
@@ -72,7 +78,8 @@
         "fileName": "Drone_UN_ADK60S_Front.png",
         "points": 51,
         "category": "Drone",
-        "faction": "UN"
+        "faction": "UN",
+		"keywords": ["FireControlInterference"]
     },
     {
         "fileName": "Drone_PL_MD4A_Front.png",
@@ -84,7 +91,8 @@
         "frame": true,
         "subCards": [
             "Projectile_PL_FGM25_Front.png"
-        ]
+        ],
+		"keywords": ["Volley(3)", "IndirectFire", "Intercept(2)"]
     },
     {
         "fileName": "Drone_PL_MD4B_Front.png",
@@ -92,7 +100,8 @@
         "category": "Drone",
         "faction": "Public",
         "ammunition": 1,
-        "frame": true
+        "frame": true,
+		"keywords": ["OnHit", "FireControlInterference"]
     },
     {
         "fileName": "Drone_PL_MD4C_Front.png",
@@ -103,7 +112,8 @@
         "frame": true,
         "subCards": [
             "Projectile_PL_FGM25_Front.png"
-        ]
+        ],
+		"keywords": ["Volley(3)", "IndirectFire", "OnHit", "FireControlInterference"]
     },
     {
         "fileName": "Drone_PL_MD4D_Front.png",
@@ -112,7 +122,8 @@
         "faction": "Public",
         "ammunition": 1,
         "intercept": 2,
-        "frame": true
+        "frame": true,
+		"keywords": ["Intercept(2)"]
     },
     {
         "fileName": "Drone_PL_MD4E_Front.png",
@@ -124,13 +135,15 @@
         "subCards": [
             "Projectile_PL_AS3A_Front.png",
             "Projectile_PL_AS3B_Front.png"
-        ]
+        ],
+		"keywords": ["DirectFire"]
     },
     {
         "fileName": "Drone_PL_LD5A_Front.jpg",
         "points": 48,
         "category": "Drone",
-        "faction": "Public"
+        "faction": "Public",
+		"keywords": ["OmniDirectionFiring", "MeleeFiring", "AirbornMovement"]
     },
     {
         "fileName": "Drone_PL_LD5B_Front.jpg",
@@ -140,13 +153,15 @@
         "ammunition": 4,
         "subCards": [
             "Projectile_PL_FG33_Front.jpg"
-        ]
+        ],
+		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement"]
     },
     {
         "fileName": "Drone_PL_LD5M_Front.jpg",
         "points": 42,
         "category": "Drone",
-        "faction": "Public"
+        "faction": "Public",
+		"keywords": ["Highlight", "AirbornMovement", "OmniDirectionFiring", "MeleeFiring"]
     },
     {
         "fileName": "Drone_PL_LD5S_Front.jpg",
@@ -157,7 +172,8 @@
         "subCards": [
             "Projectile_PL_FG33_Front.jpg",
             "Projectile_PL_RMA_Front.jpg"
-        ]
+        ],
+		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement", "DirectFire"]
     },
     {
         "fileName": "Drone_WD_ACE001_Defense_Front.jpg",
@@ -169,7 +185,8 @@
             "Drone_WD_ACE001_Offense_Front.jpg"
         ],
         "visible": false,
-        "frame": true
+        "frame": true,
+		"keywords": ["AutomaticShield"]
     },
     {
         "fileName": "Drone_WD_ACE001_Mobile_Front.jpg",
@@ -181,7 +198,8 @@
             "Drone_WD_ACE001_Defense_Front.jpg"
         ],
         "visible": false,
-        "frame": true
+        "frame": true,
+		"keywords": ["MeleeFiring", "OmniDirectionFiring"]
     },
     {
         "fileName": "Drone_WD_ACE001_Offense_Front.jpg",

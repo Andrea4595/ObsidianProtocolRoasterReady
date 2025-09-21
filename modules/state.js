@@ -4,6 +4,7 @@ import { factionSelect } from './dom.js';
 
 // --- State Variables ---
 export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: new Map() };
+export let allKeywords = new Map();
 export let allRosters = {}; // This will store Roster instances
 export let activeRosterName = '';
 export let nextUnitId = 0;
@@ -260,8 +261,21 @@ async function loadImageData() {
     }
 }
 
+async function loadKeywordData() {
+    try {
+        const response = await fetch(`data/keywords.json?v=${new Date().getTime()}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} for file keywords.json`);
+        }
+        const keywordData = await response.json();
+        allKeywords = new Map(keywordData.map(kw => [kw.keyword, kw]));
+    } catch (error) {
+        console.error("Could not load keyword data:", error);
+    }
+}
+
 export const initializeApp = async () => {
-    await loadImageData();
+    await Promise.all([loadImageData(), loadKeywordData()]);
     const savedRostersRaw = localStorage.getItem('rosters');
     let savedRosters = savedRostersRaw ? JSON.parse(savedRostersRaw) : null;
     const savedActiveName = localStorage.getItem('activeRosterName');

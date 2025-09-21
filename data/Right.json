@@ -6,20 +6,24 @@
         "faction": "RDL",
         "drop": "Part_RDL_Right_AC150_Dropped.jpg",
 		"mobility": -2,
-		"dropMobility": 0
+		"dropMobility": 0,
+		"keywords": ["Stationary", "Suppression"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_R20_Front.jpg",
         "points": 51,
         "category": "Right",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Stationary", "ArmorPiercing(1)"]
     },
     {
         "fileName": "Part_RDL_Right_CC4_Front.jpg",
         "points": 39,
         "category": "Right",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["PulseWeapon"]
     },
     {
         "fileName": "Part_RDL_Right_ACX350_Front.jpg",
@@ -28,21 +32,29 @@
         "faction": "RDL",
         "drop": "Part_RDL_Right_ACX350_Dropped.jpg",
 		"mobility": -2,
-		"dropMobility": 0
+		"dropMobility": 0,
+		"keywords": ["TwoHanded", "MultiTarget(3)", "Suppression"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_R35_Front.jpg",
         "points": 54,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_R35_Dropped.jpg"
+        "drop": "Part_RDL_Right_R35_Dropped.jpg",
+		"mobility": -2,
+		"dropMobility": 0,
+		"keywords": ["Mutilation", "ArmorPiercing(1)"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9_Front.jpg",
         "points": 48,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_Type55_PC9_Dropped.jpg"
+        "drop": "Part_RDL_Right_Type55_PC9_Dropped.jpg",
+		"keywords": ["ScatterShot"],
+		"dropKeywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9_Grenade_Front.jpg",
@@ -53,7 +65,9 @@
         "ammunition": 1,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
-        ]
+        ],
+		"keywords": ["DirectFire", "ScatterShot"],
+		"dropKeywords": ["DirectFire", "Concussion"]
     },
     {
         "fileName": "Part_RDL_Right_L320_CC90_Front.jpg",
@@ -61,55 +75,69 @@
         "category": "Right",
         "faction": "RDL",
         "drop": "Part_RDL_Right_L320_CC90_Dropped.jpg",
-        "intercept": 1
+        "intercept": 1,
+		"keywords": ["Intercept(1)", "TwoHanded", "Mutilation", "PulseWeapon", "Cleaving"],
+		"dropKeywords": ["Intercept(1)"]
     },
     {
         "fileName": "Part_RDL_Right_CC100_Front.jpg",
         "points": 48,
         "category": "Right",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Mutilation", "Wrecking"]
     },
     {
         "fileName": "Part_RDL_Right_AC39_Front.jpg",
         "points": 45,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC39_Dropped.jpg"
+        "drop": "Part_RDL_Right_AC39_Dropped.jpg",
+		"keywords": ["TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_Type63_CC20_Front.jpg",
         "points": 66,
         "category": "Right",
         "faction": "RDL",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["PulseWeapon"]
     },
     {
         "fileName": "Part_RDL_Right_AC161_Front.jpg",
         "points": 45,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC161_Dropped.jpg"
+        "drop": "Part_RDL_Right_AC161_Dropped.jpg",
+		"keywords": ["TwoHanded", "Stationary"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_AC32_Front.jpg",
         "points": 24,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32_Dropped.jpg"
+        "drop": "Part_RDL_Right_AC32_Dropped.jpg",
+		"keywords": ["TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9K_Front.png",
         "points": 63,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_Type55_PC9K_Dropped.png"
+        "drop": "Part_RDL_Right_Type55_PC9K_Dropped.png",
+		"keywords": ["OnHit", "KnockBack(1)", "ScatterShot"],
+		"dropKeywords": ["Concussion"]
     },
     {
         "fileName": "Part_RDL_Right_AH21_CC50_Front.png",
         "points": 63,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AH21_CC50_Dropped.png"
+        "drop": "Part_RDL_Right_AH21_CC50_Dropped.png",
+		"keywords": ["OmniDirectionFiring"],
+		"dropKeywords": ["Mutilation"]
     },
     {
         "fileName": "Part_RDL_Right_AC35_Front.png",
@@ -118,14 +146,18 @@
         "faction": "RDL",
         "drop": "Part_RDL_Right_AC35_Dropped.png",
 		"mobility": -2,
-		"dropMobility": 0
+		"dropMobility": 0,
+		"keywords": ["TwoHanded", "Snipe"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_AC32C_Front.png",
         "points": 36,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32C_Dropped.png"
+        "drop": "Part_RDL_Right_AC32C_Dropped.png",
+		"keywords": ["TwoHanded", "ScatterShot", "MeleeFiring"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_RDL_Right_L330_CC85_Front.png",
@@ -133,14 +165,18 @@
         "category": "Right",
         "faction": "RDL",
         "drop": "Part_RDL_Right_L330_CC85_Dropped.png",
-        "intercept": 1
+        "intercept": 1,
+		"keywords": ["Intercept(1)", "TwoHanded", "Mutilation", "Concussion"],
+		"dropKeywords": ["Intercept(1)"]
     },
     {
         "fileName": "Part_RDL_Right_AC32M_Front.png",
         "points": 33,
         "category": "Right",
         "faction": "RDL",
-        "drop": "Part_RDL_Right_AC32M_Dropped.png"
+        "drop": "Part_RDL_Right_AC32M_Dropped.png",
+		"keywords": ["TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_G6_M5_Front.png",
@@ -148,7 +184,9 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_G6_M5_Dropped.png",
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["LaserWeapon", "Vulnerable", "ScatterShot", "MeleeFiring", "Mutilation"],
+		"dropKeywords": ["Mutilation"]
     },
     {
         "fileName": "Part_UN_Right_IGX350_Front.png",
@@ -156,7 +194,9 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_IGX350_Dropped.png",
-        "charge": true
+        "charge": true,
+		"keywords": ["Charged", "Mutilation", "ScatterShot", "IonWeapon", "MeleeFiring"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_IGX920_Front.png",
@@ -166,7 +206,9 @@
         "charge": true,
 		"drop": "Part_UN_Right_IGX920_Dropped_Front.png",
 		"mobility": -2,
-		"dropMobility": 0
+		"dropMobility": 0,
+		"keywords": ["TwoHanded", "Snipe", "Charged", "Mutilation", "IonWeapon"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_M3S_Front.png",
@@ -186,7 +228,8 @@
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ],
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Vollet(3)", "IndirectFire"]
     },
     {
         "fileName": "Part_UN_Right_M15BO_Front.png",
@@ -194,7 +237,8 @@
         "category": "Right",
         "faction": "UN",
         "freehand": true,
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["TwoHanded", "Mutilation"]
     },
     {
         "fileName": "Part_UN_Right_MDXS_R6_Front.png",
@@ -202,14 +246,17 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_MDXS_R6_Dropped.png",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["LaserWeapon", "Stationary"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_R33_Front.png",
         "points": 39,
         "category": "Right",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["LaserWeapon", "Stationary", "Snipe"]
     },
     {
         "fileName": "Part_UN_Right_R6_Front.png",
@@ -217,7 +264,9 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_R6_Dropped.png",
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["LaserWeapon", "TwoHanded", "Stationary"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_R6SD_Front.png",
@@ -225,21 +274,27 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_R6SD_Dropped.png",
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["Silence", "LaserWeapon", "TwoHanded", "Stationary"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_R7_Front.png",
         "points": 42,
         "category": "Right",
         "faction": "UN",
-        "drop": "Part_UN_Right_R7_Dropped.png"
+        "drop": "Part_UN_Right_R7_Dropped.png",
+		"keywords": ["LaserWeapon", "TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_R9B_Front.png",
         "points": 48,
         "category": "Right",
         "faction": "UN",
-		"drop": "Part_UN_Right_R9B_Dropped_Front.png"
+		"drop": "Part_UN_Right_R9B_Dropped_Front.png",
+		"keywords": ["Silence", "LaserWeapon", "TwoHanded"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_RH21_M3_Front.png",
@@ -247,7 +302,9 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_RH21_Dropped_Front.png",
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["OmniDirectionFiring"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_RHX23_Front.png",
@@ -255,27 +312,33 @@
         "category": "Right",
         "faction": "UN",
         "drop": "Part_UN_Right_RHX23_Dropped.png",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["OmniDirectionFiring", "Suppression"],
+		"dropKeywords": []
     },
     {
         "fileName": "Part_UN_Right_S100R6SS_Front.png",
         "points": 63,
         "category": "Right",
         "faction": "UN",
-		"drop": "Part_UN_Right_S100_R6SS_Dropped.png"
+		"drop": "Part_UN_Right_S100_R6SS_Dropped.png",
+		"keywords": ["LaserWeapon", "Stationary"],
+		"dropKeywords": ["LaserWeapon", "Stationary"]
     },
     {
         "fileName": "Part_UN_Right_K9_Trial_Front.png",
         "points": 42,
         "category": "Right",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["Silence", "OnHit"]
     },
     {
         "fileName": "Part_WD_Right_ACE001_Front.jpg",
         "points": 72,
         "category": "Right",
         "faction": "Public",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["MeleeFiring", "Mutilation"]
     }
 ]
