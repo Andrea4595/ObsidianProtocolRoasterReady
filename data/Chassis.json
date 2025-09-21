@@ -19,7 +19,8 @@
         "category": "Chassis",
         "faction": "RDL",
         "frame": true,
-		"mobility": 3
+		"mobility": 3,
+		"keywords": ["MovingInStraightLine"]
     },
     {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
@@ -42,7 +43,8 @@
         "category": "Chassis",
         "faction": "RDL",
         "frame": true,
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["MovingInStraightLine"]
     },
     {
         "fileName": "Part_UN_Chassis_LM231_Front.png",
@@ -56,7 +58,8 @@
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
-		"mobility": 4
+		"mobility": 4,
+		"keywords": ["Silence"]
     },
     {
         "fileName": "Part_UN_Chassis_LM213B_Front.png",
@@ -70,7 +73,8 @@
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
-		"mobility": 4
+		"mobility": 4,
+		"keywords": ["Silence"]
     },
     {
         "fileName": "Part_WD_Chassis_ACE001_Front.jpg",

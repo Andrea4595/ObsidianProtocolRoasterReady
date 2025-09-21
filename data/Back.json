@@ -5,7 +5,8 @@
         "category": "Back",
         "faction": "RDL",
         "intercept": 3,
-		"electronic": 1
+		"electronic": 1,
+		"keywords": ["Intercept(3)"]
     },
     {
         "fileName": "Part_RDL_Back_ML34_Front.jpg",
@@ -16,13 +17,15 @@
 		"mobility": 1,
         "subCards": [
             "Projectile_RDL_MC3_Front.jpg"
-        ]
+        ],
+		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
         "fileName": "Part_RDL_Back_LGP80_Front.jpg",
         "points": 33,
         "category": "Back",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Mutilation"]
     },
     {
         "fileName": "Part_RDL_Back_GLP15_Front.jpg",
@@ -31,7 +34,8 @@
         "faction": "RDL",
         "subCards": [
             "Projectile_RDL_GM35_Front.jpg"
-        ]
+        ],
+		"keywords": ["IndirectFire", "Silence"]
     },
     {
         "fileName": "Part_RDL_Back_MUD1_Front.jpg",
@@ -39,7 +43,8 @@
         "category": "Back",
         "faction": "RDL",
 		"electronic": 1,
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["Highlight"]
     },
     {
         "fileName": "Part_RDL_Back_CP3_Front.jpg",
@@ -51,20 +56,23 @@
             "Projectile_RDL_B31_Front.jpg",
             "Projectile_RDL_B32_Front.jpg",
             "Projectile_RDL_B33_Front.jpg"
-        ]
+        ],
+		"keywords": ["DirectFire", "Silence", "Throw"]
     },
     {
         "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
         "points": 30,
         "category": "Back",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["ElectronicSupport", "ExtraActionOpportunity"]
     },
     {
         "fileName": "Part_RDL_Back_TB600_Front.jpg",
         "points": 48,
         "category": "Back",
         "faction": "RDL",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["AirborneMovement"]
     },
     {
         "fileName": "Part_RDL_Back_ML92_Front.jpg",
@@ -74,7 +82,8 @@
         "ammunition": 2,
         "subCards": [
             "Projectile_RDL_MR9_Front.jpg"
-        ]
+        ],
+		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
         "fileName": "Part_RDL_Back_SH15_Front.jpg",
@@ -109,7 +118,8 @@
         "ammunition": 4,
         "subCards": [
             "Projectile_RDL_MR10_Front.png"
-        ]
+        ],
+		"keywords": ["Volley(4)", "IndirectFire"]
     },
     {
         "fileName": "Part_RDL_Back_CP4_Front.png",
@@ -119,7 +129,8 @@
         "ammunition": 2,
         "subCards": [
             "Projectile_RDL_MD1_Front.png"
-        ]
+        ],
+		"keywords": ["IndirectFire", "Silence", "Throw"]
     },
     {
         "fileName": "Part_RDL_Back_AMS193_Front.png",
@@ -127,7 +138,8 @@
         "category": "Back",
         "faction": "RDL",
         "intercept": 3,
-		"electronic": 1
+		"electronic": 1,
+		"keywords": ["Intercept(3)"]
     },
     {
         "fileName": "Part_UN_Back_AMDS210_Front.png",
@@ -162,7 +174,8 @@
         "category": "Back",
         "faction": "UN",
         "charge": true,
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["KCArmor"]
     },
     {
         "fileName": "Part_UN_Back_EC50_Front.png",
@@ -170,7 +183,8 @@
         "category": "Back",
         "faction": "UN",
 		"electronic": 1,
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["ElectronicAttack"]
     },
     {
         "fileName": "Part_UN_Back_GSD-2A_Front.png",
@@ -181,28 +195,32 @@
         "subCards": [
             "Projectile_UN_SGM2_Front.png",
 			"Projectile_UN_SGM2_Unfolded_Front.png"
-        ]
+        ],
+		"keywords": ["IndirectFire", "Throw", "Silence"]
     },
     {
         "fileName": "Part_UN_Back_JP1_Front.png",
         "points": 57,
         "category": "Back",
         "faction": "UN",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["AirborneMovement", "Load"]
     },
     {
         "fileName": "Part_UN_Back_MSH2_Front.png",
         "points": 24,
         "category": "Back",
         "faction": "UN",
-        "freehand": true
+        "freehand": true,
+		"keywords": ["OmniDirectionFiring"]
     },
     {
         "fileName": "Part_UN_Back_OCSP_Front.png",
         "points": 49,
         "category": "Back",
         "faction": "UN",
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["Load"]
     },
     {
         "fileName": "Part_UN_Back_RKG70_Front.png",
@@ -217,7 +235,8 @@
         "category": "Back",
         "faction": "UN",
         "charge": true,
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["KCArmor"]
     },
     {
         "fileName": "Part_WD_Back_ACE001_Front.jpg",

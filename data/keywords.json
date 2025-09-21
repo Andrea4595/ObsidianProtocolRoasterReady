@@ -1,0 +1,347 @@
+[
+	{
+		"keyword" : "IndirectFire",
+		"name" : "곡사",
+		"information" : "이 액션은 낙하 지점이나 대상에 대한 시야가 필요하지 않습니다."
+	},
+	{
+		"keyword" : "AirborneMovement",
+		"name" : "공중 이동",
+		"information" : "이 액션은 비행 이동으로 취급됩니다."
+	},
+	{
+		"keyword" : "Drag",
+		"name" : "끌어당기기",
+		"information" : "대상을 이 메카의 인접 그리드로 강제 이동시킨 뒤, 대상의 전방을 설정합니다.\n(참고: 끌어당기기는 비행이동으로 취급됩니다)"
+	},
+	{
+		"keyword" : "KnockBack#",
+		"name" : "넉백 #",
+		"information" : "이 액션이 종료 시, 대상을 공격 방향으로 # 칸 강제 이동시킵니다.\n\n참고: 넉백은 일직선으로 이동하며, 방향은 공격자가 향하는 방향을 기준으로 합니다.\n유닛이나 지형에 의해 경로가 막히면 일찍 멈춥니다.\n비행 중인 유닛도 이 효과로 인해 강제로 이동해야 할 때 유닛과 지형에 의해 막힙니다."
+	},
+	{
+		"keyword" : "MultiTarget#",
+		"name" : "다중지정 #",
+		"information" : "이 액션은 최대 # 개의 대상을 지정할 수 있습니다.\n\n다중 지정 효과를 사용하는 경우 공격은 다음과 같이 진행합니다:\n- 이 액션으로 시전된 주사위의 총 개수를 세고, 이때 공격 주사위 증가 효과가 발동합니다.\n- 각 대상에게 총 주사위 굴림 횟수를 임의로 할당하고, 차례로 대상에 대한 공격을 수행합니다. 공격할 때는 할당된 주사위 굴림 횟수에 따라 공격 주사위를 굴립니다.\n- 메카가 이 액션 수행 시 각 공격에 개별적으로 링크 리롤이 가능합니다.\n- 공격이 효과를 발생시키면 각 공격이 개별적으로 대상에 효과를 발생시킵니다.\n(참고: 이 효과는 동일 유닛을 두 번 이상 대상으로 선택할 수 없으며, 대상에 공격 주사위를 0으로 할당할 수도 없습니다)"
+	},
+	{
+		"keyword" : "LaserWeapon",
+		"name" : "레이저 무기",
+		"information" : "명중 시, 대상에게 취약 토큰 1개를 부여합니다."
+	},
+	{
+		"keyword" : "Silence",
+		"name" : "무소음",
+		"information" : "이 액션을 수행할 때 광학 위장 및 저피탐이 해제되지 않습니다."
+	},
+	{
+		"keyword" : "Disarm",
+		"name" : "무장 해제",
+		"information" : "피격 부품을 비무장 상태로 전환합니다."
+	},
+	{
+		"keyword" : "MissileGroup#",
+		"name" : "미사일 편대 #",
+		"information" : "각 미사일 편대는 # 모델이 포함됩니다. 함께 이동하며 동일 대상만 공격할 수 있습니다. 모델 1개당 요격 및 폭발 데미지가 따로 적용됩니다."
+	},
+	{
+		"keyword" : "_#",
+		"name" : "밀치기 #",
+		"information" : "대상에게 임의의 직선 방향으로 #그리드만큼 강제 이동시킵니다. 밀쳐진 대상이 메카인 경우, 링크 수치를 1 감소시킵니다."
+	},
+	{
+		"keyword" : "Barricade",
+		"name" : "방벽",
+		"information" : "적 유닛이 이 유닛 이외의 아군 유닛을 공격할 경우, 이 유닛은 3인치 높이의 지형으로 취급됩니다."
+	},
+	{
+		"keyword" : "Wrecking",
+		"name" : "붕괴",
+		"information" : "{번개} 하나당 상대방의 링크 수치 1을 감소시키고, 데미지를 입힙니다."
+	},
+	{
+		"keyword" : "ScatterShot",
+		"name" : "산탄",
+		"information" : "대상이 메카인 경우, 연쇄 데미지가 대상의 다른 무작위 부품 1개에 적용됩니다."
+	},
+	{
+		"keyword" : "_",
+		"name" : "순항",
+		"information" : "사거리 내에 대상이 없을 경우, 이 유닛을 파괴하지 않고 사거리 내의 원하는 그리드로 비행합니다."
+	},
+	{
+		"keyword" : "Aura",
+		"name" : "오라",
+		"information" : "이 액션은 오라 액션이며, '오라'의 효과 제한 또는 강화에 영향을 받습니다.\n별도의 설명이 없는 경우, 이 액션은 사거리 내의 모든 유닛에 적용되며 아군 유닛을 대상으로 하는 경우 이 유닛도 포함됩니다."
+	},
+	{
+		"keyword" : "Intercept#",
+		"name" : "요격 #",
+		"information" : "이 부품에는 #개만큼의 요격 토큰이 있습니다."
+	},
+	{
+		"keyword" : "FlexibleTiming",
+		"name" : "유연한 타이밍",
+		"information" : "이 액션은 인접한 타이밍의 시작 액션으로도 사용할 수 있습니다.(예: 이 키워드가 있는 이동 액션은 사격/이동/전술 타이밍의 시작 액션으로 사용될 수 있습니다)"
+	},
+	{
+		"keyword" : "IonWeapon",
+		"name" : "이온 무기",
+		"information" : "취약 토큰을 지닌 대상에게 공격 시 {번개}를 {강공격}으로 취급합니다."
+	},
+	{
+		"keyword" : "_#",
+		"name" : "이형체",
+		"information" : "이 액션을 수행하려면 링크 수치를 #만큼 소모해야 합니다."
+	},
+	{
+		"keyword" : "TwoHanded",
+		"name" : "양손",
+		"information" : "이 액션을 수행할 때 이 부품을 제외한 다른 비무장인 부품을 선택하여 보조하면 이 특별 규칙의 효과를 얻을 수 있습니다."
+	},
+	{
+		"keyword" : "Volley#",
+		"name" : "일제발사 #",
+		"information" : "최대 # 개의 발사체를 발사하거나 설치하고, 동일한 수의 탄약 토큰을 소모합니다."
+	},
+	{
+		"keyword" : "AutomaticShield",
+		"name" : "자율 보호",
+		"information" : "인접한 아군 유닛이 사격을 받을 시, 시야선이 이 유닛을 통과하면 해당 공격은 이 유닛을 대상으로 진행하게 됩니다."
+	},
+	{
+		"keyword" : "Snipe",
+		"name" : "저격",
+		"information" : "공격 시 대상 부품을 지정할 수 있습니다."
+	},
+	{
+		"keyword" : "_",
+		"name" : "저지 불가",
+		"information" : "이 액션은 이동불가 상태에서도 이동을 수행할 수 있습니다."
+	},
+	{
+		"keyword" : "LowProfile",
+		"name" : "저피탐",
+		"information" : "저피탐 토큰을 지닌 유닛은 사격 공격을 당할 시, 방어 굴림에서 {눈}이 {회피}로 취급됩니다."
+	},
+	{
+		"keyword" : "DesignateW#",
+		"name" : "지정 # (하양 주사위)",
+		"information" : "주사위풀에서 증감이 해결된 후 주사위를 굴릴 때, 하양 주사위 #개의 결과값을 원하는 결과로 지정할 수 있습니다. 결과를 지정한 주사위는 굴리지 않으며, 재굴림도 불가합니다."
+	},
+	{
+		"keyword" : "ArmorPiercing#",
+		"name" : "장갑 관통 #",
+		"information" : "이 공격의 대상은 굴림 전 하양 주사위를 #개 제거합니다."
+	},
+	{
+		"keyword" : "OmniDirectionFiring",
+		"name" : "전방향 사격",
+		"information" : "이 액션에는 전방 범위 제한이 없습니다."
+	},
+	{
+		"keyword" : "WarfareNode#",
+		"name" : "전자전 노드 #",
+		"information" : "사거리 내의 아군 유닛이 전자전 주사위를 굴릴 때, 이 유닛의 전자전 수치 +# 값으로 사용할 수 있습니다.\n(참고: 이 효과는 대상 전자전 주사위 굴림의 시전자와 대응자를 변경하지 않습니다.)"
+	},
+	{
+		"keyword" : "ElectronicAttack",
+		"name" : "전자 공격",
+		"information" : "이 액션은 전자 공격 액션이며, '전자 공격'을 제한하거나 강화할 때 영향을 받습니다.\n별도의 설명이 없는 경우, 이 액션은 적 유닛을 대상으로 하며 전자전 굴림을 진행합니다. 성공 시 효과가 발동합니다."
+	},
+	{
+		"keyword" : "ElectronicSupport",
+		"name" : "전자 지원",
+		"information" : "이 행동은 아군 유닛을 대상으로 하며 ECM 주사위를 던질 필요 없이 자동으로 작동됩니다."
+	},
+	{
+		"keyword" : "Cleaving",
+		"name" : "절단",
+		"information" : "연쇄 데미지가 대상의 무작위 부품 1개 또는 액션 사거리 내의 다른 대상에게 적용됩니다."
+	},
+	{
+		"keyword" : "Suppression",
+		"name" : "제압",
+		"information" : "이 액션의 대상으로 지정된 메카는 그 즉시 방어 스탠스로 전환됩니다.(셧다운 스탠스 유닛은 영향을 받지 않습니다)"
+	},
+	{
+		"keyword" : "Repeater",
+		"name" : "중계기",
+		"information" : "사거리 내에 있는 아군 유닛은 전자 공격 또는 전자 지원을 수행할 때 이 유닛을 출발점으로 사용할 수 있습니다."
+	},
+	{
+		"keyword" : "DirectFire",
+		"name" : "직사",
+		"information" : "이 액션은 낙하지점이나 대상에 대한 시야가 필요합니다."
+	},
+	{
+		"keyword" : "Concussion",
+		"name" : "충격",
+		"information" : "공격 굴림의 {번개}당 대상의 링크 수치가 1 감소합니다.\n(참고: 효과는 중첩될 수 있습니다)"
+	},
+	{
+		"keyword" : "_#",
+		"name" : "커맨드 생성 #",
+		"information" : "커맨드 페이즈 시작 시 이 유닛은 1개가 아닌 #개의 커맨드 토큰을 생성합니다."
+	},
+	{
+		"keyword" : "_#",
+		"name" : "커맨드 조정 #",
+		"information" : "이 액션을 수행한 직후, 자신의 드론 #대에 커맨드 토큰 1개를 지시할 수 있습니다."
+	},
+	{
+		"keyword" : "KCArmor",
+		"name" : "KC 장갑",
+		"information" : "이 메카가 공격받을 시, 이 부품의 충전됨 토큰을 소모하여 방어 주사위 굴림의 {번개}를 {방어}로 교체할 수 있습니다."
+	},
+	{
+		"keyword" : "Throw",
+		"name" : "투척",
+		"information" : "이 액션을 수행하려면 비무장 부품을 지정해야 합니다."
+	},
+	{
+		"keyword" : "Mutilation",
+		"name" : "파열",
+		"information" : "연쇄 데미지가 대상 부품의 구조에 적용됩니다."
+	},
+	{
+		"keyword" : "PulseWeapon",
+		"name" : "펄스 무기",
+		"information" : "{번개}를 [강공격]으로 교체할 수 있습니다."
+	},
+	{
+		"keyword" : "Load",
+		"name" : "화물",
+		"information" : "드론이 부품을 화물로써 운반합니다. 드론은 이 부품의 능력과 속성을 얻지 못합니다."
+	},
+	{
+		"keyword" : "Highlight",
+		"name" : "하이라이트",
+		"information" : "적 유닛이 사격 액션을 수행할 때, 선택 가능한 대상 중 하이라이트 유닛이 있는 경우, 해당 유닛만을 대상으로 지정해야 하며 다른 대상을 공격할 수 없습니다."
+	},
+	{
+		"keyword" : "Stationary",
+		"name" : "부동",
+		"information" : "이번 액션 기회 동안 이 유닛이 이동/기동(방향 전환 포함)을 하지 않았다면, 이 특별 규칙의 효과를 얻을 수 있습니다."
+	},
+	{
+		"keyword" : "Charged",
+		"name" : "충전됨",
+		"information" : "이 액션을 수행 시, 부품 중 앞면인 충전 토큰이 있는 경우, 해당 토큰을 소모(뒤집기)하여 이 특별규칙의 효과를 얻을 수 있습니다."
+	},
+	{
+		"keyword" : "MovingInStraightLine",
+		"name" : "일직선으로 이동",
+		"information" : "이 액션을 수행할 때 이동 경로가 직선(전장 가로 또는 세로 방향으로 전체 이동)인 경우, 이 특별 규칙의 효과를 얻을 수 있습니다."
+	},
+	{
+		"keyword" : "OnHit",
+		"name" : "명중",
+		"information" : "이 공격에서 {회피}로 상쇄되지 않은 데미지가 있는 경우, 이 규칙의 효과가 적용됩니다."
+	},
+	{
+		"keyword" : "ExtraFiringTick",
+		"name" : "추가 사격 틱",
+		"information" : "추가 사격 틱이 생긴 경우, 해당 액션 기회의 끝에서 사용 가능하며 사격 액션을 수행할 때만 해당 액션 기회 때 사용했던 액션을 수행할 수 있습니다."
+	},
+	{
+		"keyword" : "MeleeFiring",
+		"name" : "근접 사격",
+		"information" : "락온 상태에서도 사격이 가능합니다."
+	},
+	{
+		"keyword" : "ExtraActionOpportunity",
+		"name" : "추가 액션 기회",
+		"information" : "추가 액션 기회가 생긴 경우, 기본 액션 기회를 얻는 것과 마찬가지로 기동1 액션2틱을 얻어 액션을 수행합니다.\n<b>단, 이때 시작 액션은 추가 액션 기회를 주는 메카의 타이밍이 아닌, 지정 받아 액션하는 메카의 설정 타이밍에 맞게 액션해야 합니다.</b>"
+	},
+	{
+		"keyword" : "Immobilized",
+		"name" : "이동불가",
+		"information" : "이동불가 토큰을 지닌 유닛은 이동 액션/기동(방향 전환 포함)을 수행할 수 없습니다. 피격 시 파랑 주사위를 굴릴 수 없습니다."
+	},
+	{
+		"keyword" : "Stealth#",
+		"name" : "은폐 #",
+		"information" : "광학 위장이 비활성화됐을 시, 이 메카는 #그리드 이내에 등장해야 합니다."
+	},
+	{
+		"keyword" : "Fragile",
+		"name" : "취약",
+		"information" : "취약 토큰을 지닌 유닛은 피격 시 방어 굴림에서 하양 주사위-1(중첩 가능)"
+	},
+	{
+		"keyword" : "FireControlInterference",
+		"name" : "사격 통제 방해",
+		"information" : "이 토큰을 지닌 유닛은 사격 액션을 할 수 없으며, 요격도 불가합니다. (ECM 수치가 있는 발사체는 해당 토큰 획득 시 즉각 파괴)"
+	},
+	{
+		"keyword" : "Strength+X",
+		"name" : "송출 강도+X",
+		"information" : "EA 시 노랑 주사위를 X만큼 추가합니다."
+	},
+	{
+		"keyword" : "Pilot_Misty",
+		"name" : "전술 변경",
+		"information" : "전술 타이밍 시, 설정 타이밍에 상관없이 아무 타이밍의 액션을 시작 액션으로 사용 가능"
+	},
+	{
+		"keyword" : "Pilot_Spike",
+		"name" : "매의 눈",
+		"information" : "사격 액션 시, 장갑관통 1 획득"
+	},
+	{
+		"keyword" : "Pilot_Wu",
+		"name" : "강인함",
+		"information" : "부품이 파괴되어도 링크 수치가 감소하지 않음"
+	},
+	{
+		"keyword" : "Pilot_Hammerhead",
+		"name" : "맹공격",
+		"information" : "[공격 스탠스] 시 근접 액션에서 {눈}을 {약공격}으로 교체"
+	},
+	{
+		"keyword" : "Pilot_Anser",
+		"name" : "지치지 않는",
+		"information" : "파일럿이 탑승한 메카가 구조 수치가 없는 섀시를 사용하고 있는 경우, 장갑이 파괴되어도 구조 수치2가 있는 것으로 취급함"
+	},
+	{
+		"keyword" : "Pilot_Keyhole",
+		"name" : "증폭화",
+		"information" : "파일럿이 탑승한 메카의 오라, 전자 공격/전자 지원 사거리 1그리드 추가"
+	},
+	{
+		"keyword" : "Pilot_Quartz",
+		"name" : "침착함",
+		"information" : "매 라운드의 끝마다 링크 수치 1 회복"
+	},
+	{
+		"keyword" : "Pilot_Panzer",
+		"name" : "저지",
+		"information" : "파일럿의 메카로부터 락온 해제 시, 적 유닛은 이동 거리를 1 추가로 소모하거나, 링크 수치를 1 소모"
+	},
+	{
+		"keyword" : "Pilot_Firefly",
+		"name" : "무흔",
+		"information" : "파일럿의 메카가 이동할 때, 광학 위장 또는 저피탐 상태라면 다른 유닛을 무시하고 이동 가능"
+	},
+	{
+		"keyword" : "Pilot_Yoyu",
+		"name" : "도발",
+		"information" : "전자전 굴림이 성공했을 시, 대응자 메카의 스탠스를 공격 스탠스로 변경 가능"
+	},
+	{
+		"keyword" : "Pilot_Onyx",
+		"name" : "완고한",
+		"information" : "파일럿의 메카는 대형 유닛을 상대로 분쇄 가능"
+	},
+	{
+		"keyword" : "Pilot_Sealock",
+		"name" : "추격",
+		"information" : "취약 토큰을 지닌 대상을 공격할 때, {눈}을 {강공격}으로 교체"
+	},
+	{
+		"keyword" : "Pilot_KarlFried",
+		"name" : "공감각",
+		"information" : "메카의 링크를 소모해 “화이트드워프” 비트의 주사위를 재굴림할 수 있습니다."
+	}
+]

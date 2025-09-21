@@ -40,19 +40,22 @@
         "points": 0,
         "category": "Projectile",
         "faction": "RDL",
-		"frame": true
+		"frame": true,
+		"keywords": ["Highlight"]
     },
     {
         "fileName": "Projectile_RDL_B33_Front.jpg",
         "points": 0,
         "category": "Projectile",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
         "fileName": "Projectile_RDL_GM35_Front.jpg",
         "points": 0,
         "category": "Projectile",
-        "faction": "RDL"
+        "faction": "RDL",
+		"keywords": ["Aura"]
     },
     {
         "fileName": "Projectile_RDL_GS2_Front.jpg",
@@ -100,13 +103,15 @@
         "fileName": "Projectile_UN_AMDS210_Front.png",
         "points": 0,
         "category": "Projectile",
-        "faction": "UN"
+        "faction": "UN",
+		"keywords": ["ElectronicAttack", "FireControlInterference"]
     },
     {
         "fileName": "Projectile_UN_DBP_Front.png",
         "points": 0,
         "category": "Projectile",
-        "faction": "UN"
+        "faction": "UN",
+		"keywords": ["Barricade"]
     },
     {
         "fileName": "Projectile_UN_M7_Front.png",
@@ -124,7 +129,8 @@
         "fileName": "Projectile_UN_RKG70_Front.png",
         "points": 0,
         "category": "Projectile",
-        "faction": "UN"
+        "faction": "UN",
+		"keywords": ["MissileGroup(3)"]
     },
     {
         "fileName": "Projectile_UN_SGM2_Front.png",

@@ -13,7 +13,8 @@
         "category": "Torso",
         "faction": "RDL",
         "frame": true,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
         "fileName": "Part_RDL_Torso_RT08_Front.jpg",
@@ -21,7 +22,8 @@
         "category": "Torso",
         "faction": "RDL",
         "frame": true,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["Stationary", "ExtraFiringTick", "OnHit", "KnockBack(1)"]
     },
     {
         "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
@@ -42,7 +44,8 @@
         "category": "Torso",
         "faction": "RDL",
         "frame": true,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["ElectronicSupport", "WarfareNode(1)"]
     },
     {
         "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
@@ -67,7 +70,8 @@
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
-        "frame": true
+        "frame": true,
+		"keywords": ["DesignateW(1)", "DirectFire"]
     },
     {
         "fileName": "Part_RDL_Torso_RT16B_Front.png",
@@ -80,7 +84,8 @@
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
         ],
-        "frame": true
+        "frame": true,
+		"keywords": ["DirectFire"]
     },
     {
         "fileName": "Part_RDL_Torso_RT15S_Front.png",
@@ -88,7 +93,8 @@
         "category": "Torso",
         "faction": "RDL",
         "frame": true,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["ElectronicSupport"]
     },
     {
         "fileName": "Part_RDL_Torso_RT06E_Front.png",
@@ -121,7 +127,8 @@
         "subCards": [
             "Projectile_UN_M9_Front.png"
         ],
-        "frame": true
+        "frame": true,
+		"keywords": ["IndirectFire"]
     },
     {
         "fileName": "Part_UN_Torso_TM31R_Front.png",
@@ -140,7 +147,8 @@
         "charge": true,
         "frame": true,
 		"mobility": 1,
-		"electronic": 4
+		"electronic": 4,
+		"keywords": ["KCArmor", "Highlight"]
     },
     {
         "fileName": "Part_UN_Torso_TM35N_Front.png",
@@ -150,7 +158,8 @@
         "charge": true,
         "frame": true,
 		"mobility": 1,
-		"electronic": 4
+		"electronic": 4,
+		"keywords": ["KCArmor", "ElectronicAttack", "Silence", "Immobilized"]
     },
     {
         "fileName": "Part_UN_Torso_TM39_Front.png",
@@ -159,7 +168,8 @@
         "faction": "UN",
         "frame": true,
 		"mobility": 1,
-		"electronic": 5
+		"electronic": 5,
+		"keywords": ["Silence", "LowProfile"]
     },
     {
         "fileName": "Part_UN_Torso_TM641_Front.png",
@@ -168,7 +178,8 @@
         "faction": "UN",
         "frame": true,
 		"mobility": 1,
-		"electronic": 5
+		"electronic": 5,
+		"keywords": ["Silence", "LowProfile", "Stealth(2)"]
     },
     {
         "fileName": "Part_UN_Torso_TM641O_Trial_Front.png",
@@ -177,7 +188,8 @@
         "faction": "UN",
         "frame": true,
 		"mobility": 1,
-		"electronic": 5
+		"electronic": 5,
+		"keywords": ["Silence", "LowProfile", "Stealth(2)"]
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",

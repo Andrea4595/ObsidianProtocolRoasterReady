@@ -729,3 +729,56 @@ div.hidden-card-overlay > img.hidden-title-image {
 .modal-image-container.tactical-card-view {
     grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
 }
+
+/* Card Detail Modal Styles */
+#card-detail-modal-content {
+    max-width: 500px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+.keywords-container {
+    margin-top: 20px;
+    padding: 15px;
+    /* background-color: #f9f9f9; */ /* Removed background color */
+    border-radius: 8px;
+}
+
+.keyword-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Increased border-radius */
+    background-color: #eeeeee; /* Darkened grey background */
+}
+
+.keyword-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #1877f2; /* Changed to blue */
+}
+
+.keyword-info {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.keyword-item:last-child {
+    margin-bottom: 0;
+}
+
+#card-detail-content {
+    display: flex;
+    flex-direction: column; /* Ensure keywords appear below the image */
+    justify-content: flex-start; /* Align content to the top */
+    align-items: center;
+    height: auto; /* Let height be determined by content */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#card-detail-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+}
