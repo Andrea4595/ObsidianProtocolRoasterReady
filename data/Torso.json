@@ -29,6 +29,7 @@
         "category": "Torso",
         "faction": "RDL",
         "ammunition": 1,
+		"mobility": 1,
 		"electronic": 3,
         "subCards": [
             "Projectile_RDL_GS2_Front.jpg"
