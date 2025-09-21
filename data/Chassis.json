@@ -19,7 +19,8 @@
         "category": "Chassis",
         "faction": "RDL",
         "frame": true,
-		"mobility": 3
+		"mobility": 3,
+		"keywords": ["MovingInStraightLine"]
     },
     {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
@@ -42,7 +43,8 @@
         "category": "Chassis",
         "faction": "RDL",
         "frame": true,
-		"mobility": 2
+		"mobility": 2,
+		"keywords": ["MovingInStraightLine"]
     },
     {
         "fileName": "Part_UN_Chassis_LM231_Front.png",

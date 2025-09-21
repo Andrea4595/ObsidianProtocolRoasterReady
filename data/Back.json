@@ -57,7 +57,7 @@
             "Projectile_RDL_B32_Front.jpg",
             "Projectile_RDL_B33_Front.jpg"
         ],
-		"keywords": ["IndirectFire", "Silence", "Throw"]
+		"keywords": ["DirectFire", "Silence", "Throw"]
     },
     {
         "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
@@ -183,7 +183,8 @@
         "category": "Back",
         "faction": "UN",
 		"electronic": 1,
-		"mobility": 1
+		"mobility": 1,
+		"keywords": ["ElectronicAttack"]
     },
     {
         "fileName": "Part_UN_Back_GSD-2A_Front.png",

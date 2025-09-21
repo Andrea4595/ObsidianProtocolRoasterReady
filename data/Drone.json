@@ -79,7 +79,7 @@
         "points": 51,
         "category": "Drone",
         "faction": "UN",
-		"keywords": ["FireControlInterference"]
+		"keywords": ["ElectronicAttack", "FireControlInterference"]
     },
     {
         "fileName": "Drone_PL_MD4A_Front.png",
