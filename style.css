@@ -739,7 +739,7 @@ div.hidden-card-overlay > img.hidden-title-image {
 .keywords-container {
     margin-top: 20px;
     padding: 15px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */ /* Removed background color */
     border-radius: 8px;
 }
 
@@ -747,13 +747,14 @@ div.hidden-card-overlay > img.hidden-title-image {
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+    border-radius: 20px; /* Increased border-radius */
+    background-color: #eeeeee; /* Darkened grey background */
 }
 
 .keyword-name {
     font-weight: bold;
     margin-bottom: 5px;
+    color: #1877f2; /* Changed to blue */
 }
 
 .keyword-info {
