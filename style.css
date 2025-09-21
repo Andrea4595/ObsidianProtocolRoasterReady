@@ -729,3 +729,24 @@ div.hidden-card-overlay > img.hidden-title-image {
 .modal-image-container.tactical-card-view {
     grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
 }
+
+/* Card Detail Modal Styles */
+#card-detail-modal-content {
+    max-width: 500px; /* Adjust as needed */
+}
+
+#card-detail-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#card-detail-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+}

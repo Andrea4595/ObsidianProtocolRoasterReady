@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { renderRoster, createBuilderModeImage } from './ui.js';
+import { renderRoster, createBuilderModeImage, createGameCardImage } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 
@@ -119,4 +119,25 @@ export const openTacticalCardModal = () => {
     });
 
     dom.modalOverlay.style.display = 'flex';
+};
+
+export const openCardDetailModal = (cardData) => {
+    const cardDetailContent = document.getElementById('card-detail-content');
+    if (!cardDetailContent) return;
+
+    cardDetailContent.innerHTML = ''; // Clear previous content
+
+    const img = state.isGameMode ? createGameCardImage(cardData) : createBuilderModeImage(cardData);
+    img.style.width = '100%';
+    img.style.height = 'auto';
+
+    cardDetailContent.appendChild(img);
+
+    const modal = document.getElementById('card-detail-modal');
+    if (modal) modal.style.display = 'flex';
+};
+
+export const closeCardDetailModal = () => {
+    const modal = document.getElementById('card-detail-modal');
+    if (modal) modal.style.display = 'none';
 };

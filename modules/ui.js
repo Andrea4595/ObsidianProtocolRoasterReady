@@ -1,9 +1,10 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openModal } from './modal.js';
+import { openModal, openCardDetailModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
 import { categoryOrder, CSS_CLASSES } from './constants.js';
 import { applyUnitRules, applyDroneRules } from './rules.js';
+import { setupLongPress } from './longPress.js';
 
 // --- Main Render Functions ---
 
@@ -319,10 +320,7 @@ const createGameModeCard = (card, cardData, isInteractive) => {
 
     if (isHiddenTacticalCard && !isRevealedHiddenTactical) {
         card.appendChild(createHiddenCardOverlay(cardData));
-        card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            performActionAndPreserveScroll(() => { cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode; }, e.target);
-        });
+        card.style.cursor = 'pointer';
     } else {
         if (isInteractive && !isRevealedHiddenTactical) {
             appendStatusToken(card, cardData);
@@ -330,13 +328,8 @@ const createGameModeCard = (card, cardData, isInteractive) => {
 
         if (isRevealedHiddenTactical) {
             card.style.cursor = 'pointer';
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                performActionAndPreserveScroll(() => { cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode; }, e.target);
-            });
         } else if (isInteractive) {
             card.style.cursor = 'pointer';
-            card.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target));
         }
     }
 };
@@ -361,7 +354,7 @@ const createHiddenCardOverlay = (cardData) => {
     return overlay;
 };
 
-const createGameCardImage = (cardData) => {
+export const createGameCardImage = (cardData) => {
     const isDestroyed = cardData.cardStatus === 2;
     const img = document.createElement('img');
     img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
@@ -426,14 +419,14 @@ const createFreightBackCardSlot = (cardData) => {
 
     if (state.isGameMode) {
         if (backCardData) {
+            setupLongPress(backSlot, () => openCardDetailModal(backCardData), (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
             backCardWrapper.appendChild(createTokenArea(backCardData, null));
             backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
         } else {
             backCardWrapper.insertBefore(createActionButtons(null), backSlot);
         }
     } else {
-        backSlot.style.cursor = 'pointer';
-        backSlot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
+        setupLongPress(backSlot, () => backCardData && openCardDetailModal(backCardData), () => openModal(cardData.rosterId, 'Back', true));
     }
     return backCardWrapper;
 };
@@ -447,9 +440,22 @@ export const createCardElement = (cardData, isInteractive = true) => {
     const { wrapper, card } = createCardBase(cardData);
 
     if (state.isGameMode) {
+        setupLongPress(card, () => openCardDetailModal(cardData), (e) => {
+            if (isInteractive) {
+                const isHiddenTacticalCard = cardData.category === 'Tactical' && cardData.hidden === true;
+                if (isHiddenTacticalCard) {
+                    performActionAndPreserveScroll(() => {
+                        cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode;
+                    }, e.target);
+                } else {
+                    performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target);
+                }
+            }
+        });
         createGameModeCard(card, cardData, isInteractive);
     } else {
         createBuilderModeCard(card, cardData);
+        setupLongPress(card, () => openCardDetailModal(cardData));
     }
     
     if (!state.isGameMode && (cardData.category === 'Drone' || cardData.category === 'Tactical')) {
@@ -579,19 +585,18 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (cardData) {
             wrapper.appendChild(createTokenArea(cardData, unitData));
             if (category !== 'Pilot') {
-                slot.style.cursor = 'pointer';
-                slot.addEventListener('click', (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
+                setupLongPress(slot, () => openCardDetailModal(cardData), (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
                 wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
             } else {
                 wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
+                setupLongPress(slot, () => openCardDetailModal(cardData));
             }
         } else {
             wrapper.insertBefore(createActionButtons(null, unitData), slot);
             wrapper.appendChild(createTokenArea(null, unitData));
         }
     } else {
-        slot.style.cursor = 'pointer';
-        slot.addEventListener('click', () => openModal(unitId, category));
+        setupLongPress(slot, () => cardData && openCardDetailModal(cardData), () => openModal(unitId, category));
     }
     
     return wrapper;

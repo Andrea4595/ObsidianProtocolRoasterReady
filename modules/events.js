@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal, openTacticalCardModal, openModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
@@ -25,6 +25,17 @@ export function setupEventListeners() {
     dom.modalOverlay.addEventListener('click', (event) => {
         if (event.target === dom.modalOverlay) closeModal();
     });
+
+    // Card Detail Modal
+    const cardDetailModal = document.getElementById('card-detail-modal');
+    const cardDetailClose = document.getElementById('card-detail-close');
+
+    if (cardDetailModal && cardDetailClose) {
+        cardDetailClose.addEventListener('click', closeCardDetailModal);
+        cardDetailModal.addEventListener('click', (event) => {
+            if (event.target === cardDetailModal) closeCardDetailModal();
+        });
+    }
 
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
