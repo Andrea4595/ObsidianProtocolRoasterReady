@@ -174,7 +174,7 @@
         "category": "Pilot",
         "faction": "UN",
 		"link": 4,
-		"keywords": ["Pilot_Sealock", "Vulnerable"]
+		"keywords": ["Pilot_Sealock", "Fragile"]
     },
     {
         "fileName": "Dial_UNPilot_27_Rifleman_Front.png",

@@ -185,7 +185,7 @@
         "faction": "UN",
         "drop": "Part_UN_Right_G6_M5_Dropped.png",
 		"mobility": 1,
-		"keywords": ["LaserWeapon", "Vulnerable", "ScatterShot", "MeleeFiring", "Mutilation"],
+		"keywords": ["LaserWeapon", "Fragile", "ScatterShot", "MeleeFiring", "Mutilation"],
 		"dropKeywords": ["Mutilation"]
     },
     {

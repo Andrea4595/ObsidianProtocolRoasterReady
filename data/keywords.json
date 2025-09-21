@@ -265,7 +265,7 @@
 		"information" : "광학 위장이 비활성화됐을 시, 이 메카는 #그리드 이내에 등장해야 합니다."
 	},
 	{
-		"keyword" : "Vulnerable",
+		"keyword" : "Fragile",
 		"name" : "취약",
 		"information" : "취약 토큰을 지닌 유닛은 피격 시 방어 굴림에서 하양 주사위-1(중첩 가능)"
 	},

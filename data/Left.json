@@ -155,7 +155,7 @@
         "subCards": [
             "Projectile_UN_M7_Front.png"
         ],
-		"keywords": ["LaserWeapon", "Vulnerable", "ScatterShot", "MeleeFiring", "Volley(3)", "IndirectFire"],
+		"keywords": ["LaserWeapon", "Fragile", "ScatterShot", "MeleeFiring", "Volley(3)", "IndirectFire"],
 		"dropKeywords": ["Volley(3)", "IndirectFire"]
     },
     {
@@ -297,6 +297,6 @@
         "category": "Left",
         "faction": "Public",
         "freehand": true,
-		"keywords": ["MeleeFiring", "OnHit", "Vulnerable"]
+		"keywords": ["MeleeFiring", "OnHit", "Fragile"]
     }
 ]
