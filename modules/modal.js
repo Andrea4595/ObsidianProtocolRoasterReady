@@ -11,7 +11,7 @@ let isBackCard = false;
 export const closeModal = () => {
     dom.modalOverlay.style.display = 'none';
     dom.modalImageContainer.innerHTML = '';
-    dom.modalImageContainer.classList.remove(CSS_CLASSES.DRONE_VIEW);
+    dom.modalImageContainer.classList.remove(CSS_CLASSES.DRONE_VIEW, CSS_CLASSES.TACTICAL_CARD_VIEW);
 };
 
 const addCardToUnit = (cardData) => {
