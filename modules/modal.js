@@ -121,6 +121,44 @@ export const openTacticalCardModal = () => {
     dom.modalOverlay.style.display = 'flex';
 };
 
+function createKeywordElements(keywords) {
+    if (!keywords || keywords.length === 0) {
+        return null;
+    }
+
+    const keywordsContainer = document.createElement('div');
+    keywordsContainer.className = 'keywords-container';
+
+    keywords.forEach(keywordStr => {
+        const match = keywordStr.match(/(.+?)(?:\((\d+)\))?$/);
+        if (!match) return;
+
+        const keywordName = match[1];
+        const keywordValue = match[2];
+
+        const keywordData = state.allKeywords.get(keywordName) || state.allKeywords.get(`${keywordName}#`);
+
+        if (keywordData) {
+            const keywordElement = document.createElement('div');
+            keywordElement.className = 'keyword-item';
+
+            const nameElement = document.createElement('div');
+            nameElement.className = 'keyword-name';
+            nameElement.textContent = keywordData.name.replace('#', keywordValue || '').trim();
+
+            const infoElement = document.createElement('div');
+            infoElement.className = 'keyword-info';
+            infoElement.innerHTML = keywordData.information.replace('#', keywordValue || '').replace(/\n/g, '<br>').trim();
+
+            keywordElement.appendChild(nameElement);
+            keywordElement.appendChild(infoElement);
+            keywordsContainer.appendChild(keywordElement);
+        }
+    });
+
+    return keywordsContainer;
+}
+
 export const openCardDetailModal = (cardData) => {
     const cardDetailContent = document.getElementById('card-detail-content');
     if (!cardDetailContent) return;
@@ -136,38 +174,8 @@ export const openCardDetailModal = (cardData) => {
     cardDetailContent.appendChild(img);
 
     const keywords = (state.isGameMode && cardData.isDropped && cardData.dropKeywords) ? cardData.dropKeywords : cardData.keywords;
-
-    if (keywords && keywords.length > 0) {
-        const keywordsContainer = document.createElement('div');
-        keywordsContainer.className = 'keywords-container';
-
-        keywords.forEach(keywordStr => {
-            const match = keywordStr.match(/(.+?)(?:\((\d+)\))?$/);
-            if (!match) return;
-
-            const keywordName = match[1];
-            const keywordValue = match[2];
-
-            const keywordData = state.allKeywords.get(keywordName) || state.allKeywords.get(`${keywordName}#`);
-
-            if (keywordData) {
-                const keywordElement = document.createElement('div');
-                keywordElement.className = 'keyword-item';
-
-                const nameElement = document.createElement('div');
-                nameElement.className = 'keyword-name';
-                nameElement.textContent = keywordData.name.replace('#', keywordValue || '').trim();
-
-                const infoElement = document.createElement('div');
-                infoElement.className = 'keyword-info';
-                infoElement.innerHTML = keywordData.information.replace('#', keywordValue || '').replace(/\n/g, '<br>').trim();
-
-                keywordElement.appendChild(nameElement);
-                keywordElement.appendChild(infoElement);
-                keywordsContainer.appendChild(keywordElement);
-            }
-        });
-
+    const keywordsContainer = createKeywordElements(keywords);
+    if (keywordsContainer) {
         cardDetailContent.appendChild(keywordsContainer);
     }
 

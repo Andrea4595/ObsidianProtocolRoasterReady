@@ -419,14 +419,14 @@ const createFreightBackCardSlot = (cardData) => {
 
     if (state.isGameMode) {
         if (backCardData) {
-            setupLongPress(backSlot, () => openCardDetailModal(backCardData), (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
+            setupCardInteractions(backSlot, backCardData, (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target));
             backCardWrapper.appendChild(createTokenArea(backCardData, null));
             backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
         } else {
             backCardWrapper.insertBefore(createActionButtons(null), backSlot);
         }
     } else {
-        setupLongPress(backSlot, () => backCardData && openCardDetailModal(backCardData), () => openModal(cardData.rosterId, 'Back', true));
+        setupCardInteractions(backSlot, backCardData, () => openModal(cardData.rosterId, 'Back', true));
     }
     return backCardWrapper;
 };
@@ -440,7 +440,7 @@ export const createCardElement = (cardData, isInteractive = true) => {
     const { wrapper, card } = createCardBase(cardData);
 
     if (state.isGameMode) {
-        setupLongPress(card, () => openCardDetailModal(cardData), (e) => {
+        const clickCallback = (e) => {
             if (isInteractive) {
                 const isHiddenTacticalCard = cardData.category === 'Tactical' && cardData.hidden === true;
                 if (isHiddenTacticalCard) {
@@ -451,11 +451,12 @@ export const createCardElement = (cardData, isInteractive = true) => {
                     performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target);
                 }
             }
-        });
+        };
+        setupCardInteractions(card, cardData, clickCallback);
         createGameModeCard(card, cardData, isInteractive);
     } else {
         createBuilderModeCard(card, cardData);
-        setupLongPress(card, () => openCardDetailModal(cardData));
+        setupCardInteractions(card, cardData, null);
     }
     
     if (!state.isGameMode && (cardData.category === 'Drone' || cardData.category === 'Tactical')) {
@@ -488,6 +489,16 @@ export const createCardElement = (cardData, isInteractive = true) => {
 
     return mainContainer;
 };
+
+function setupCardInteractions(element, cardData, clickCallback) {
+    if (!cardData) {
+        element.addEventListener('click', clickCallback);
+        return;
+    }
+
+    const longPressCallback = () => openCardDetailModal(cardData);
+    setupLongPress(element, longPressCallback, clickCallback);
+}
 
 const createPartStatusIndicator = (unitData) => {
     const indicatorContainer = document.createElement('div');
@@ -585,18 +596,18 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (cardData) {
             wrapper.appendChild(createTokenArea(cardData, unitData));
             if (category !== 'Pilot') {
-                setupLongPress(slot, () => openCardDetailModal(cardData), (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
+                setupCardInteractions(slot, cardData, (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unitData), e.target));
                 wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
             } else {
                 wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
-                setupLongPress(slot, () => openCardDetailModal(cardData));
+                setupCardInteractions(slot, cardData, null);
             }
         } else {
             wrapper.insertBefore(createActionButtons(null, unitData), slot);
             wrapper.appendChild(createTokenArea(null, unitData));
         }
     } else {
-        setupLongPress(slot, () => cardData && openCardDetailModal(cardData), () => openModal(unitId, category));
+        setupCardInteractions(slot, cardData, () => openModal(unitId, category));
     }
     
     return wrapper;
