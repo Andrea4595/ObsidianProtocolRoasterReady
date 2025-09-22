@@ -90,7 +90,7 @@ export function setupEventListeners() {
 
     document.addEventListener('contextmenu', (event) => {
         const target = event.target;
-        if (target.tagName === 'IMG' && (target.closest('.unit-row') || target.closest('#drones-container') || target.closest('.modal-image-container') || target.closest('.sub-cards-container'))) {
+        if (target.tagName === 'IMG' && (target.closest('.unit-row') || target.closest('#drones-container') || target.closest('.modal-image-container') || target.closest('.sub-cards-container') || target.closest('#card-detail-content'))) {
             event.preventDefault();
         }
     });
