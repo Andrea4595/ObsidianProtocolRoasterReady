@@ -235,9 +235,25 @@ async function loadImageData() {
         allCards.drones = [];
         allCards.tactical = [];
         allCards.byFileName = new Map();
+        allCards.byCardId = new Map();
         
         cardData.forEach(card => {
+            // Generate and set the unique cardId
+            const nameOnly = card.fileName.substring(0, card.fileName.lastIndexOf('.'));
+            const parts = nameOnly.split('_');
+            let startIndex;
+            if (parts[0] === 'Part') {
+                startIndex = 3;
+            } else { // Drone, Dial, etc.
+                startIndex = 2;
+            }
+            const idParts = parts.slice(startIndex, -1);
+            const modelId = idParts.join('_');
+            const cardId = `${card.category}_${modelId}`;
+            card.cardId = cardId;
+
             allCards.byFileName.set(card.fileName, card);
+            allCards.byCardId.set(cardId, card);
 
             if (card.category === "Tactical" && card.hidden === true) {
                 card.isRevealedInGameMode = false;

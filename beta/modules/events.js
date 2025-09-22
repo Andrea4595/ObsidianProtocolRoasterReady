@@ -5,6 +5,7 @@ import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
 import { ROSTER_SELECT_ACTIONS } from './constants.js';
+import { exportRosterCode, importRosterCode, openRosterCodeModal, closeRosterCodeModal, copyCodeToClipboard } from './rosterCode.js';
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -36,6 +37,16 @@ export function setupEventListeners() {
             if (event.target === cardDetailModal) closeCardDetailModal();
         });
     }
+
+    // Roster Code Modal
+    dom.exportRosterCodeBtn.addEventListener('click', exportRosterCode);
+    dom.importRosterCodeBtn.addEventListener('click', () => openRosterCodeModal('import'));
+    dom.rosterCodeModalClose.addEventListener('click', closeRosterCodeModal);
+    dom.copyRosterCodeBtn.addEventListener('click', copyCodeToClipboard);
+    dom.importRosterBtn.addEventListener('click', importRosterCode);
+    dom.rosterCodeModal.addEventListener('click', (event) => {
+        if (event.target === dom.rosterCodeModal) closeRosterCodeModal();
+    });
 
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');

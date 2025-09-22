@@ -7,6 +7,12 @@ export class Roster {
         this.faction = faction;
     }
 
+    clear() {
+        this.units = {};
+        this.drones = [];
+        this.tacticalCards = [];
+    }
+
     serialize() {
         const serialized = { version: 1, faction: this.faction, units: {}, drones: [], tacticalCards: [] };
 
