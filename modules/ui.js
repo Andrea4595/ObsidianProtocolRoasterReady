@@ -4,7 +4,6 @@ import { openModal, openCardDetailModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
 import { categoryOrder, CSS_CLASSES } from './constants.js';
 import { applyUnitRules, applyDroneRules } from './rules.js';
-import { setupLongPress } from './longPress.js';
 
 // --- Main Render Functions ---
 
@@ -290,6 +289,7 @@ const createCardBase = (cardData) => {
     const card = document.createElement('div');
     card.className = CSS_CLASSES.DISPLAY_CARD;
     card.style.position = 'relative';
+    card.style.position = 'relative';
 
     if (cardData.category === 'Drone' || cardData.category === 'Projectile') {
         card.classList.add(CSS_CLASSES.DRONE_DISPLAY_CARD, 'drone-card');
@@ -357,6 +357,7 @@ const createHiddenCardOverlay = (cardData) => {
 export const createGameCardImage = (cardData) => {
     const isDestroyed = cardData.cardStatus === 2;
     const img = document.createElement('img');
+    img.className = 'card-image'; // 클래스 추가
     img.src = `Cards/${cardData.category}/${cardData.isDropped ? cardData.drop : cardData.fileName}`;
     if (isDestroyed) {
         img.style.filter = 'brightness(50%)';
@@ -366,6 +367,7 @@ export const createGameCardImage = (cardData) => {
 
 export const createBuilderModeImage = (cardData) => {
     const img = document.createElement('img');
+    img.className = 'card-image'; // 클래스 추가
     img.src = `Cards/${cardData.category}/${cardData.fileName}`;
     return img;
 };
@@ -373,13 +375,16 @@ export const createBuilderModeImage = (cardData) => {
 const appendStatusToken = (card, cardData) => {
     let tokenSrc = null;
     const isDrone = cardData.category === 'Drone';
-    if (cardData.cardStatus === 1) tokenSrc = isDrone ? 'icons/warning_drone.png' : 'icons/warning.png';
-    if (cardData.cardStatus === 2) tokenSrc = isDrone ? 'icons/destroyed_drone.png' : 'icons/destroyed.png';
+    if (cardData.cardStatus === 1) tokenSrc = 'icons/warning.png';
+    if (cardData.cardStatus === 2) tokenSrc = 'icons/destroyed.png';
     if (cardData.cardStatus === 3 && !isDrone) tokenSrc = 'icons/repaired.png';
 
     if (tokenSrc) {
         const tokenImg = document.createElement('img');
         tokenImg.className = CSS_CLASSES.STATUS_TOKEN;
+        if (isDrone) {
+            tokenImg.classList.add('drone-status-token');
+        }
         tokenImg.src = tokenSrc;
         card.appendChild(tokenImg);
     }
@@ -491,13 +496,22 @@ export const createCardElement = (cardData, isInteractive = true) => {
 };
 
 function setupCardInteractions(element, cardData, clickCallback) {
-    if (!cardData) {
+    // Add click event for main action
+    if (clickCallback) {
         element.addEventListener('click', clickCallback);
-        return;
     }
 
-    const longPressCallback = () => openCardDetailModal(cardData);
-    setupLongPress(element, longPressCallback, clickCallback);
+    // Add info button for card details
+    if (cardData) {
+        const infoButton = document.createElement('img');
+        infoButton.src = 'icons/information.png';
+        infoButton.className = 'info-button';
+        infoButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent card's main click event
+            openCardDetailModal(cardData);
+        });
+        element.appendChild(infoButton);
+    }
 }
 
 const createPartStatusIndicator = (unitData) => {
@@ -569,6 +583,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
 
     const slot = document.createElement('div');
     slot.className = CSS_CLASSES.CARD_SLOT;
+    slot.style.position = 'relative';
     
     if (cardData) {
         const img = state.isGameMode ? createGameCardImage(cardData) : createBuilderModeImage(cardData);
