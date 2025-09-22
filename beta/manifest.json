@@ -1,0 +1,21 @@
+{
+  "name": "로스터 빌더",
+  "short_name": "로스터 빌더",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#1c1e21",
+  "description": "옵시디언 프로토콜 게임의 로스터를 빌드할 수 있는 툴입니다.",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

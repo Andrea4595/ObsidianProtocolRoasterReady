@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로스터 빌더</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-mode-header" style="display: none;">
+        <div id="game-mode-notice">직관적인 상태 확인을 위하여 실물 카드도 함께 구비하는 것을 권장드립니다.</div>
+        <button id="exit-game-mode-btn">빌더로 돌아가기</button>
+    </div>
+
+    <h1 id="app-title" style="display: none;">로스터</h1>
+
+    <div id="roster-controls">
+        <div class="control-group">
+            <select id="roster-select"></select>
+            <button id="rename-roster-btn" class="image-button" title="이름 변경">
+                <img src="icons/rename.png" alt="이름 변경">
+            </button>
+            <button id="delete-roster-btn" class="image-button" title="삭제">
+                <img src="icons/remove.png" alt="삭제">
+            </button>
+        </div>
+        <div class="control-group">
+            <select id="faction-select">
+                <option value="RDL">RDL</option>
+                <option value="UN">UN</option>
+            </select>
+            <button id="export-image-btn" class="image-button" title="이미지로 저장">
+                <img src="icons/image.png" alt="이미지로 저장">
+            </button>
+            <button id="game-mode-btn" class="image-button" title="게임 모드">
+                <img src="icons/gameMode.png" alt="게임 모드">
+            </button>
+        </div>
+    </div>
+
+    <div id="roster-summary">
+        <h2>총합 포인트: <span id="total-points">0</span></h2>
+    </div>
+
+    <div id="units-container"></div>
+
+    <div class="add-button-container">
+        <button id="add-unit-button">+ 유닛 추가</button>
+        <button id="add-drone-button">+ 드론 추가</button>
+        <button id="add-tactical-card-button">+ 전술 카드 추가</button>
+    </div>
+
+    <!-- Modal for selecting images -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <span id="modal-close" class="modal-close">&times;</span>
+            <h2 id="modal-title">부품 선택</h2>
+            <div id="modal-image-container" class="modal-image-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal for card details -->
+    <div id="card-detail-modal" class="modal-overlay">
+        <div id="card-detail-modal-content" class="modal-content">
+            <span id="card-detail-close" class="modal-close">&times;</span>
+            <div id="card-detail-content"></div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

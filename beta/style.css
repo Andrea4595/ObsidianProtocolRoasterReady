@@ -1,0 +1,807 @@
+:root {
+    /* Card Size Variables */
+    --card-slot-width: 200px;
+    --card-slot-height: 300px;
+    --drone-card-height: 300px;
+    --tactical-card-width: 360px;
+    --tactical-card-height: 500px;
+    --hidden-title-height: 90px;
+    --hidden-title-top: 10px;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px 20px 120px 20px; /* Add padding to bottom for the add button */
+}
+
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    margin-bottom: 40px;
+}
+
+#units-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center rows and cards */
+    gap: 10px; /* Space between unit entries */
+}
+
+.unit-entry {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px; /* Space between full unit entries */
+}
+
+.unit-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; /* Align wrappers to the top */
+    gap: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.card-wrapper {
+    position: relative; /* Set position context for absolute children */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Align content to the bottom */
+}
+
+.card-slot {
+    width: var(--card-slot-width);
+    height: var(--card-slot-height);
+    border: 2px dashed #ccd0d5;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden; /* Prevent children from overflowing rounded corners */
+}
+
+.card-slot:hover {
+    background-color: #f7f8fa;
+    border-color: #8a8d91;
+}
+
+.slot-label {
+    font-weight: bold;
+    color: #65676b;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
+.card-slot .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Drone & Sub-card Container Styles */
+#drones-container, #tactical-cards-container, .sub-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    align-items: flex-start; /* Align wrappers to the top */
+    margin-top: 20px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sub-cards-container {
+    background-color: #ced4da; /* Darker gray background */
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px; /* Add space from drone container */
+}
+
+.drone-card {
+    position: relative;
+    width: fit-content; /* Fit to image width */
+    height: fit-content;
+    margin: auto;
+    border-radius: 10px; /* Match image radius */
+}
+
+.drone-card .card-image {
+    height: var(--drone-card-height);
+    width: auto; /* Let width adjust to maintain aspect ratio */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.tactical-display-card {
+    width: var(--tactical-card-width);
+    height: var(--tactical-card-height);
+}
+
+.tactical-display-card .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.delete-drone-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #dc3545;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 2;
+}
+
+.delete-drone-button:hover { transform: scale(1.2); }
+
+/* Add/Delete Button Styles */
+.add-button-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    max-width: 90vw; /* Use viewport width to constrain size */
+    overflow-x: auto;   /* Allow horizontal scrolling */
+    white-space: nowrap;  /* Prevent buttons from wrapping */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+#add-unit-button, #add-drone-button, #add-tactical-card-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    color: #fff; /* Common text color */
+}
+
+#add-unit-button:hover, #add-drone-button:hover, #add-tactical-card-button:hover {
+    transform: scale(1.05); /* Common hover transform */
+}
+
+#add-unit-button {
+    background-color: #1877f2;
+}
+#add-unit-button:hover {
+    background-color: #166fe5;
+}
+
+#add-drone-button {
+    background-color: #42b72a;
+}
+#add-drone-button:hover {
+    background-color: #36a420;
+}
+
+#add-tactical-card-button {
+    background-color: #8a2be2; /* Purple */
+}
+#add-tactical-card-button:hover {
+    background-color: #7b24c6; /* Darker Purple */
+}
+
+.delete-unit-button {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0; /* Prevent button from shrinking */
+    font-size: 24px;
+    font-weight: bold;
+    color: #dc3545; /* Red */
+    background-color: #f8f9fa;
+    border: 1px solid #dc3545;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.delete-unit-button:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1200px;
+    height: 90%;
+    max-height: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #606770;
+    cursor: pointer;
+}
+
+#modal-title {
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-image-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.modal-card-item {
+    position: relative;
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 6px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    align-self: start;
+}
+
+.modal-card-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(24, 119, 242, 0.6);
+    border-color: #1877f2;
+}
+
+.modal-card-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+}
+
+.deselect-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    aspect-ratio: 5 / 7; /* Set aspect ratio similar to main cards */
+    border: 2px dashed #ccd0d5;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #65676b;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    align-self: start; /* Prevent stretching */
+}
+
+.deselect-option:hover {
+    background-color: #f7f8fa;
+    border-color: #dc3545; /* Red color on hover */
+    color: #dc3545;
+}
+
+.hidden-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+div.hidden-card-overlay > img.hidden-title-image {
+    position: absolute;
+    top: var(--hidden-title-top);
+    left: 50%;
+    transform: translateX(-50%);
+    height: var(--hidden-title-height);
+    width: auto;
+}
+
+/* This more specific selector ensures the unknown icon size is not overridden by the general .tactical-display-card img rule */
+.tactical-display-card .unknown-icon-image {
+    width: 50%;
+    height: auto;
+    object-fit: contain; /* Use contain to ensure the whole icon is visible */
+    opacity: 0.8;
+}
+
+/* Roster Summary Styles */
+#roster-summary {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#roster-summary h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #1c1e21;
+}
+
+#total-points {
+    color: #1877f2;
+    font-weight: bold;
+}
+
+/* Card-specific points display */
+.card-points {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 8px;
+    background-color: rgba(24, 119, 242, 0.9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* So it doesn't interfere with the click */
+}
+
+.unit-points-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* --- Responsive Styles --- */
+
+@media (max-width: 1400px) {
+    :root {
+        --card-slot-width: 180px;
+        --card-slot-height: 270px;
+        --drone-card-height: 270px;
+        --tactical-card-width: 290px;
+        --tactical-card-height: 405px;
+        --hidden-title-height: 84px;
+        --hidden-title-top: 8px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --card-slot-width: 160px;
+        --card-slot-height: 240px;
+        --drone-card-height: 240px;
+        --tactical-card-width: 255px;
+        --tactical-card-height: 360px;
+        --hidden-title-height: 72px;
+        --hidden-title-top: 8px;
+    }
+    .unit-row {
+        width: auto;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --card-slot-width: 140px;
+        --card-slot-height: 210px;
+        --drone-card-height: 210px;
+        --tactical-card-width: 225px;
+        --tactical-card-height: 315px;
+        --hidden-title-height: 60px;
+        --hidden-title-top: 6px;
+    }
+    body {
+        padding: 15px 15px 100px 15px;
+    }
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    #roster-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    .control-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .control-group:not(:last-child) {
+        border-right: none;
+        padding-right: 0;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccd0d5;
+    }
+    #roster-controls select#roster-select {
+      flex-grow: 0;
+      max-width: 180px; /* Adjust width for mobile */
+    }
+    .unit-row {
+        gap: 10px; /* Smaller gap for mobile */
+        padding: 15px;
+    }
+    /* General mobile adjustments */
+    .delete-unit-button {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        margin-left: 10px;
+    }
+    .add-button-container {
+        gap: 10px;
+    }
+    #add-unit-button, #add-drone-button, #add-tactical-card-button {
+        padding: 10px 15px;
+        font-size: 14px;
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+    .modal-content {
+        width: 95%;
+        height: 85%;
+    }
+    .modal-image-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+}
+
+/* Roster Controls Styles */
+#roster-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e7f3ff;
+    border-radius: 12px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.control-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.control-group:not(:last-child) {
+    border-right: 1px solid #ccd0d5;
+    padding-right: 10px;
+}
+
+.image-button {
+    background: none;
+    border: 1px solid transparent;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    height: 34px; /* Match estimated select height */
+    width: 34px;  /* Make it square */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-button:hover {
+    background-color: #0000001a; /* A light grey background on hover */
+    border-color: #ccd0d5;
+}
+
+.image-button img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle; /* Align icon nicely */
+}
+
+#roster-controls select, #roster-controls button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccd0d5;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+#roster-controls select:hover, #roster-controls button:hover {
+    background-color: #f7f8fa;
+    border-color: #8a8d91;
+}
+
+#roster-controls select {
+    flex-grow: 1;
+    max-width: 250px;
+}
+
+/* Style for the new image-based delete button */
+#roster-controls button#delete-roster-btn {
+    background-color: #f5c6cb;
+    border-color: #e08991;
+}
+
+#roster-controls button#delete-roster-btn:hover {
+    background-color: #dc3545;
+    border-color: #b02a37;
+}
+
+
+
+/* Game Mode Styles */
+#game-mode-header {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#exit-game-mode-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #6c757d;
+    color: white;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+}
+
+#exit-game-mode-btn:hover {
+    background-color: #5a6268;
+}
+
+.action-button-wrapper {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.action-button-placeholder {
+    height: 43px; /* Matches height of button (33px) + wrapper margin (10px) */
+}
+
+.action-button {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.drop-button {
+    background-color: #c82333;
+}
+
+.drop-button.dropped {
+    background-color: #6c757d;
+}
+
+.change-button {
+    background-color: #17a2b8;
+}
+
+.resource-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    max-width: 180px; /* Match card width */
+    margin-top: 5px;
+}
+
+.resource-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.status-token {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40%; /* 카드 너비의 1/4 */
+    width: auto; /* 종횡비 유지 */
+    z-index: 5;
+    pointer-events: none; /* Make token non-clickable so it passes clicks to the card below */
+}
+
+.token-area {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.charge-token-img {
+    height: 24px; /* Match other tokens */
+    width: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.charge-token-img:hover {
+    transform: scale(1.05);
+}
+#game-mode-notice {
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 10px auto;
+    text-align: center;
+    max-width: 800px;
+    font-size: 14px;
+    color: #594300;
+}
+
+.modal-image-container.drone-view {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.modal-image-container.tactical-card-view {
+    grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
+}
+
+/* Card Detail Modal Styles */
+#card-detail-modal-content {
+    max-width: 500px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+.keywords-container {
+    margin-top: 20px;
+    padding: 15px;
+    /* background-color: #f9f9f9; */ /* Removed background color */
+    border-radius: 8px;
+}
+
+.keyword-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Increased border-radius */
+    background-color: #eeeeee; /* Darkened grey background */
+}
+
+.keyword-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #1877f2; /* Changed to blue */
+}
+
+.keyword-info {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.keyword-item:last-child {
+    margin-bottom: 0;
+}
+
+#card-detail-content {
+    display: flex;
+    flex-direction: column; /* Ensure keywords appear below the image */
+    justify-content: flex-start; /* Align content to the top */
+    align-items: center;
+    height: auto; /* Let height be determined by content */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#card-detail-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+.info-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    z-index: 15;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    box-sizing: border-box;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.info-button:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.drone-status-token {
+    left: 35%; /* Move from center (50%) to the left */
+}
