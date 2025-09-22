@@ -96,4 +96,29 @@ export function setupEventListeners() {
     });
 
     window.addEventListener('resize', adjustOverlayWidths);
+
+    // Sticky summary logic
+    const summary = dom.rosterSummary;
+    const placeholder = dom.rosterSummaryPlaceholder;
+    let summaryTop = summary.offsetTop;
+
+    window.addEventListener('scroll', () => {
+        // Update summaryTop on scroll to handle dynamic content changes, but not when sticky
+        if (!summary.classList.contains('sticky')) {
+            summaryTop = summary.offsetTop;
+        }
+
+        if (window.pageYOffset > summaryTop) {
+            if (!summary.classList.contains('sticky')) {
+                placeholder.style.height = `${summary.offsetHeight}px`;
+                placeholder.style.display = 'block';
+                summary.classList.add('sticky');
+            }
+        } else {
+            if (summary.classList.contains('sticky')) {
+                summary.classList.remove('sticky');
+                placeholder.style.display = 'none';
+            }
+        }
+    });
 }

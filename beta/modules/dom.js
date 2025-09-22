@@ -29,6 +29,7 @@ export const modalTitle = document.getElementById('modal-title');
 export const modalImageContainer = document.getElementById('modal-image-container');
 export const rosterControls = document.getElementById('roster-controls');
 export const rosterSummary = document.getElementById('roster-summary');
+export const rosterSummaryPlaceholder = document.getElementById('roster-summary-placeholder');
 export const gameModeHeader = document.getElementById('game-mode-header');
 export const addButtonContainer = document.querySelector('.add-button-container');
 export const factionSelect = document.getElementById('faction-select');

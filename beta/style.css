@@ -379,7 +379,21 @@ div.hidden-card-overlay > img.hidden-title-image {
     max-width: 400px;
     margin-left: auto;
     margin-right: auto;
+    transition: all 0.3s ease-in-out;
+    z-index: 99;
 }
+
+#roster-summary.sticky {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
 
 #roster-summary h2 {
     margin: 0;
@@ -785,7 +799,7 @@ div.hidden-card-overlay > img.hidden-title-image {
 
 .info-button {
     position: absolute;
-    top: 4px;
+    bottom: 4px;
     right: 4px;
     width: 16px;
     height: 16px;
