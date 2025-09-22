@@ -15,6 +15,7 @@
         "points": 51,
         "category": "Right",
         "faction": "RDL",
+        "freehand": true,
 		"keywords": ["Stationary", "ArmorPiercing(1)"]
     },
     {

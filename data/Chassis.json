@@ -66,6 +66,7 @@
         "points": 57,
         "category": "Chassis",
         "faction": "UN",
+		"frame": true,
 		"mobility": 4
     },
     {
