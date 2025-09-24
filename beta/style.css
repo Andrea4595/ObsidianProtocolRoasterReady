@@ -819,3 +819,86 @@ div.hidden-card-overlay > img.hidden-title-image {
 .drone-status-token {
     left: 35%; /* Move from center (50%) to the left */
 }
+
+/* Roster Code Modal Styles */
+#roster-code-modal .modal-content {
+    max-width: 800px; /* More appropriate width for side-by-side content */
+    height: auto; /* Auto height based on content */
+    max-height: 90vh; /* Limit height to 90% of viewport height */
+}
+
+#roster-code-content-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+    padding-top: 15px;
+}
+
+#roster-code-export-container,
+#roster-code-import-container {
+    flex: 1; /* Each takes up half the space */
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background-color: #f7f8fa;
+    border-radius: 8px;
+}
+
+#roster-code-export-container p,
+#roster-code-import-container p {
+    margin-top: 0;
+    font-size: 14px;
+    color: #65676b;
+}
+
+#roster-code-display,
+#roster-code-input {
+    flex-grow: 1; /* Allow textareas to fill available vertical space */
+    width: 100%;
+    min-height: 150px; /* Ensure a minimum height */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccd0d5;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+#copy-roster-code-btn,
+#import-roster-btn {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#copy-roster-code-btn {
+    background-color: #1877f2; /* Blue */
+}
+
+#copy-roster-code-btn:hover {
+    background-color: #166fe5;
+    transform: scale(1.02);
+}
+
+#import-roster-btn {
+    background-color: #42b72a; /* Green */
+}
+
+#import-roster-btn:hover {
+    background-color: #36a420;
+    transform: scale(1.02);
+}
+
+/* Responsive adjustments for the roster code modal */
+@media (max-width: 768px) {
+    #roster-code-content-wrapper {
+        flex-direction: column;
+    }
+}

@@ -35,8 +35,7 @@ export const addButtonContainer = document.querySelector('.add-button-container'
 export const factionSelect = document.getElementById('faction-select');
 
 // Roster Code Modal Elements
-export const exportRosterCodeBtn = document.getElementById('export-roster-code-btn');
-export const importRosterCodeBtn = document.getElementById('import-roster-code-btn');
+export const rosterCodeBtn = document.getElementById('roster-code-btn');
 export const rosterCodeModal = document.getElementById('roster-code-modal');
 export const rosterCodeModalClose = document.getElementById('roster-code-modal-close');
 export const rosterCodeModalTitle = document.getElementById('roster-code-modal-title');

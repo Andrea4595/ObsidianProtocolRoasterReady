@@ -5,7 +5,7 @@ import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
 import { ROSTER_SELECT_ACTIONS } from './constants.js';
-import { exportRosterCode, importRosterCode, openRosterCodeModal, closeRosterCodeModal, copyCodeToClipboard } from './rosterCode.js';
+import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard } from './rosterCode.js';
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -39,8 +39,7 @@ export function setupEventListeners() {
     }
 
     // Roster Code Modal
-    dom.exportRosterCodeBtn.addEventListener('click', exportRosterCode);
-    dom.importRosterCodeBtn.addEventListener('click', () => openRosterCodeModal('import'));
+    dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
     dom.rosterCodeModalClose.addEventListener('click', closeRosterCodeModal);
     dom.copyRosterCodeBtn.addEventListener('click', copyCodeToClipboard);
     dom.importRosterBtn.addEventListener('click', importRosterCode);

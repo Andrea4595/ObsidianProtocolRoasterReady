@@ -247,7 +247,10 @@ async function loadImageData() {
             } else { // Drone, Dial, etc.
                 startIndex = 2;
             }
-            const idParts = parts.slice(startIndex, -1);
+            let idParts = parts.slice(startIndex);
+            if (idParts.length > 1 && idParts[idParts.length - 1] === 'Front') {
+                idParts.pop();
+            }
             const modelId = idParts.join('_');
             const cardId = `${card.category}_${modelId}`;
             card.cardId = cardId;
