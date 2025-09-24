@@ -799,8 +799,8 @@ div.hidden-card-overlay > img.hidden-title-image {
 
 .info-button {
     position: absolute;
-    bottom: 4px;
-    right: 4px;
+    top: 2px;
+    right: 2px;
     width: 16px;
     height: 16px;
     cursor: pointer;
