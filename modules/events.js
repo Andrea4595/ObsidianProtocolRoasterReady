@@ -5,6 +5,7 @@ import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
 import { ROSTER_SELECT_ACTIONS } from './constants.js';
+import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard } from './rosterCode.js';
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -36,6 +37,15 @@ export function setupEventListeners() {
             if (event.target === cardDetailModal) closeCardDetailModal();
         });
     }
+
+    // Roster Code Modal
+    dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
+    dom.rosterCodeModalClose.addEventListener('click', closeRosterCodeModal);
+    dom.copyRosterCodeBtn.addEventListener('click', copyCodeToClipboard);
+    dom.importRosterBtn.addEventListener('click', importRosterCode);
+    dom.rosterCodeModal.addEventListener('click', (event) => {
+        if (event.target === dom.rosterCodeModal) closeRosterCodeModal();
+    });
 
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
@@ -96,4 +106,29 @@ export function setupEventListeners() {
     });
 
     window.addEventListener('resize', adjustOverlayWidths);
+
+    // Sticky summary logic
+    const summary = dom.rosterSummary;
+    const placeholder = dom.rosterSummaryPlaceholder;
+    let summaryTop = summary.offsetTop;
+
+    window.addEventListener('scroll', () => {
+        // Update summaryTop on scroll to handle dynamic content changes, but not when sticky
+        if (!summary.classList.contains('sticky')) {
+            summaryTop = summary.offsetTop;
+        }
+
+        if (window.pageYOffset > summaryTop) {
+            if (!summary.classList.contains('sticky')) {
+                placeholder.style.height = `${summary.offsetHeight}px`;
+                placeholder.style.display = 'block';
+                summary.classList.add('sticky');
+            }
+        } else {
+            if (summary.classList.contains('sticky')) {
+                summary.classList.remove('sticky');
+                placeholder.style.display = 'none';
+            }
+        }
+    });
 }

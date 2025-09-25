@@ -1,4 +1,4 @@
-const CACHE_NAME = 'unit-combiner-v4';
+const CACHE_NAME = 'unit-combiner-v5';
 const appShellUrls = [
   '/',
   'index.html',

@@ -29,6 +29,19 @@ export const modalTitle = document.getElementById('modal-title');
 export const modalImageContainer = document.getElementById('modal-image-container');
 export const rosterControls = document.getElementById('roster-controls');
 export const rosterSummary = document.getElementById('roster-summary');
+export const rosterSummaryPlaceholder = document.getElementById('roster-summary-placeholder');
 export const gameModeHeader = document.getElementById('game-mode-header');
 export const addButtonContainer = document.querySelector('.add-button-container');
 export const factionSelect = document.getElementById('faction-select');
+
+// Roster Code Modal Elements
+export const rosterCodeBtn = document.getElementById('roster-code-btn');
+export const rosterCodeModal = document.getElementById('roster-code-modal');
+export const rosterCodeModalClose = document.getElementById('roster-code-modal-close');
+export const rosterCodeModalTitle = document.getElementById('roster-code-modal-title');
+export const rosterCodeExportContainer = document.getElementById('roster-code-export-container');
+export const rosterCodeDisplay = document.getElementById('roster-code-display');
+export const copyRosterCodeBtn = document.getElementById('copy-roster-code-btn');
+export const rosterCodeImportContainer = document.getElementById('roster-code-import-container');
+export const rosterCodeInput = document.getElementById('roster-code-input');
+export const importRosterBtn = document.getElementById('import-roster-btn');
