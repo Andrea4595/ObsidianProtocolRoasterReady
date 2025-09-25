@@ -392,6 +392,17 @@ div.hidden-card-overlay > img.hidden-title-image {
     margin-bottom: 0;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#roster-summary.sticky h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#roster-summary.sticky #total-points {
+    font-size: 18px;
 }
 
 
@@ -409,9 +420,9 @@ div.hidden-card-overlay > img.hidden-title-image {
 /* Card-specific points display */
 .card-points {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 5px 8px;
+    top: 0px;
+    left: 0px;
+    padding: 4px 6px 4px 6px;
     background-color: rgba(24, 119, 242, 0.9);
     color: #fff;
     font-size: 16px;
@@ -424,8 +435,8 @@ div.hidden-card-overlay > img.hidden-title-image {
 
 .unit-points-overlay {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 0px;
+    left: 0px;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 2px 8px;
@@ -809,6 +820,11 @@ div.hidden-card-overlay > img.hidden-title-image {
     border-radius: 50%;
     box-sizing: border-box;
     transition: transform 0.2s, background-color 0.2s;
+}
+
+.drone-card .info-button,
+.tactical-display-card .info-button {
+    right: 10%;
 }
 
 .info-button:hover {

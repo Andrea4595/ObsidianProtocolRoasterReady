@@ -660,18 +660,7 @@ const createUnitElement = (unitId, unitData) => {
         const pointsDisplay = document.createElement('div');
         pointsDisplay.className = 'unit-points-overlay';
         pointsDisplay.textContent = `${unitPoints}`;
-        Object.assign(pointsDisplay.style, {
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            color: 'white',
-            padding: '2px 8px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            zIndex: '10'
-        });
+        
         unitRow.appendChild(pointsDisplay); // Append to unitRow
     }
 
