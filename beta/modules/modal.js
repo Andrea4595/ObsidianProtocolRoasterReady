@@ -12,6 +12,7 @@ export const closeModal = () => {
     dom.modalOverlay.style.display = 'none';
     dom.modalImageContainer.innerHTML = '';
     dom.modalImageContainer.classList.remove(CSS_CLASSES.DRONE_VIEW, CSS_CLASSES.TACTICAL_CARD_VIEW);
+    document.body.style.overflow = 'auto';
 };
 
 const addCardToUnit = (cardData) => {
@@ -89,8 +90,8 @@ export const openModal = (unitId, category, isBack = false) => {
         if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addCardToUnit));
     });
-
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 export const openDroneModal = () => {
@@ -106,6 +107,7 @@ export const openDroneModal = () => {
     });
 
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 export const openTacticalCardModal = () => {
@@ -121,8 +123,8 @@ export const openTacticalCardModal = () => {
         if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addTacticalCardToRoster)); // Tactical cards are added using addTacticalCardToRoster
     });
-
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 function createKeywordElements(keywords) {
@@ -184,10 +186,16 @@ export const openCardDetailModal = (cardData) => {
     }
 
     const modal = document.getElementById('card-detail-modal');
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 };
 
 export const closeCardDetailModal = () => {
     const modal = document.getElementById('card-detail-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 };
