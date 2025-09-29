@@ -146,8 +146,6 @@
         "category": "Right",
         "faction": "RDL",
         "drop": "Part_RDL_Right_AC35_Dropped.png",
-		"mobility": -2,
-		"dropMobility": 0,
 		"keywords": ["TwoHanded", "Snipe"],
 		"dropKeywords": []
     },

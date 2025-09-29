@@ -13,8 +13,7 @@
         "points": 27,
         "category": "Drone",
         "faction": "RDL",
-        "frame": true,
-		"keywords": ["Volley(2)", "IndirectFire"]
+        "frame": true
     },
     {
         "fileName": "Drone_RDL_DTG30S_Front.jpg",
@@ -23,6 +22,7 @@
         "faction": "RDL",
         "ammunition": 4,
         "frame": true,
+		"keywords": ["Volley(2)", "IndirectFire"],
         "subCards": [
             "Projectile_RDL_MC3_Front.jpg"
         ]

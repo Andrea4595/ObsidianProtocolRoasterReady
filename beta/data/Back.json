@@ -35,7 +35,7 @@
         "subCards": [
             "Projectile_RDL_GM35_Front.jpg"
         ],
-		"keywords": ["IndirectFire", "Silence"]
+		"keywords": ["DirectFire", "Silence"]
     },
     {
         "fileName": "Part_RDL_Back_MUD1_Front.jpg",
@@ -204,7 +204,10 @@
         "category": "Back",
         "faction": "UN",
 		"mobility": 2,
-		"keywords": ["AirborneMovement", "Load"]
+		"keywords": ["AirborneMovement", "Load"],
+        "special": [
+            "cannot_freighted"
+        ]
     },
     {
         "fileName": "Part_UN_Back_MSH2_Front.png",
@@ -220,7 +223,10 @@
         "category": "Back",
         "faction": "UN",
 		"mobility": 2,
-		"keywords": ["Load"]
+		"keywords": ["Load"],
+        "special": [
+            "cannot_freighted"
+        ]
     },
     {
         "fileName": "Part_UN_Back_RKG70_Front.png",
