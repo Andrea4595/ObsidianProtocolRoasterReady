@@ -79,10 +79,12 @@ export const openModal = (unitId, category, isBack = false) => {
 
     const cardsToShow = state.allCards.byCategory[category] || [];
     const faction = state.getActiveRoster().faction;
-    let factionFilteredCards = cardsToShow.filter(c => c.faction === faction);
+    let factionFilteredCards;
 
     if (isBack) {
-        factionFilteredCards = factionFilteredCards.filter(c => !c.special?.includes('cannot_freighted'));
+        factionFilteredCards = cardsToShow.filter(c => c.faction === faction && !c.special?.includes('cannot_freighted'));
+    } else {
+        factionFilteredCards = cardsToShow.filter(c => c.faction === faction || c.faction === 'Public');
     }
 
     dom.modalImageContainer.appendChild(createDeselectOption());
@@ -99,7 +101,7 @@ export const openDroneModal = () => {
     dom.modalImageContainer.classList.add(CSS_CLASSES.DRONE_VIEW);
 
     const faction = state.getActiveRoster().faction;
-    const factionFilteredDrones = state.allCards.drones.filter(d => d.faction === faction);
+    const factionFilteredDrones = state.allCards.drones.filter(d => d.faction === faction || d.faction === 'Public');
 
     factionFilteredDrones.forEach(cardData => {
         if (cardData.visible === false) return;
@@ -117,7 +119,7 @@ export const openTacticalCardModal = () => {
 
     const faction = state.getActiveRoster().faction;
     const tacticalCards = state.allCards.tactical || [];
-    const factionFilteredTacticalCards = tacticalCards.filter(c => c.faction === faction);
+    const factionFilteredTacticalCards = tacticalCards.filter(c => c.faction === faction || c.faction === 'Public');
 
     factionFilteredTacticalCards.forEach(cardData => {
         if (cardData.visible === false) return;
