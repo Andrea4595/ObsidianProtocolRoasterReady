@@ -12,6 +12,7 @@ export const closeModal = () => {
     dom.modalOverlay.style.display = 'none';
     dom.modalImageContainer.innerHTML = '';
     dom.modalImageContainer.classList.remove(CSS_CLASSES.DRONE_VIEW, CSS_CLASSES.TACTICAL_CARD_VIEW);
+    document.body.style.overflow = 'auto';
 };
 
 const addCardToUnit = (cardData) => {
@@ -78,15 +79,19 @@ export const openModal = (unitId, category, isBack = false) => {
 
     const cardsToShow = state.allCards.byCategory[category] || [];
     const faction = state.getActiveRoster().faction;
-    const factionFilteredCards = cardsToShow.filter(c => c.faction === faction || c.faction === 'Public');
+    let factionFilteredCards = cardsToShow.filter(c => c.faction === faction);
+
+    if (isBack) {
+        factionFilteredCards = factionFilteredCards.filter(c => !c.special?.includes('cannot_freighted'));
+    }
 
     dom.modalImageContainer.appendChild(createDeselectOption());
     factionFilteredCards.forEach(cardData => {
         if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addCardToUnit));
     });
-
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 export const openDroneModal = () => {
@@ -94,7 +99,7 @@ export const openDroneModal = () => {
     dom.modalImageContainer.classList.add(CSS_CLASSES.DRONE_VIEW);
 
     const faction = state.getActiveRoster().faction;
-    const factionFilteredDrones = state.allCards.drones.filter(d => d.faction === faction || d.faction === 'Public');
+    const factionFilteredDrones = state.allCards.drones.filter(d => d.faction === faction);
 
     factionFilteredDrones.forEach(cardData => {
         if (cardData.visible === false) return;
@@ -102,6 +107,7 @@ export const openDroneModal = () => {
     });
 
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 export const openTacticalCardModal = () => {
@@ -111,14 +117,14 @@ export const openTacticalCardModal = () => {
 
     const faction = state.getActiveRoster().faction;
     const tacticalCards = state.allCards.tactical || [];
-    const factionFilteredTacticalCards = tacticalCards.filter(c => c.faction === faction || c.faction === 'Public');
+    const factionFilteredTacticalCards = tacticalCards.filter(c => c.faction === faction);
 
     factionFilteredTacticalCards.forEach(cardData => {
         if (cardData.visible === false) return;
         dom.modalImageContainer.appendChild(createCardItem(cardData, addTacticalCardToRoster)); // Tactical cards are added using addTacticalCardToRoster
     });
-
     dom.modalOverlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 function createKeywordElements(keywords) {
@@ -180,10 +186,16 @@ export const openCardDetailModal = (cardData) => {
     }
 
     const modal = document.getElementById('card-detail-modal');
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 };
 
 export const closeCardDetailModal = () => {
     const modal = document.getElementById('card-detail-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 };
