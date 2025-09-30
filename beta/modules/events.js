@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
@@ -47,6 +47,62 @@ export function setupEventListeners() {
         if (event.target === dom.rosterCodeModal) closeRosterCodeModal();
     });
 
+    // Image Export Settings Modal
+    dom.imageExportSettingsClose.addEventListener('click', closeImageExportSettingsModal);
+    dom.cancelExportBtn.addEventListener('click', closeImageExportSettingsModal);
+    dom.imageExportSettingsModal.addEventListener('click', (event) => {
+        if (event.target === dom.imageExportSettingsModal) closeImageExportSettingsModal();
+    });
+
+    document.getElementById('setting-show-points').addEventListener('change', (event) => {
+        const subSettings = document.getElementById('points-sub-settings');
+        const isChecked = event.target.checked;
+        subSettings.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.disabled = !isChecked;
+            // Only force-check sub-options on a real user click
+            if (isChecked && event.isTrusted) {
+                checkbox.checked = true;
+            } else if (!isChecked) {
+                checkbox.checked = false;
+            }
+        });
+    });
+
+    document.getElementById('points-sub-settings').addEventListener('change', () => {
+        const subSettings = document.getElementById('points-sub-settings');
+        const subCheckboxes = subSettings.querySelectorAll('input[type="checkbox"]');
+        const allUnchecked = Array.from(subCheckboxes).every(checkbox => !checkbox.checked);
+        if (allUnchecked) {
+            const mainToggle = document.getElementById('setting-show-points');
+            mainToggle.checked = false;
+            mainToggle.dispatchEvent(new Event('change'));
+        }
+    });
+
+    const saveImageExportSettings = () => {
+        const settings = {
+            showTitle: document.getElementById('setting-show-title').checked,
+            showDiscarded: document.getElementById('setting-show-discarded').checked,
+            showPoints: document.getElementById('setting-show-points').checked,
+            showTotalPoints: document.getElementById('setting-show-total-points').checked,
+            showCardPoints: document.getElementById('setting-show-card-points').checked,
+            showUnitPoints: document.getElementById('setting-show-unit-points').checked,
+            showSubCards: document.getElementById('setting-show-sub-cards').checked,
+            revealHidden: document.getElementById('setting-reveal-hidden').checked,
+        };
+        localStorage.setItem('imageExportSettings', JSON.stringify(settings));
+        state.setImageExportSettings(settings); // Update state as well
+    };
+
+    dom.imageExportSettingsForm.addEventListener('change', saveImageExportSettings);
+
+    dom.imageExportSettingsForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        saveImageExportSettings(); // Save one last time on submit
+        closeImageExportSettingsModal();
+        handleExportImage(state.imageExportSettings);
+    });
+
     const handleNewRoster = () => {
         const name = prompt('새 로스터의 이름을 입력하세요:', '새 로스터');
         if (name) {
@@ -87,7 +143,7 @@ export function setupEventListeners() {
         }
     });
 
-    dom.exportImageBtn.addEventListener('click', handleExportImage);
+    dom.exportImageBtn.addEventListener('click', openImageExportSettingsModal);
     dom.gameModeBtn.addEventListener('click', () => setGameMode(true));
     dom.exitGameModeBtn.addEventListener('click', () => setGameMode(false));
 
