@@ -45,3 +45,11 @@ export const copyRosterCodeBtn = document.getElementById('copy-roster-code-btn')
 export const rosterCodeImportContainer = document.getElementById('roster-code-import-container');
 export const rosterCodeInput = document.getElementById('roster-code-input');
 export const importRosterBtn = document.getElementById('import-roster-btn');
+
+// Image Export Settings Modal Elements
+export const imageExportSettingsModal = document.getElementById('image-export-settings-modal');
+export const imageExportSettingsClose = document.getElementById('image-export-settings-close');
+export const imageExportSettingsForm = document.getElementById('image-export-settings-form');
+export const generateImageBtn = document.getElementById('generate-image-btn');
+export const cancelExportBtn = document.getElementById('cancel-export-btn');
+export const settingRevealHiddenRow = document.getElementById('setting-reveal-hidden-row');

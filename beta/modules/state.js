@@ -12,11 +12,25 @@ export let nextDroneId = 0;
 export let nextTacticalCardId = 0;
 export let isGameMode = false;
 export let gameRoster = {};
+export let imageExportSettings = {
+    showTitle: true,
+    showDiscarded: true,
+    showPoints: true,
+    showTotalPoints: true,
+    showCardPoints: true,
+    showUnitPoints: true,
+    showSubCards: true,
+    revealHidden: true,
+};
 
 // --- Save Versioning ---
 const CURRENT_SAVE_VERSION = 1;
 
 // --- Getters and Setters ---
+
+export function setImageExportSettings(settings) {
+    imageExportSettings = settings;
+}
 export function getActiveRoster() {
     return allRosters[activeRosterName];
 }
@@ -295,6 +309,13 @@ async function loadKeywordData() {
 
 export const initializeApp = async () => {
     await Promise.all([loadImageData(), loadKeywordData()]);
+
+    const savedSettingsRaw = localStorage.getItem('imageExportSettings');
+    if (savedSettingsRaw) {
+        const savedSettings = JSON.parse(savedSettingsRaw);
+        imageExportSettings = { ...imageExportSettings, ...savedSettings };
+    }
+
     const savedRostersRaw = localStorage.getItem('rosters');
     let savedRosters = savedRostersRaw ? JSON.parse(savedRostersRaw) : null;
     const savedActiveName = localStorage.getItem('activeRosterName');
