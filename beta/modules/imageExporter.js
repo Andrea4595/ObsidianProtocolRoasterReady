@@ -277,7 +277,7 @@ function loadHtml2Canvas() {
     });
 }
 
-export const handleExportImage = async (settings) => {
+export const handleExportImage = async (settings, format = 'image/png') => {
     const exportIcon = exportImageBtn.querySelector('img');
     if (!exportIcon) return;
 
@@ -376,7 +376,7 @@ export const handleExportImage = async (settings) => {
 
         const canvas = await html2canvas(exportContainer, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#f0f2f5' });
 
-        const dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();
         newTab.document.write(`
             <html style="height: 100%; margin: 0; padding: 0;">
