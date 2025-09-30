@@ -96,11 +96,12 @@ export function setupEventListeners() {
 
     dom.imageExportSettingsForm.addEventListener('change', saveImageExportSettings);
 
-    dom.imageExportSettingsForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        saveImageExportSettings(); // Save one last time on submit
+    dom.imageExportSettingsForm.addEventListener('change', saveImageExportSettings);
+
+    dom.generateImageBtn.addEventListener('click', () => {
+        saveImageExportSettings(); // Save one last time
         closeImageExportSettingsModal();
-        handleExportImage(state.imageExportSettings);
+        handleExportImage(state.imageExportSettings, 'image/jpeg');
     });
 
     const handleNewRoster = () => {
