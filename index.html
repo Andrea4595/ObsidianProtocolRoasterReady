@@ -95,6 +95,53 @@
         </div>
     </div>
 
+    <!-- Modal for Image Export Settings -->
+    <div id="image-export-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span id="image-export-settings-close" class="modal-close">&times;</span>
+            <form id="image-export-settings-form">
+                <div class="setting-row">
+                    <label for="setting-show-title">타이틀 표시</label>
+                    <input type="checkbox" id="setting-show-title" checked>
+                </div>
+                <div class="setting-row">
+                    <label for="setting-show-discarded">버리기/변경 카드 표시</label>
+                    <input type="checkbox" id="setting-show-discarded" checked>
+                </div>
+                <div class="setting-row">
+                    <label for="setting-show-points">포인트 표시</label>
+                    <input type="checkbox" id="setting-show-points" checked>
+                </div>
+                <div id="points-sub-settings">
+                    <div class="setting-row sub-setting">
+                        <label for="setting-show-total-points">총합 포인트 표시</label>
+                        <input type="checkbox" id="setting-show-total-points" checked>
+                    </div>
+                    <div class="setting-row sub-setting">
+                        <label for="setting-show-card-points">카드 포인트 표시</label>
+                        <input type="checkbox" id="setting-show-card-points" checked>
+                    </div>
+                    <div class="setting-row sub-setting">
+                        <label for="setting-show-unit-points">유닛 총합 포인트 표시</label>
+                        <input type="checkbox" id="setting-show-unit-points" checked>
+                    </div>
+                </div>
+                <div class="setting-row">
+                    <label for="setting-show-sub-cards">서브 카드 표시</label>
+                    <input type="checkbox" id="setting-show-sub-cards" checked>
+                </div>
+                <div class="setting-row" id="setting-reveal-hidden-row" style="display: none;">
+                    <label for="setting-reveal-hidden">숨김 카드 공개</label>
+                    <input type="checkbox" id="setting-reveal-hidden" checked>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="generate-image-btn">이미지 생성</button>
+                    <button type="button" id="cancel-export-btn">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -201,3 +201,44 @@ export const closeCardDetailModal = () => {
         document.body.style.overflow = 'auto';
     }
 };
+
+export const openImageExportSettingsModal = () => {
+    // Apply saved settings to the form
+    document.getElementById('setting-show-title').checked = state.imageExportSettings.showTitle;
+    document.getElementById('setting-show-discarded').checked = state.imageExportSettings.showDiscarded;
+    document.getElementById('setting-show-points').checked = state.imageExportSettings.showPoints;
+    document.getElementById('setting-show-total-points').checked = state.imageExportSettings.showTotalPoints;
+    document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
+    document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
+    document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
+    document.getElementById('setting-reveal-hidden').checked = state.imageExportSettings.revealHidden;
+
+    // Trigger change event to correctly set sub-option states
+    document.getElementById('setting-show-points').dispatchEvent(new Event('change'));
+
+
+    const rosterState = state.getActiveRoster();
+    if (!rosterState) return;
+
+    const allCardsInRoster = [];
+    Object.values(rosterState.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+    allCardsInRoster.push(...rosterState.drones);
+    if (rosterState.tacticalCards) {
+        allCardsInRoster.push(...rosterState.tacticalCards);
+    }
+    const hasHiddenCards = allCardsInRoster.some(card => card && card.hidden);
+
+    if (hasHiddenCards) {
+        dom.settingRevealHiddenRow.style.display = 'flex';
+    } else {
+        dom.settingRevealHiddenRow.style.display = 'none';
+    }
+
+    dom.imageExportSettingsModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+export const closeImageExportSettingsModal = () => {
+    dom.imageExportSettingsModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};

@@ -3,50 +3,6 @@ import { updateTotalPoints } from './ui.js';
 import { categoryOrder, CARD_DIMENSIONS } from './constants.js';
 import { exportImageBtn } from './dom.js';
 
-// --- Custom Confirmation Modal ---
-const showHiddenCardConfirmation = () => {
-    return new Promise((resolve) => {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000;';
-
-        const modal = document.createElement('div');
-        modal.style.cssText = 'background-color: #fff; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);';
-
-        const message = document.createElement('p');
-        message.textContent = '비공개 카드를 숨기시겠습니까?';
-        message.style.cssText = 'margin: 0 0 20px; font-size: 18px;';
-
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.cssText = 'display: flex; gap: 15px; justify-content: center;';
-
-        const hideBtn = document.createElement('button');
-        hideBtn.textContent = '비공개 숨김';
-        hideBtn.style.cssText = 'padding: 10px 20px; border-radius: 8px; border: 1px solid #6c757d; background-color: #6c757d; color: white; font-size: 16px; cursor: pointer;';
-
-        const revealBtn = document.createElement('button');
-        revealBtn.textContent = '모두 공개';
-        revealBtn.style.cssText = 'padding: 10px 20px; border-radius: 8px; border: 1px solid #17a2b8; background-color: #17a2b8; color: white; font-size: 16px; cursor: pointer;';
-
-        hideBtn.onclick = () => {
-            document.body.removeChild(overlay);
-            resolve(true);
-        };
-
-        revealBtn.onclick = () => {
-            document.body.removeChild(overlay);
-            resolve(false);
-        };
-
-        buttonContainer.appendChild(hideBtn);
-        buttonContainer.appendChild(revealBtn);
-        modal.appendChild(message);
-        modal.appendChild(buttonContainer);
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-    });
-};
-
-
 // --- HTML Generation Helpers ---
 
 const createElementWithStyles = (tag, styles) => {
@@ -55,7 +11,7 @@ const createElementWithStyles = (tag, styles) => {
     return element;
 };
 
-const generateCardHtml = (card, shouldHide, imgStyles) => {
+const generateCardHtml = (card, shouldHide, settings, imgStyles) => {
     if (!card) return null;
 
     const container = createElementWithStyles('div', { position: 'relative' });
@@ -107,7 +63,7 @@ const generateCardHtml = (card, shouldHide, imgStyles) => {
         unknownIcon.src = 'icons/unknown.png';
         overlay.appendChild(unknownIcon);
         container.appendChild(overlay);
-    } else {
+    } else if (settings.showCardPoints) {
         const pointsDiv = createElementWithStyles('div', {
             position: 'absolute',
             top: '5px',
@@ -127,7 +83,7 @@ const generateCardHtml = (card, shouldHide, imgStyles) => {
     return container;
 };
 
-const generateUnitHtml = (unit, shouldHide) => {
+const generateUnitHtml = (unit, shouldHide, settings) => {
     const unitContainer = createElementWithStyles('div', {
         display: 'flex',
         gap: '10px',
@@ -139,22 +95,23 @@ const generateUnitHtml = (unit, shouldHide) => {
         position: 'relative' // Added for absolute positioning of unit points
     });
 
-    const unitPoints = Object.values(unit).reduce((sum, card) => sum + (card ? card.points : 0), 0);
-
-    const unitPointsDisplay = createElementWithStyles('div', {
-        position: 'absolute',
-        top: '10px',
-        left: '10px',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        color: 'white',
-        padding: '2px 8px',
-        borderRadius: '6px',
-        fontSize: '14px',
-        fontWeight: 'bold',
-        zIndex: '10'
-    });
-    unitPointsDisplay.textContent = `${unitPoints}`;
-    unitContainer.appendChild(unitPointsDisplay);
+    if (settings.showUnitPoints) {
+        const unitPoints = Object.values(unit).reduce((sum, card) => sum + (card ? card.points : 0), 0);
+        const unitPointsDisplay = createElementWithStyles('div', {
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            padding: '2px 8px',
+            borderRadius: '6px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            zIndex: '10'
+        });
+        unitPointsDisplay.textContent = `${unitPoints}`;
+        unitContainer.appendChild(unitPointsDisplay);
+    }
 
     for (const category of categoryOrder) {
         const card = unit[category];
@@ -173,34 +130,36 @@ const generateUnitHtml = (unit, shouldHide) => {
         });
 
         if (card) {
-            cardSlot.appendChild(generateCardHtml(card, shouldHide, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
+            cardSlot.appendChild(generateCardHtml(card, shouldHide, settings, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
 
-            const addSeparator = () => {
-                cardSlot.appendChild(createElementWithStyles('div', {
-                    height: '5px',
-                    width: '80%',
-                    backgroundColor: '#ccc',
-                    margin: '5px 0',
-                    borderRadius: '2px'
-                }));
-            };
+            if (settings.showDiscarded) {
+                const addSeparator = () => {
+                    cardSlot.appendChild(createElementWithStyles('div', {
+                        height: '5px',
+                        width: '80%',
+                        backgroundColor: '#ccc',
+                        margin: '5px 0',
+                        borderRadius: '2px'
+                    }));
+                };
 
-            if (card.drop) {
-                addSeparator();
-                const dropImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
-                dropImg.src = `Cards/${card.category}/${card.drop}`;
-                cardSlot.appendChild(dropImg);
-            }
-            if (card.changes) {
-                card.changes.forEach(changeFileName => {
-                    const changedCardData = state.allCards.byFileName.get(changeFileName);
-                    if (changedCardData) {
-                        addSeparator();
-                        const changeImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
-                        changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
-                        cardSlot.appendChild(changeImg);
-                    }
-                });
+                if (card.drop) {
+                    addSeparator();
+                    const dropImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
+                    dropImg.src = `Cards/${card.category}/${card.drop}`;
+                    cardSlot.appendChild(dropImg);
+                }
+                if (card.changes) {
+                    card.changes.forEach(changeFileName => {
+                        const changedCardData = state.allCards.byFileName.get(changeFileName);
+                        if (changedCardData) {
+                            addSeparator();
+                            const changeImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
+                            changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
+                            cardSlot.appendChild(changeImg);
+                        }
+                    });
+                }
             }
         } else {
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
@@ -212,7 +171,7 @@ const generateUnitHtml = (unit, shouldHide) => {
     return unitContainer;
 };
 
-const generateDroneEntryHtml = (drone, shouldHide) => {
+const generateDroneEntryHtml = (drone, shouldHide, settings) => {
     const droneContainer = createElementWithStyles('div', {
         display: 'flex',
         alignItems: 'flex-start',
@@ -224,14 +183,14 @@ const generateDroneEntryHtml = (drone, shouldHide) => {
     });
 
     const mainCol = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' });
-    mainCol.appendChild(generateCardHtml(drone, shouldHide, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
+    mainCol.appendChild(generateCardHtml(drone, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
 
-    if (drone.changes) {
+    if (settings.showDiscarded && drone.changes) {
         drone.changes.forEach(changeFileName => {
             const changedCardData = state.allCards.byFileName.get(changeFileName);
             if (changedCardData) {
                 mainCol.appendChild(createElementWithStyles('div', { height: '5px', width: '80%', backgroundColor: '#ccc', margin: '5px 0', borderRadius: '2px' }));
-                mainCol.appendChild(generateCardHtml(changedCardData, shouldHide, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
+                mainCol.appendChild(generateCardHtml(changedCardData, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
             }
         });
     }
@@ -239,14 +198,14 @@ const generateDroneEntryHtml = (drone, shouldHide) => {
 
     if (drone.backCard) {
         const backCardCol = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' });
-        backCardCol.appendChild(generateCardHtml(drone.backCard, shouldHide, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
+        backCardCol.appendChild(generateCardHtml(drone.backCard, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
         droneContainer.appendChild(backCardCol);
     }
 
     return droneContainer;
 };
 
-const generateTacticalCardHtml = (card, shouldHide) => {
+const generateTacticalCardHtml = (card, shouldHide, settings) => {
     const cardContainer = createElementWithStyles('div', {
         display: 'flex',
         flexDirection: 'column',
@@ -258,11 +217,11 @@ const generateTacticalCardHtml = (card, shouldHide) => {
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         width: '270px'
     });
-    cardContainer.appendChild(generateCardHtml(card, shouldHide, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
+    cardContainer.appendChild(generateCardHtml(card, shouldHide, settings, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
     return cardContainer;
 };
 
-const generateSubCardsHtml = (subCardFileNames) => {
+const generateSubCardsHtml = (subCardFileNames, settings) => {
     if (subCardFileNames.size === 0) return null;
 
     const container = document.createElement('div');
@@ -318,7 +277,7 @@ function loadHtml2Canvas() {
     });
 }
 
-export const handleExportImage = async () => {
+export const handleExportImage = async (settings, format = 'image/png') => {
     const exportIcon = exportImageBtn.querySelector('img');
     if (!exportIcon) return;
 
@@ -333,18 +292,7 @@ export const handleExportImage = async () => {
         const rosterState = state.getActiveRoster();
         if (!rosterState) return;
 
-        const allCardsInRosterForCheck = [];
-        Object.values(rosterState.units).forEach(unit => allCardsInRosterForCheck.push(...Object.values(unit)));
-        allCardsInRosterForCheck.push(...rosterState.drones);
-        if (rosterState.tacticalCards) {
-            allCardsInRosterForCheck.push(...rosterState.tacticalCards);
-        }
-        const hasHiddenCards = allCardsInRosterForCheck.some(card => card && card.hidden);
-
-        let shouldHide = false;
-        if (hasHiddenCards) {
-            shouldHide = await showHiddenCardConfirmation();
-        }
+        const shouldHide = !settings.revealHidden;
 
         const exportContainer = createElementWithStyles('div', {
             position: 'absolute',
@@ -356,13 +304,17 @@ export const handleExportImage = async () => {
         });
         document.body.appendChild(exportContainer);
 
-        const h1 = createElementWithStyles('h1', { textAlign: 'center', color: '#1c1e21' });
-        h1.textContent = state.activeRosterName;
-        exportContainer.appendChild(h1);
+        if (settings.showTitle) {
+            const h1 = createElementWithStyles('h1', { textAlign: 'center', color: '#1c1e21' });
+            h1.textContent = state.activeRosterName;
+            exportContainer.appendChild(h1);
 
-        const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
-        h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
-        exportContainer.appendChild(h2);
+            if (settings.showTotalPoints) {
+                const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
+                h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
+                exportContainer.appendChild(h2);
+            }
+        }
 
         if (Object.keys(rosterState.units).length > 0) {
             const unitsTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
@@ -371,7 +323,7 @@ export const handleExportImage = async () => {
 
             const unitsContainer = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', gap: '20px' });
             for (const unitId in rosterState.units) {
-                unitsContainer.appendChild(generateUnitHtml(rosterState.units[unitId], shouldHide));
+                unitsContainer.appendChild(generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
             }
             exportContainer.appendChild(unitsContainer);
         }
@@ -396,7 +348,7 @@ export const handleExportImage = async () => {
 
             const dronesContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
             allDronesToRender.forEach(drone => {
-                dronesContainer.appendChild(generateDroneEntryHtml(drone, shouldHide));
+                dronesContainer.appendChild(generateDroneEntryHtml(drone, shouldHide, settings));
             });
             exportContainer.appendChild(dronesContainer);
         }
@@ -408,21 +360,23 @@ export const handleExportImage = async () => {
 
             const tacticalContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
             rosterState.tacticalCards.forEach(card => {
-                tacticalContainer.appendChild(generateTacticalCardHtml(card, shouldHide));
+                tacticalContainer.appendChild(generateTacticalCardHtml(card, shouldHide, settings));
             });
             exportContainer.appendChild(tacticalContainer);
         }
 
-        const subCardsContainer = generateSubCardsHtml(otherSubCards);
-        if (subCardsContainer) {
-            exportContainer.appendChild(subCardsContainer);
+        if (settings.showSubCards) {
+            const subCardsContainer = generateSubCardsHtml(otherSubCards, settings);
+            if (subCardsContainer) {
+                exportContainer.appendChild(subCardsContainer);
+            }
         }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const canvas = await html2canvas(exportContainer, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#f0f2f5' });
 
-        const dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();
         newTab.document.write(`
             <html style="height: 100%; margin: 0; padding: 0;">
