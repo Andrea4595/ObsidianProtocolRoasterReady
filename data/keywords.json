@@ -310,6 +310,11 @@
 		"information" : "파일럿이 탑승한 메카의 오라, 전자 공격/전자 지원 사거리 1그리드 추가"
 	},
 	{
+		"keyword" : "Pilot_Keyhole_Different_1",
+		"name" : "동화 위장",
+		"information" : "파일럿 메카가 아군 오라의 사거리 내에 위치 시, 저피탐을 획득한다."
+	},
+	{
 		"keyword" : "Pilot_Quartz",
 		"name" : "침착함",
 		"information" : "매 라운드의 끝마다 링크 수치 1 회복"
