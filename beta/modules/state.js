@@ -267,6 +267,7 @@ async function loadImageData() {
         allCards.tactical = [];
         allCards.byFileName = new Map();
         allCards.byCardId = new Map();
+        allCards.byName = new Map();
         
         cardData.forEach(card => {
             // Generate and set the unique cardId
@@ -288,6 +289,7 @@ async function loadImageData() {
 
             allCards.byFileName.set(card.fileName, card);
             allCards.byCardId.set(cardId, card);
+            allCards.byName.set(`${card.category}_${card.name}`, card);
 
             if (card.category === "Tactical" && card.hidden === true) {
                 card.isRevealedInGameMode = false;
