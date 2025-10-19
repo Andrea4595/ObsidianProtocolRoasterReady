@@ -5,44 +5,7 @@ import { categoryOrder } from './constants.js';
 
 // --- Compression Helpers ---
 
-async function compressString(str) {
-    const stream = new Blob([str], { type: 'text/plain' }).stream();
-    const compressedStream = stream.pipeThrough(new CompressionStream('gzip'));
-    const chunks = [];
-    const reader = compressedStream.getReader();
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-    }
-    const blob = new Blob(chunks);
 
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',', 2)[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-}
-
-async function decompressString(base64) {
-    try {
-        const blob = await (await fetch(`data:application/octet-stream;base64,${base64}`)).blob();
-        const stream = blob.stream().pipeThrough(new DecompressionStream('gzip'));
-        const reader = stream.getReader();
-        const chunks = [];
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-        }
-        const decompressedBlob = new Blob(chunks);
-        return await decompressedBlob.text();
-    } catch (error) {
-        console.error("Decompression failed:", error);
-        return null; // Indicate failure
-    }
-}
 
 
 // --- Modal Handling ---
@@ -51,7 +14,7 @@ export async function showRosterCodeModal() {
     const roster = state.getActiveRoster();
     if (!roster) return;
 
-    dom.rosterCodeDisplay.value = '압축 중...';
+    dom.rosterCodeDisplay.value = '';
     dom.rosterCodeModalTitle.textContent = '로스터 코드';
     dom.rosterCodeInput.value = '';
     dom.rosterCodeModal.style.display = 'flex';
@@ -62,30 +25,29 @@ export async function showRosterCodeModal() {
     const unitsCode = Object.values(roster.units).map(unit => {
         return categoryOrder.map(category => {
             const card = unit[category];
-            return card ? card.cardId.split('_').slice(1).join('_') : '';
+            return card ? card.name : '';
         }).join('/');
     }).join('|');
 
-    const droneModelIds = roster.drones
-        .filter(card => card && card.cardId)
-        .map(card => card.cardId.split('_').slice(1).join('_'));
-    const dronesCode = droneModelIds.length > 0 ? `Drone:${droneModelIds.join(',')}` : '';
+    const droneNames = roster.drones
+        .filter(card => card && card.name)
+        .map(card => {
+            if (card.special?.includes('freight_back') && card.backCard) {
+                return `${card.name}:${card.backCard.name}`;
+            }
+            return card.name;
+        });
+    const dronesCode = droneNames.length > 0 ? `Drone:${droneNames.join(',')}` : '';
 
-    const tacticalModelIds = roster.tacticalCards
-        .filter(card => card && card.cardId)
-        .map(card => card.cardId.split('_').slice(1).join('_'));
-    const tacticalCardsCode = tacticalModelIds.length > 0 ? `Tactical:${tacticalModelIds.join(',')}` : '';
+    const tacticalNames = roster.tacticalCards
+        .filter(card => card && card.name)
+        .map(card => card.name);
+    const tacticalCardsCode = tacticalNames.length > 0 ? `Tactical:${tacticalNames.join(',')}` : '';
 
     const dataCode = `${factionCode}~${unitsCode}~${dronesCode}~${tacticalCardsCode}`;
     const fullCode = `${encodedRosterName}#${dataCode}`;
 
-    try {
-        const compressed = await compressString(fullCode);
-        dom.rosterCodeDisplay.value = `z;${compressed}`;
-    } catch (error) {
-        console.error("Compression failed, falling back to uncompressed:", error);
-        dom.rosterCodeDisplay.value = fullCode;
-    }
+    dom.rosterCodeDisplay.value = fullCode;
 }
 
 export function closeRosterCodeModal() {
@@ -102,15 +64,6 @@ export async function importRosterCode() {
     }
 
     let mainCode = code;
-    if (code.startsWith('z;')) {
-        const compressedPart = code.substring(2);
-        const decompressed = await decompressString(compressedPart);
-        if (!decompressed) {
-            alert('코드 압축 해제에 실패했습니다. 코드가 올바른지 확인하세요.');
-            return;
-        }
-        mainCode = decompressed;
-    }
 
     const codeParts = mainCode.split('#');
     let newRosterName;
@@ -147,9 +100,9 @@ export async function importRosterCode() {
                 modelIds.forEach((modelId, index) => {
                     if (modelId) {
                         const category = categoryOrder[index];
-                        const cardId = `${category}_${modelId}`;
-                        if (state.allCards.byCardId.has(cardId)) {
-                            const card = { ...state.allCards.byCardId.get(cardId) };
+                        const key = `${category}_${modelId}`;
+                        if (state.allCards.byName.has(key)) {
+                            const card = { ...state.allCards.byName.get(key) };
                             roster.units[unitId][category] = card;
                         }
                     }
@@ -161,9 +114,16 @@ export async function importRosterCode() {
             const modelIds = dronesCode.substring('Drone:'.length).split(',');
             modelIds.forEach(modelId => {
                 if (modelId) {
-                    const cardId = `Drone_${modelId}`;
-                    if (state.allCards.byCardId.has(cardId)) {
-                        const card = { ...state.allCards.byCardId.get(cardId) };
+                    const [droneName, backCardName] = modelId.split(':');
+                    const key = `Drone_${droneName}`;
+                    if (state.allCards.byName.has(key)) {
+                        const card = { ...state.allCards.byName.get(key) };
+                        if (backCardName) {
+                            const backCardKey = `Back_${backCardName}`;
+                            if (state.allCards.byName.has(backCardKey)) {
+                                card.backCard = { ...state.allCards.byName.get(backCardKey) };
+                            }
+                        }
                         roster.drones.push(card);
                     }
                 }
@@ -174,9 +134,9 @@ export async function importRosterCode() {
             const modelIds = tacticalCardsCode.substring('Tactical:'.length).split(',');
             modelIds.forEach(modelId => {
                 if (modelId) {
-                    const cardId = `Tactical_${modelId}`;
-                    if (state.allCards.byCardId.has(cardId)) {
-                        const card = { ...state.allCards.byCardId.get(cardId) };
+                    const key = `Tactical_${modelId}`;
+                    if (state.allCards.byName.has(key)) {
+                        const card = { ...state.allCards.byName.get(key) };
                         roster.tacticalCards.push(card);
                     }
                 }

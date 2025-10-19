@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Back_AMS190_Front.jpg",
+        "name": "AMS190",
         "points": 27,
         "category": "Back",
         "faction": "RDL",
@@ -10,6 +11,7 @@
     },
     {
         "fileName": "Part_RDL_Back_ML34_Front.jpg",
+        "name": "ML34",
         "points": 39,
         "category": "Back",
         "faction": "RDL",
@@ -22,6 +24,7 @@
     },
     {
         "fileName": "Part_RDL_Back_LGP80_Front.jpg",
+        "name": "LGP80",
         "points": 33,
         "category": "Back",
         "faction": "RDL",
@@ -29,6 +32,7 @@
     },
     {
         "fileName": "Part_RDL_Back_GLP15_Front.jpg",
+        "name": "GLP15",
         "points": 30,
         "category": "Back",
         "faction": "RDL",
@@ -39,6 +43,7 @@
     },
     {
         "fileName": "Part_RDL_Back_MUD1_Front.jpg",
+        "name": "MUD1",
         "points": 33,
         "category": "Back",
         "faction": "RDL",
@@ -48,6 +53,7 @@
     },
     {
         "fileName": "Part_RDL_Back_CP3_Front.jpg",
+        "name": "CP3",
         "points": 36,
         "category": "Back",
         "faction": "RDL",
@@ -61,6 +67,7 @@
     },
     {
         "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
+        "name": "MUEN20",
         "points": 30,
         "category": "Back",
         "faction": "RDL",
@@ -68,6 +75,7 @@
     },
     {
         "fileName": "Part_RDL_Back_TB600_Front.jpg",
+        "name": "TB600",
         "points": 48,
         "category": "Back",
         "faction": "RDL",
@@ -76,6 +84,7 @@
     },
     {
         "fileName": "Part_RDL_Back_ML92_Front.jpg",
+        "name": "ML92",
         "points": 20,
         "category": "Back",
         "faction": "RDL",
@@ -87,6 +96,7 @@
     },
     {
         "fileName": "Part_RDL_Back_SH15_Front.jpg",
+        "name": "SH15",
         "points": 30,
         "category": "Back",
         "faction": "RDL",
@@ -98,6 +108,7 @@
     },
     {
         "fileName": "Part_RDL_Back_ECS2_Front.jpg",
+        "name": "ECS2",
         "points": 33,
         "category": "Back",
         "faction": "RDL",
@@ -105,6 +116,7 @@
     },
     {
         "fileName": "Part_RDL_Back_HD2_Front.png",
+        "name": "HD2",
         "points": 24,
         "category": "Back",
         "faction": "RDL",
@@ -112,6 +124,7 @@
     },
     {
         "fileName": "Part_RDL_Back_ML94_Front.png",
+        "name": "ML94",
         "points": 48,
         "category": "Back",
         "faction": "RDL",
@@ -123,6 +136,7 @@
     },
     {
         "fileName": "Part_RDL_Back_CP4_Front.png",
+        "name": "CP4",
         "points": 36,
         "category": "Back",
         "faction": "RDL",
@@ -134,6 +148,7 @@
     },
     {
         "fileName": "Part_RDL_Back_AMS193_Front.png",
+        "name": "AMS193",
         "points": 27,
         "category": "Back",
         "faction": "RDL",
@@ -143,6 +158,7 @@
     },
     {
         "fileName": "Part_UN_Back_AMDS210_Front.png",
+        "name": "AMDS210",
         "points": 30,
         "category": "Back",
         "faction": "UN",
@@ -153,6 +169,7 @@
     },
     {
         "fileName": "Part_UN_Back_CSC60_Front.png",
+        "name": "CSC60",
         "points": 27,
         "category": "Back",
         "faction": "UN",
@@ -160,6 +177,7 @@
     },
     {
         "fileName": "Part_UN_Back_DBP_Front.png",
+        "name": "DBP",
         "points": 39,
         "category": "Back",
         "faction": "UN",
@@ -170,6 +188,7 @@
     },
     {
         "fileName": "Part_UN_Back_EBSX40_Front.png",
+        "name": "EBSX40",
         "points": 39,
         "category": "Back",
         "faction": "UN",
@@ -179,6 +198,7 @@
     },
     {
         "fileName": "Part_UN_Back_EC50_Front.png",
+        "name": "EC50",
         "points": 42,
         "category": "Back",
         "faction": "UN",
@@ -188,6 +208,7 @@
     },
     {
         "fileName": "Part_UN_Back_GSD-2A_Front.png",
+        "name": "GSD-2A",
         "points": 21,
         "category": "Back",
         "faction": "UN",
@@ -200,6 +221,7 @@
     },
     {
         "fileName": "Part_UN_Back_JP1_Front.png",
+        "name": "JP1",
         "points": 57,
         "category": "Back",
         "faction": "UN",
@@ -211,6 +233,7 @@
     },
     {
         "fileName": "Part_UN_Back_MSH2_Front.png",
+        "name": "MSH2",
         "points": 24,
         "category": "Back",
         "faction": "UN",
@@ -219,6 +242,7 @@
     },
     {
         "fileName": "Part_UN_Back_OCSP_Front.png",
+        "name": "OCSP",
         "points": 49,
         "category": "Back",
         "faction": "UN",
@@ -230,6 +254,7 @@
     },
     {
         "fileName": "Part_UN_Back_RKG70_Front.png",
+        "name": "RKG70",
         "points": 21,
         "category": "Back",
         "faction": "UN",
@@ -237,6 +262,7 @@
     },
     {
         "fileName": "Part_UN_Back_EBSX40_TrialModel_Front.png",
+        "name": "EBSX40_TrialModel",
         "points": 39,
         "category": "Back",
         "faction": "UN",
@@ -246,6 +272,7 @@
     },
     {
         "fileName": "Part_WD_Back_ACE001_Front.jpg",
+        "name": "ACE001",
         "points": 60,
         "category": "Back",
         "faction": "Public",

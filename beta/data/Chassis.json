@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Chassis_RL06_Front.jpg",
+        "name": "RL06",
         "points": 18,
         "category": "Chassis",
         "faction": "RDL",
@@ -8,6 +9,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL03D_Front.jpg",
+        "name": "RL03D",
         "points": 42,
         "category": "Chassis",
         "faction": "RDL",
@@ -15,6 +17,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL08_Front.jpg",
+        "name": "RL08",
         "points": 30,
         "category": "Chassis",
         "faction": "RDL",
@@ -24,6 +27,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
+        "name": "RL06M",
         "points": 18,
         "category": "Chassis",
         "faction": "RDL",
@@ -31,6 +35,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL06MS_Front.png",
+        "name": "RL06MS",
         "points": 24,
         "category": "Chassis",
         "faction": "RDL",
@@ -39,6 +44,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL08MII_Front.png",
+        "name": "RL08MII",
         "points": 45,
         "category": "Chassis",
         "faction": "RDL",
@@ -48,6 +54,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM231_Front.png",
+        "name": "LM231",
         "points": 27,
         "category": "Chassis",
         "faction": "UN",
@@ -55,6 +62,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM210S_Front.png",
+        "name": "LM210S",
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
@@ -63,6 +71,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM213B_Front.png",
+        "name": "LM213B",
         "points": 57,
         "category": "Chassis",
         "faction": "UN",
@@ -71,6 +80,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+        "name": "LM210S_Trial",
         "points": 39,
         "category": "Chassis",
         "faction": "UN",
@@ -79,6 +89,7 @@
     },
     {
         "fileName": "Part_WD_Chassis_ACE001_Front.jpg",
+        "name": "ACE001",
         "points": 24,
         "category": "Chassis",
         "faction": "Public",
