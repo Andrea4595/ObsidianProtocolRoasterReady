@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Torso_RT06_Front.jpg",
+        "name": "RT06",
         "points": 15,
         "category": "Torso",
         "faction": "RDL",
@@ -9,6 +10,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT07T_Front.jpg",
+        "name": "RT07T",
         "points": 62,
         "category": "Torso",
         "faction": "RDL",
@@ -18,6 +20,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT08_Front.jpg",
+        "name": "RT08",
         "points": 62,
         "category": "Torso",
         "faction": "RDL",
@@ -27,6 +30,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
+        "name": "RT15B",
         "points": 59,
         "category": "Torso",
         "faction": "RDL",
@@ -40,6 +44,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT15EC_Front.jpg",
+        "name": "RT15EC",
         "points": 60,
         "category": "Torso",
         "faction": "RDL",
@@ -49,6 +54,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
+        "name": "RT15C",
         "points": 56,
         "category": "Torso",
         "faction": "RDL",
@@ -62,6 +68,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT09A_Front.jpg",
+        "name": "RT09A",
         "points": 66,
         "category": "Torso",
         "faction": "RDL",
@@ -75,6 +82,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT16B_Front.png",
+        "name": "RT16B",
         "points": 60,
         "category": "Torso",
         "faction": "RDL",
@@ -89,6 +97,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT15S_Front.png",
+        "name": "RT15S",
         "points": 60,
         "category": "Torso",
         "faction": "RDL",
@@ -98,6 +107,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT06E_Front.png",
+        "name": "RT06E",
         "points": 21,
         "category": "Torso",
         "faction": "RDL",
@@ -106,6 +116,7 @@
     },
     {
         "fileName": "Part_RDL_Torso_RT09MII_Front.png",
+        "name": "RT09MII",
         "points": 66,
         "category": "Torso",
         "faction": "RDL",
@@ -118,6 +129,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM31C_Front.png",
+        "name": "TM31C",
         "points": 45,
         "category": "Torso",
         "faction": "UN",
@@ -132,6 +144,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM31R_Front.png",
+        "name": "TM31R",
         "points": 54,
         "category": "Torso",
         "faction": "UN",
@@ -141,6 +154,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM35B_Front.png",
+        "name": "TM35B",
         "points": 72,
         "category": "Torso",
         "faction": "UN",
@@ -152,6 +166,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM35N_Front.png",
+        "name": "TM35N",
         "points": 72,
         "category": "Torso",
         "faction": "UN",
@@ -163,6 +178,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM39_Front.png",
+        "name": "TM39",
         "points": 63,
         "category": "Torso",
         "faction": "UN",
@@ -173,6 +189,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM641_Front.png",
+        "name": "TM641",
         "points": 81,
         "category": "Torso",
         "faction": "UN",
@@ -183,6 +200,7 @@
     },
     {
         "fileName": "Part_UN_Torso_TM641O_Trial_Front.png",
+        "name": "TM641O_Trial",
         "points": 81,
         "category": "Torso",
         "faction": "UN",
@@ -193,6 +211,7 @@
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",
+        "name": "ACE001_Cruise",
         "points": 72,
         "category": "Torso",
         "faction": "Public",
@@ -206,6 +225,7 @@
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Front.jpg",
+        "name": "ACE001",
         "points": 72,
         "category": "Torso",
         "faction": "Public",

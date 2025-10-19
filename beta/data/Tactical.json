@@ -1,6 +1,7 @@
 [
     {
         "fileName": "1_추가_명령.png",
+        "name": "추가_명령",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
@@ -9,6 +10,7 @@
     },
     {
         "fileName": "2_전장_회복.png",
+        "name": "전장_회복",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
@@ -17,6 +19,7 @@
     },
     {
         "fileName": "3_치고_빠지기.png",
+        "name": "치고_빠지기",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
@@ -25,6 +28,7 @@
     },
     {
         "fileName": "4_시스템_복구.png",
+        "name": "시스템_복구",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
@@ -33,6 +37,7 @@
     },
     {
         "fileName": "5_전술적_배치.png",
+        "name": "전술적_배치",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
@@ -41,6 +46,7 @@
     },
     {
         "fileName": "6_원격_재가동.png",
+        "name": "원격_재가동",
         "points": 30,
         "category": "Tactical",
         "faction": "Public",
