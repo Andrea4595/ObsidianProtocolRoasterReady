@@ -23,6 +23,23 @@ export let imageExportSettings = {
     revealHidden: true,
 };
 
+export let currentSort = 'datasheet';
+
+export function setCurrentSort(sort) {
+    currentSort = sort;
+}
+
+export const saveCurrentSort = () => {
+    localStorage.setItem('currentSort', currentSort);
+};
+
+export const loadCurrentSort = () => {
+    const savedSort = localStorage.getItem('currentSort');
+    if (savedSort) {
+        currentSort = savedSort;
+    }
+};
+
 // --- Save Versioning ---
 const CURRENT_SAVE_VERSION = 1;
 
@@ -309,6 +326,8 @@ async function loadKeywordData() {
 
 export const initializeApp = async () => {
     await Promise.all([loadImageData(), loadKeywordData()]);
+
+    loadCurrentSort();
 
     const savedSettingsRaw = localStorage.getItem('imageExportSettings');
     if (savedSettingsRaw) {
