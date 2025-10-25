@@ -308,12 +308,12 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             const h1 = createElementWithStyles('h1', { textAlign: 'center', color: '#1c1e21' });
             h1.textContent = state.activeRosterName;
             exportContainer.appendChild(h1);
+        }
 
-            if (settings.showTotalPoints) {
-                const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
-                h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
-                exportContainer.appendChild(h2);
-            }
+        if (settings.showTotalPoints) {
+            const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
+            h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
+            exportContainer.appendChild(h2);
         }
 
         if (Object.keys(rosterState.units).length > 0) {

@@ -988,3 +988,23 @@ div.hidden-card-overlay > img.hidden-title-image {
     max-height: none;
     max-width: 500px;
 }
+
+.modal-sort-options {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-sort-options button {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+.modal-sort-options button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}

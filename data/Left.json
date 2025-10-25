@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
+        "name": "Type55_CC6",
         "points": 54,
         "category": "Left",
         "faction": "RDL",
@@ -9,6 +10,7 @@
     },
     {
         "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
+        "name": "ML32_CC3",
         "points": 33,
         "category": "Left",
         "faction": "RDL",
@@ -21,6 +23,7 @@
     },
     {
         "fileName": "Part_RDL_Left_R20_Front.jpg",
+        "name": "R20",
         "points": 51,
         "category": "Left",
         "faction": "RDL",
@@ -29,6 +32,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type77_Front.jpg",
+        "name": "Type77",
         "points": 50,
         "category": "Left",
         "faction": "RDL",
@@ -38,6 +42,7 @@
     },
     {
         "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
+        "name": "SPHX3",
         "points": 42,
         "category": "Left",
         "faction": "RDL",
@@ -45,6 +50,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.jpg",
+        "name": "Type55_L320_CC6",
         "points": 51,
         "category": "Left",
         "faction": "RDL",
@@ -55,6 +61,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type79_Front.jpg",
+        "name": "Type79",
         "points": 56,
         "category": "Left",
         "faction": "RDL",
@@ -62,6 +69,7 @@
     },
     {
         "fileName": "Part_RDL_Left_FCC12_Front.jpg",
+        "name": "FCC12",
         "points": 69,
         "category": "Left",
         "faction": "RDL",
@@ -70,6 +78,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
+        "name": "Type55_PC9",
         "points": 48,
         "category": "Left",
         "faction": "RDL",
@@ -79,6 +88,7 @@
     },
     {
         "fileName": "Part_RDL_Left_GAC6_Front.jpg",
+        "name": "GAC6",
         "points": 36,
         "category": "Left",
         "faction": "RDL",
@@ -92,6 +102,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
+        "name": "Type62_CC20",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
@@ -100,6 +111,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type55_MES_Front.jpg",
+        "name": "Type55_MES",
         "points": 45,
         "category": "Left",
         "faction": "RDL",
@@ -111,6 +123,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type55_PC9K_Front.png",
+        "name": "Type55_PC9K",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
@@ -120,6 +133,7 @@
     },
     {
         "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
+        "name": "AH21_CC50",
         "points": 63,
         "category": "Left",
         "faction": "RDL",
@@ -129,6 +143,7 @@
     },
     {
         "fileName": "Part_RDL_Left_Type55_Front.png",
+        "name": "Type55",
         "points": 30,
         "category": "Left",
         "faction": "RDL",
@@ -137,6 +152,7 @@
     },
     {
         "fileName": "Part_RDL_Left_L330_Type77B_Front.png",
+        "name": "L330_Type77B",
         "points": 56,
         "category": "Left",
         "faction": "RDL",
@@ -146,6 +162,7 @@
     },
     {
         "fileName": "Part_UN_Left_G6_Front.png",
+        "name": "G6",
         "points": 75,
         "category": "Left",
         "faction": "UN",
@@ -160,6 +177,7 @@
     },
     {
         "fileName": "Part_UN_Left_K7_S10_Front.png",
+        "name": "K7_S10",
         "points": 54,
         "category": "Left",
         "faction": "UN",
@@ -168,6 +186,7 @@
     },
     {
         "fileName": "Part_UN_Left_K9_Front.png",
+        "name": "K9",
         "points": 42,
         "category": "Left",
         "faction": "UN",
@@ -176,6 +195,7 @@
     },
     {
         "fileName": "Part_UN_Left_M3S_Front.png",
+        "name": "M3S",
         "points": 42,
         "category": "Left",
         "faction": "UN",
@@ -184,6 +204,7 @@
     },
     {
         "fileName": "Part_UN_Left_M4_Grenade_Front.png",
+        "name": "M4_Grenade",
         "points": 54,
         "category": "Left",
         "faction": "UN",
@@ -197,6 +218,7 @@
     },
     {
         "fileName": "Part_UN_Left_MDXS_R6_Front.png",
+        "name": "MDXS_R6",
         "points": 45,
         "category": "Left",
         "faction": "UN",
@@ -207,6 +229,7 @@
     },
     {
         "fileName": "Part_UN_Left_MX82_Front.png",
+        "name": "MX82",
         "points": 48,
         "category": "Left",
         "faction": "UN",
@@ -216,6 +239,7 @@
     },
     {
         "fileName": "Part_UN_Left_MSH1_Front.png",
+        "name": "MSH1",
         "points": 24,
         "category": "Left",
         "faction": "UN",
@@ -223,6 +247,7 @@
     },
     {
         "fileName": "Part_UN_Left_RH21_M3_Front.png",
+        "name": "RH21_M3",
         "points": 45,
         "category": "Left",
         "faction": "UN",
@@ -233,6 +258,7 @@
     },
     {
         "fileName": "Part_UN_Left_RHX23_Front.png",
+        "name": "RHX23",
         "points": 57,
         "category": "Left",
         "faction": "UN",
@@ -243,6 +269,7 @@
     },
     {
         "fileName": "Part_UN_Left_RKG70_Front.png",
+        "name": "RKG70",
         "points": 42,
         "category": "Left",
         "faction": "UN",
@@ -256,6 +283,7 @@
     },
     {
         "fileName": "Part_UN_Left_S100_Front.png",
+        "name": "S100",
         "points": 48,
         "category": "Left",
         "faction": "UN",
@@ -263,6 +291,7 @@
     },
     {
         "fileName": "Part_UN_Left_S100_Grenade_Front.png",
+        "name": "S100_Grenade",
         "points": 66,
         "category": "Left",
         "faction": "UN",
@@ -276,6 +305,7 @@
     },
     {
         "fileName": "Part_UN_Left_S9_M5_Front.png",
+        "name": "S9_M5",
         "points": 57,
         "category": "Left",
         "faction": "UN",
@@ -285,6 +315,7 @@
     },
     {
         "fileName": "Part_UN_Left_K9_Trial_Front.png",
+        "name": "K9_Trial",
         "points": 42,
         "category": "Left",
         "faction": "UN",
@@ -293,6 +324,7 @@
     },
     {
         "fileName": "Part_WD_Left_ACE001_Front.jpg",
+        "name": "ACE001",
         "points": 57,
         "category": "Left",
         "faction": "Public",
