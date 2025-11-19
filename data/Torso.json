@@ -210,6 +210,18 @@
 		"keywords": ["Silence", "LowProfile", "Stealth(2)"]
     },
     {
+        "fileName": "Part_UN_Torso_TM35BT_Front.png",
+        "name": "TM35BT",
+        "points": 84,
+        "category": "Torso",
+        "faction": "UN",
+        "frame": true,
+        "charge": true,
+		"mobility": 1,
+		"electronic": 4,
+		"keywords": ["KCArmor"]
+    },
+    {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",
         "name": "ACE001_Cruise",
         "points": 72,
