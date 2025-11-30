@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Drone_RDL_DTG30M_Front.jpg",
+        "fileName": "Drone_RDL_DTG30M_Front.png",
         "name": "DTG30M",
         "points": 42,
         "category": "Drone",
@@ -10,7 +10,7 @@
 		"keywords": ["Intercept(1)", "OmniDirectionFiring", "MeleeFiring"]
     },
     {
-        "fileName": "Drone_RDL_DTG30R_Front.jpg",
+        "fileName": "Drone_RDL_DTG30R_Front.png",
         "name": "DTG30R",
         "points": 27,
         "category": "Drone",
@@ -18,7 +18,7 @@
         "frame": true
     },
     {
-        "fileName": "Drone_RDL_DTG30S_Front.jpg",
+        "fileName": "Drone_RDL_DTG30S_Front.png",
         "name": "DTG30S",
         "points": 33,
         "category": "Drone",
@@ -27,7 +27,7 @@
         "frame": true,
 		"keywords": ["Volley(2)", "IndirectFire"],
         "subCards": [
-            "Projectile_RDL_MC3_Front.jpg"
+            "Projectile_RDL_MC3_Front.png"
         ]
     },
     {
@@ -154,7 +154,7 @@
 		"keywords": ["DirectFire"]
     },
     {
-        "fileName": "Drone_PL_LD5A_Front.jpg",
+        "fileName": "Drone_PL_LD5A_Front.png",
         "name": "LD5A",
         "points": 48,
         "category": "Drone",
@@ -162,19 +162,19 @@
 		"keywords": ["OmniDirectionFiring", "MeleeFiring", "AirbornMovement"]
     },
     {
-        "fileName": "Drone_PL_LD5B_Front.jpg",
+        "fileName": "Drone_PL_LD5B_Front.png",
         "name": "LD5B",
         "points": 45,
         "category": "Drone",
         "faction": "Public",
         "ammunition": 4,
         "subCards": [
-            "Projectile_PL_FG33_Front.jpg"
+            "Projectile_PL_FG33_Front.png"
         ],
 		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement"]
     },
     {
-        "fileName": "Drone_PL_LD5M_Front.jpg",
+        "fileName": "Drone_PL_LD5M_Front.png",
         "name": "LD5M",
         "points": 42,
         "category": "Drone",
@@ -182,15 +182,15 @@
 		"keywords": ["Highlight", "AirbornMovement", "OmniDirectionFiring", "MeleeFiring"]
     },
     {
-        "fileName": "Drone_PL_LD5S_Front.jpg",
+        "fileName": "Drone_PL_LD5S_Front.png",
         "name": "LD5S",
         "points": 48,
         "category": "Drone",
         "faction": "Public",
         "ammunition": 2,
         "subCards": [
-            "Projectile_PL_FG33_Front.jpg",
-            "Projectile_PL_RMA_Front.jpg"
+            "Projectile_PL_FG33_Front.png",
+            "Projectile_PL_RMA_Front.png"
         ],
 		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement", "DirectFire"]
     },

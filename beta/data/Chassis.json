@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Chassis_RL06_Front.jpg",
+        "fileName": "Part_RDL_Chassis_RL06_Front.png",
         "name": "RL06",
         "points": 18,
         "category": "Chassis",
@@ -8,7 +8,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_RDL_Chassis_RL03D_Front.jpg",
+        "fileName": "Part_RDL_Chassis_RL03D_Front.png",
         "name": "RL03D",
         "points": 42,
         "category": "Chassis",
@@ -16,7 +16,7 @@
 		"mobility": 4
     },
     {
-        "fileName": "Part_RDL_Chassis_RL08_Front.jpg",
+        "fileName": "Part_RDL_Chassis_RL08_Front.png",
         "name": "RL08",
         "points": 30,
         "category": "Chassis",

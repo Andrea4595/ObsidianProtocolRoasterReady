@@ -14,7 +14,7 @@
         "faction": "Public"
     },
     {
-        "fileName": "Projectile_PL_FG33_Front.jpg",
+        "fileName": "Projectile_PL_FG33_Front.png",
         "name": "FG33",
         "points": 0,
         "category": "Projectile",
@@ -28,21 +28,21 @@
         "faction": "Public"
     },
     {
-        "fileName": "Projectile_PL_RMA_Front.jpg",
+        "fileName": "Projectile_PL_RMA_Front.png",
         "name": "RMA",
         "points": 0,
         "category": "Projectile",
         "faction": "Public"
     },
     {
-        "fileName": "Projectile_RDL_B31_Front.jpg",
+        "fileName": "Projectile_RDL_B31_Front.png",
         "name": "B31",
         "points": 0,
         "category": "Projectile",
         "faction": "RDL"
     },
     {
-        "fileName": "Projectile_RDL_B32_Front.jpg",
+        "fileName": "Projectile_RDL_B32_Front.png",
         "name": "B32",
         "points": 0,
         "category": "Projectile",
@@ -51,7 +51,7 @@
 		"keywords": ["Highlight"]
     },
     {
-        "fileName": "Projectile_RDL_B33_Front.jpg",
+        "fileName": "Projectile_RDL_B33_Front.png",
         "name": "B33",
         "points": 0,
         "category": "Projectile",
@@ -59,7 +59,7 @@
 		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
-        "fileName": "Projectile_RDL_GM35_Front.jpg",
+        "fileName": "Projectile_RDL_GM35_Front.png",
         "name": "GM35",
         "points": 0,
         "category": "Projectile",
@@ -67,14 +67,14 @@
 		"keywords": ["Aura"]
     },
     {
-        "fileName": "Projectile_RDL_GS2_Front.jpg",
+        "fileName": "Projectile_RDL_GS2_Front.png",
         "name": "GS2",
         "points": 0,
         "category": "Projectile",
         "faction": "RDL"
     },
     {
-        "fileName": "Projectile_RDL_MC3_Front.jpg",
+        "fileName": "Projectile_RDL_MC3_Front.png",
         "name": "MC3",
         "points": 0,
         "category": "Projectile",
@@ -88,7 +88,7 @@
         "faction": "RDL"
     },
     {
-        "fileName": "Projectile_RDL_MES_Front.jpg",
+        "fileName": "Projectile_RDL_MES_Front.png",
         "name": "MES",
         "points": 0,
         "category": "Projectile",
@@ -102,14 +102,14 @@
         "faction": "RDL"
     },
     {
-        "fileName": "Projectile_RDL_MR9_Front.jpg",
+        "fileName": "Projectile_RDL_MR9_Front.png",
         "name": "MR9",
         "points": 0,
         "category": "Projectile",
         "faction": "RDL"
     },
     {
-        "fileName": "Projectile_RDL_RA81_Front.jpg",
+        "fileName": "Projectile_RDL_RA81_Front.png",
         "name": "RA81",
         "points": 0,
         "category": "Projectile",
