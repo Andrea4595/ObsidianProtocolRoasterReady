@@ -236,8 +236,15 @@ function createKeywordElements(keywords) {
 }
 
 export const openCardDetailModal = (cardData) => {
+    const modal = document.getElementById('card-detail-modal');
     const cardDetailContent = document.getElementById('card-detail-content');
-    if (!cardDetailContent) return;
+    if (!cardDetailContent || !modal) return;
+
+    // Logic to add a class to the modal for styling based on card type
+    modal.classList.remove('detail-view-wide');
+    if (cardData.category === 'Drone' || cardData.category === 'Projectile') {
+        modal.classList.add('detail-view-wide');
+    }
 
     cardDetailContent.innerHTML = ''; // Clear previous content
 
@@ -245,8 +252,11 @@ export const openCardDetailModal = (cardData) => {
     if (state.isGameMode && cardData.isDropped && cardData.drop) {
         img.src = `Cards/${cardData.category}/${cardData.drop}`;
     }
+
+    // Revert to original, simpler styling logic. The modal's width is now handled by CSS.
     img.style.width = '100%';
     img.style.height = 'auto';
+    
     cardDetailContent.appendChild(img);
 
     const keywords = (state.isGameMode && cardData.isDropped && cardData.dropKeywords) ? cardData.dropKeywords : cardData.keywords;
@@ -255,17 +265,15 @@ export const openCardDetailModal = (cardData) => {
         cardDetailContent.appendChild(keywordsContainer);
     }
 
-    const modal = document.getElementById('card-detail-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 };
 
 export const closeCardDetailModal = () => {
     const modal = document.getElementById('card-detail-modal');
     if (modal) {
         modal.style.display = 'none';
+        modal.classList.remove('detail-view-wide'); // Clean up class on close
         document.body.style.overflow = 'auto';
     }
 };

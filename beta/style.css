@@ -1008,3 +1008,7 @@ div.hidden-card-overlay > img.hidden-title-image {
     color: white;
     border-color: #007bff;
 }
+
+.detail-view-wide #card-detail-modal-content {
+    max-width: 750px;
+}
