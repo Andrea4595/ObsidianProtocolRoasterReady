@@ -41,7 +41,7 @@ export const loadCurrentSort = () => {
 };
 
 // --- Save Versioning ---
-const CURRENT_SAVE_VERSION = 1;
+const CURRENT_SAVE_VERSION = 2;
 
 // --- Getters and Setters ---
 
@@ -188,12 +188,12 @@ export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
 
     const subCards = new Set();
     allCardsInRoster.forEach(card => {
-        if (card && card.subCards) {
-            card.subCards.forEach(subCardFileName => {
-                const subCardData = allCards.byFileName.get(subCardFileName);
+        if (card && card.resolvedSubCards) {
+            card.resolvedSubCards.forEach(subCardData => {
                 if (subCardData) {
                     if (includeDrones || subCardData.category !== 'Drone') {
-                        subCards.add(subCardFileName);
+                        // Add the full card object or a specific identifier. Let's add the object.
+                        subCards.add(subCardData); 
                     }
                 }
             });
@@ -209,9 +209,10 @@ function migrateFromVersion0ToVersion1(oldRosterData) {
         units: {},
         drones: [],
         tacticalCards: [],
-        version: CURRENT_SAVE_VERSION
+        version: 1 // Target version is 1
     };
 
+    // ... (rest of the function is unchanged)
     // Migrate units
     for (const unitId in oldRosterData.units) {
         const oldUnit = oldRosterData.units[unitId];
@@ -243,6 +244,81 @@ function migrateFromVersion0ToVersion1(oldRosterData) {
     return newRosterData;
 }
 
+function migrateFromVersion1ToVersion2(v1Data) {
+    const v2Data = {
+        version: 2,
+        faction: v1Data.faction || 'RDL',
+        units: {},
+        drones: [],
+        tacticalCards: []
+    };
+
+    // Create a map from base filename (without extension) to the full card object.
+    // This handles the .jpg -> .png transition.
+    const mapByBaseName = new Map();
+    for (const card of allCards.byFileName.values()) {
+        const baseName = card.fileName.substring(0, card.fileName.lastIndexOf('.'));
+        mapByBaseName.set(baseName, card);
+    }
+
+    const findCard = (fileNameFromV1) => {
+        if (!fileNameFromV1) return null;
+        const baseName = fileNameFromV1.substring(0, fileNameFromV1.lastIndexOf('.'));
+        return mapByBaseName.get(baseName) || null;
+    };
+
+    // Migrate units
+    for (const unitId in v1Data.units) {
+        v2Data.units[unitId] = {};
+        const v1Unit = v1Data.units[unitId];
+        for (const category in v1Unit) {
+            const fileName = v1Unit[category];
+            if (fileName) {
+                const card = findCard(fileName);
+                if (card) {
+                    v2Data.units[unitId][category] = { category: card.category, name: card.name };
+                } else {
+                    v2Data.units[unitId][category] = null;
+                }
+            } else {
+                v2Data.units[unitId][category] = null;
+            }
+        }
+    }
+
+    // Migrate drones
+    v2Data.drones = v1Data.drones.map(item => {
+        const mainFileName = typeof item === 'string' ? item : (item && item.fileName);
+        const backCardFileName = item && item.backCardFileName;
+
+        if (mainFileName) {
+            const mainCard = findCard(mainFileName);
+            if (mainCard) {
+                const newDrone = { category: mainCard.category, name: mainCard.name };
+                if (backCardFileName) {
+                    const backCard = findCard(backCardFileName);
+                    if (backCard) {
+                        newDrone.backCard = { category: backCard.category, name: backCard.name };
+                    }
+                }
+                return newDrone;
+            }
+        }
+        return null;
+    }).filter(Boolean);
+
+    // Migrate tacticalCards
+    v2Data.tacticalCards = v1Data.tacticalCards.map(fileName => {
+        if (fileName) {
+            const card = findCard(fileName);
+            return card ? { category: card.category, name: card.name } : null;
+        }
+        return null;
+    }).filter(Boolean);
+
+    return v2Data;
+}
+
 // --- Initialization ---
 
 async function loadImageData() {
@@ -270,7 +346,7 @@ async function loadImageData() {
         allCards.byName = new Map();
         
         cardData.forEach(card => {
-            // Generate and set the unique cardId
+            // ... (existing code to populate maps)
             const nameOnly = card.fileName.substring(0, card.fileName.lastIndexOf('.'));
             const parts = nameOnly.split('_');
             let startIndex;
@@ -308,6 +384,29 @@ async function loadImageData() {
             }
             allCards.byCategory[card.category].push(card);
         });
+
+        // --- Resolve sub-card references ---
+        const mapByBaseName = new Map();
+        for (const card of allCards.byFileName.values()) {
+            const baseName = card.fileName.substring(0, card.fileName.lastIndexOf('.'));
+            mapByBaseName.set(baseName, card);
+        }
+
+        cardData.forEach(card => {
+            card.resolvedSubCards = [];
+            if (card.subCards && Array.isArray(card.subCards)) {
+                card.subCards.forEach(subCardFileName => {
+                    const baseName = subCardFileName.substring(0, subCardFileName.lastIndexOf('.'));
+                    const subCardData = mapByBaseName.get(baseName);
+                    if (subCardData) {
+                        card.resolvedSubCards.push(subCardData);
+                    } else {
+                        console.warn(`Could not resolve sub-card for fileName: ${subCardFileName}`);
+                    }
+                });
+            }
+        });
+
     } catch (error) {
         console.error("Could not load image data:", error);
     }
@@ -345,12 +444,21 @@ export const initializeApp = async () => {
         const migratedRosters = {};
         for (const rosterName in savedRosters) {
             let rosterData = savedRosters[rosterName];
-            // Migration check: If 'version' is missing or not current, it's an old format
-            if (!rosterData.version || rosterData.version < CURRENT_SAVE_VERSION) {
-                console.warn(`Migrating old roster format for: ${rosterName}`);
-                rosterData = migrateFromVersion0ToVersion1(rosterData);
+
+            // Migration check: If 'version' is missing, it's a v0 save.
+            if (!rosterData.version) {
+                console.warn(`Migrating v0 roster format for: ${rosterName}`);
+                rosterData = migrateFromVersion0ToVersion1(roosterData);
             }
-            migratedRosters[rosterName] = Roster.deserialize(rosterName, rosterData, allCards.byFileName);
+
+            // If version is 1, migrate to v2.
+            if (rosterData.version === 1) {
+                console.warn(`Migrating v1 roster format for: ${rosterName}`);
+                rosterData = migrateFromVersion1ToVersion2(rosterData);
+            }
+
+            // After all migrations, deserialize using the byName map.
+            migratedRosters[rosterName] = Roster.deserialize(rosterName, rosterData, allCards.byName);
         }
         allRosters = migratedRosters;
         activeRosterName = savedActiveName && allRosters[savedActiveName] ? savedActiveName : Object.keys(allRosters)[0];
