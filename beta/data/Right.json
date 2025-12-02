@@ -198,7 +198,7 @@
     },
     {
         "fileName": "Part_RDL_Right_GT_Front.png",
-        "name": "GT",
+        "name": "RDL_GT",
         "points": 99,
         "category": "Right",
         "faction": "RDL"
@@ -386,7 +386,7 @@
     },
     {
         "fileName": "Part_UN_Right_GT_Front.png",
-        "name": "GT",
+        "name": "UN_GT",
         "points": 99,
         "category": "Right",
         "faction": "UN"
