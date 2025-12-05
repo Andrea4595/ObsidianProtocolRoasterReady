@@ -14,27 +14,36 @@ export class Roster {
     }
 
     serialize() {
-        const serialized = { version: 1, faction: this.faction, units: {}, drones: [], tacticalCards: [] };
+        const serialized = { version: 2, faction: this.faction, units: {}, drones: [], tacticalCards: [] };
 
         for (const unitId in this.units) {
             const unit = this.units[unitId];
             serialized.units[unitId] = {};
             for (const category in unit) {
                 if (unit[category]) {
-                    serialized.units[unitId][category] = unit[category].fileName;
+                    serialized.units[unitId][category] = { 
+                        category: unit[category].category,
+                        name: unit[category].name 
+                    };
                 }
             }
         }
 
         serialized.drones = this.drones.map(drone => {
             if (!drone) return null;
-            if (drone.backCard && drone.backCard.fileName) {
-                return { fileName: drone.fileName, backCardFileName: drone.backCard.fileName };
+            const droneData = { category: drone.category, name: drone.name };
+            if (drone.backCard && drone.backCard.name) {
+                droneData.backCard = {
+                    category: drone.backCard.category,
+                    name: drone.backCard.name
+                };
             }
-            return drone.fileName;
+            return droneData;
         }).filter(Boolean);
 
-        serialized.tacticalCards = this.tacticalCards.map(card => card ? card.fileName : null).filter(Boolean);
+        serialized.tacticalCards = this.tacticalCards.map(card => {
+            return card ? { category: card.category, name: card.name } : null;
+        }).filter(Boolean);
 
         return serialized;
     }
@@ -45,19 +54,27 @@ export class Roster {
             const savedUnit = savedData.units[unitId];
             units[unitId] = {};
             for (const category in savedUnit) {
-                const fileName = savedUnit[category];
-                units[unitId][category] = fileName && allCardsMap.has(fileName) ? { ...allCardsMap.get(fileName) } : null;
+                const item = savedUnit[category];
+                if (item && item.name) {
+                    const key = `${item.category}_${item.name}`;
+                    units[unitId][category] = allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
+                } else {
+                    units[unitId][category] = null;
+                }
             }
         }
 
         const drones = (savedData.drones || []).map(item => {
-            const mainFileName = typeof item === 'string' ? item : (item && item.fileName);
-            const backCardFileName = item && item.backCardFileName;
-
-            if (mainFileName && allCardsMap.has(mainFileName)) {
-                const reconstructedDrone = { ...allCardsMap.get(mainFileName) };
-                if (backCardFileName && allCardsMap.has(backCardFileName)) {
-                    reconstructedDrone.backCard = { ...allCardsMap.get(backCardFileName) };
+            if (!item || !item.name) return null;
+            
+            const key = `${item.category}_${item.name}`;
+            if (allCardsMap.has(key)) {
+                const reconstructedDrone = { ...allCardsMap.get(key) };
+                if (item.backCard && item.backCard.name) {
+                    const backKey = `${item.backCard.category}_${item.backCard.name}`;
+                    if (allCardsMap.has(backKey)) {
+                        reconstructedDrone.backCard = { ...allCardsMap.get(backKey) };
+                    }
                 }
                 return reconstructedDrone;
             }
@@ -65,8 +82,9 @@ export class Roster {
         }).filter(Boolean);
 
         const tacticalCards = (savedData.tacticalCards || []).map(item => {
-            const fileName = typeof item === 'string' ? item : (item && item.fileName);
-            return fileName && allCardsMap.has(fileName) ? { ...allCardsMap.get(fileName) } : null;
+            if (!item || !item.name) return null;
+            const key = `${item.category}_${item.name}`;
+            return allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
         }).filter(Boolean);
 
         return new Roster({

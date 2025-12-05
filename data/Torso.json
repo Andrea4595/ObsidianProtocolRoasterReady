@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Torso_RT06_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT06_Front.png",
         "name": "RT06",
         "points": 15,
         "category": "Torso",
@@ -9,7 +9,7 @@
 		"electronic": 2
     },
     {
-        "fileName": "Part_RDL_Torso_RT07T_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT07T_Front.png",
         "name": "RT07T",
         "points": 62,
         "category": "Torso",
@@ -19,7 +19,7 @@
 		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT08_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT08_Front.png",
         "name": "RT08",
         "points": 62,
         "category": "Torso",
@@ -29,7 +29,7 @@
 		"keywords": ["Stationary", "ExtraFiringTick", "OnHit", "KnockBack(1)"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT15B_Front.png",
         "name": "RT15B",
         "points": 59,
         "category": "Torso",
@@ -38,12 +38,12 @@
 		"mobility": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.jpg"
+            "Projectile_RDL_GS2_Front.png"
         ],
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT15EC_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT15EC_Front.png",
         "name": "RT15EC",
         "points": 60,
         "category": "Torso",
@@ -53,7 +53,7 @@
 		"keywords": ["ElectronicSupport", "WarfareNode(1)"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT15C_Front.png",
         "name": "RT15C",
         "points": 56,
         "category": "Torso",
@@ -62,12 +62,12 @@
 		"mobility": 1,
 		"electronic": 2,
         "subCards": [
-            "Projectile_RDL_GS2_Front.jpg"
+            "Projectile_RDL_GS2_Front.png"
         ],
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT09A_Front.jpg",
+        "fileName": "Part_RDL_Torso_RT09A_Front.png",
         "name": "RT09A",
         "points": 66,
         "category": "Torso",
@@ -75,7 +75,7 @@
         "ammunition": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.jpg"
+            "Projectile_RDL_GS2_Front.png"
         ],
         "frame": true,
 		"keywords": ["DesignateW(1)", "DirectFire"]
@@ -90,7 +90,7 @@
 		"mobility": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.jpg"
+            "Projectile_RDL_GS2_Front.png"
         ],
         "frame": true,
 		"keywords": ["DirectFire"]
@@ -123,7 +123,7 @@
         "ammunition": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.jpg"
+            "Projectile_RDL_GS2_Front.png"
         ],
         "frame": true
     },

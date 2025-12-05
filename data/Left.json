@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
+        "fileName": "Part_RDL_Left_Type55_CC6_Front.png",
         "name": "Type55_CC6",
         "points": 54,
         "category": "Left",
@@ -9,20 +9,20 @@
 		"dropKeywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
+        "fileName": "Part_RDL_Left_ML32_CC3_Front.png",
         "name": "ML32_CC3",
         "points": 33,
         "category": "Left",
         "faction": "RDL",
         "ammunition": 2,
         "subCards": [
-            "Projectile_RDL_MC3_Front.jpg"
+            "Projectile_RDL_MC3_Front.png"
         ],
         "freehand": true,
 		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
-        "fileName": "Part_RDL_Left_R20_Front.jpg",
+        "fileName": "Part_RDL_Left_R20_Front.png",
         "name": "R20",
         "points": 51,
         "category": "Left",
@@ -31,17 +31,17 @@
 		"keywords": ["Stationary", "ArmorPiercing(1)"]
     },
     {
-        "fileName": "Part_RDL_Left_Type77_Front.jpg",
+        "fileName": "Part_RDL_Left_Type77_Front.png",
         "name": "Type77",
         "points": 50,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type77_Dropped.jpg",
+        "drop": "Part_RDL_Left_Type77_Dropped.png",
 		"mobility": -2,
 		"dropMobility": 0
     },
     {
-        "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
+        "fileName": "Part_RDL_Left_SPHX3_Front.png",
         "name": "SPHX3",
         "points": 42,
         "category": "Left",
@@ -49,18 +49,18 @@
         "freehand": true
     },
     {
-        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.jpg",
+        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.png",
         "name": "Type55_L320_CC6",
         "points": 51,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.jpg",
+        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.png",
         "intercept": 1,
 		"keywords": ["Intercept(1)", "PulseWeapon"],
 		"dropKeywords": ["Intercept(1)", "Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_Type79_Front.jpg",
+        "fileName": "Part_RDL_Left_Type79_Front.png",
         "name": "Type79",
         "points": 56,
         "category": "Left",
@@ -68,7 +68,7 @@
         "freehand": true
     },
     {
-        "fileName": "Part_RDL_Left_FCC12_Front.jpg",
+        "fileName": "Part_RDL_Left_FCC12_Front.png",
         "name": "FCC12",
         "points": 69,
         "category": "Left",
@@ -77,31 +77,31 @@
 		"keywords": ["OnHit", "Drag", "Disarm"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
+        "fileName": "Part_RDL_Left_Type55_PC9_Front.png",
         "name": "Type55_PC9",
         "points": 48,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg",
+        "drop": "Part_RDL_Left_Type55_PC9_Dropped.png",
 		"keywords": ["ScatterShot"],
 		"dropKeywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_GAC6_Front.jpg",
+        "fileName": "Part_RDL_Left_GAC6_Front.png",
         "name": "GAC6",
         "points": 36,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_GAC6_Dropped.jpg",
+        "drop": "Part_RDL_Left_GAC6_Dropped.png",
         "ammunition": 2,
         "subCards": [
-            "Projectile_RDL_RA81_Front.jpg"
+            "Projectile_RDL_RA81_Front.png"
         ],
 		"keywords": ["DirectFire"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
+        "fileName": "Part_RDL_Left_Type62_CC20_Front.png",
         "name": "Type62_CC20",
         "points": 63,
         "category": "Left",
@@ -110,14 +110,14 @@
 		"keywords": ["PulseWeapon"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_MES_Front.jpg",
+        "fileName": "Part_RDL_Left_Type55_MES_Front.png",
         "name": "Type55_MES",
         "points": 45,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_MES_Dropped.jpg",
+        "drop": "Part_RDL_Left_Type55_MES_Dropped.png",
         "subCards": [
-            "Projectile_RDL_MES_Front.jpg"
+            "Projectile_RDL_MES_Front.png"
         ],
 		"keywords": ["DirectFire", "Silence"]
     },

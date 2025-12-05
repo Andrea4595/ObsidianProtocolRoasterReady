@@ -232,6 +232,14 @@
 		"link": 4
     },
     {
+        "fileName": "Dial_UNPilot_66_Rifleman_Front.png",
+        "name": "Rifleman",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "UN",
+		"link": 4
+    },
+    {
         "fileName": "Dial_UNPilot_31_Charger_Front.png",
         "name": "Charger",
         "points": 6,

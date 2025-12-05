@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Back_AMS190_Front.jpg",
+        "fileName": "Part_RDL_Back_AMS190_Front.png",
         "name": "AMS190",
         "points": 27,
         "category": "Back",
@@ -10,7 +10,7 @@
 		"keywords": ["Intercept(3)"]
     },
     {
-        "fileName": "Part_RDL_Back_ML34_Front.jpg",
+        "fileName": "Part_RDL_Back_ML34_Front.png",
         "name": "ML34",
         "points": 39,
         "category": "Back",
@@ -18,12 +18,12 @@
         "ammunition": 4,
 		"mobility": 1,
         "subCards": [
-            "Projectile_RDL_MC3_Front.jpg"
+            "Projectile_RDL_MC3_Front.png"
         ],
 		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
-        "fileName": "Part_RDL_Back_LGP80_Front.jpg",
+        "fileName": "Part_RDL_Back_LGP80_Front.png",
         "name": "LGP80",
         "points": 33,
         "category": "Back",
@@ -31,18 +31,18 @@
 		"keywords": ["Mutilation"]
     },
     {
-        "fileName": "Part_RDL_Back_GLP15_Front.jpg",
+        "fileName": "Part_RDL_Back_GLP15_Front.png",
         "name": "GLP15",
         "points": 30,
         "category": "Back",
         "faction": "RDL",
         "subCards": [
-            "Projectile_RDL_GM35_Front.jpg"
+            "Projectile_RDL_GM35_Front.png"
         ],
 		"keywords": ["DirectFire", "Silence"]
     },
     {
-        "fileName": "Part_RDL_Back_MUD1_Front.jpg",
+        "fileName": "Part_RDL_Back_MUD1_Front.png",
         "name": "MUD1",
         "points": 33,
         "category": "Back",
@@ -52,21 +52,21 @@
 		"keywords": ["Highlight"]
     },
     {
-        "fileName": "Part_RDL_Back_CP3_Front.jpg",
+        "fileName": "Part_RDL_Back_CP3_Front.png",
         "name": "CP3",
         "points": 36,
         "category": "Back",
         "faction": "RDL",
         "ammunition": 1,
         "subCards": [
-            "Projectile_RDL_B31_Front.jpg",
-            "Projectile_RDL_B32_Front.jpg",
-            "Projectile_RDL_B33_Front.jpg"
+            "Projectile_RDL_B31_Front.png",
+            "Projectile_RDL_B32_Front.png",
+            "Projectile_RDL_B33_Front.png"
         ],
 		"keywords": ["DirectFire", "Silence", "Throw"]
     },
     {
-        "fileName": "Part_RDL_Back_MUEN20_Front.jpg",
+        "fileName": "Part_RDL_Back_MUEN20_Front.png",
         "name": "MUEN20",
         "points": 30,
         "category": "Back",
@@ -74,7 +74,7 @@
 		"keywords": ["ElectronicSupport", "ExtraActionOpportunity"]
     },
     {
-        "fileName": "Part_RDL_Back_TB600_Front.jpg",
+        "fileName": "Part_RDL_Back_TB600_Front.png",
         "name": "TB600",
         "points": 48,
         "category": "Back",
@@ -83,19 +83,19 @@
 		"keywords": ["AirborneMovement"]
     },
     {
-        "fileName": "Part_RDL_Back_ML92_Front.jpg",
+        "fileName": "Part_RDL_Back_ML92_Front.png",
         "name": "ML92",
         "points": 20,
         "category": "Back",
         "faction": "RDL",
         "ammunition": 2,
         "subCards": [
-            "Projectile_RDL_MR9_Front.jpg"
+            "Projectile_RDL_MR9_Front.png"
         ],
 		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
-        "fileName": "Part_RDL_Back_SH15_Front.jpg",
+        "fileName": "Part_RDL_Back_SH15_Front.png",
         "name": "SH15",
         "points": 30,
         "category": "Back",
@@ -107,7 +107,7 @@
 		]
     },
     {
-        "fileName": "Part_RDL_Back_ECS2_Front.jpg",
+        "fileName": "Part_RDL_Back_ECS2_Front.png",
         "name": "ECS2",
         "points": 33,
         "category": "Back",
@@ -147,7 +147,7 @@
 		"keywords": ["IndirectFire", "Silence", "Throw"]
     },
     {
-        "fileName": "Part_RDL_Back_AMS193_Front.png",
+        "fileName": "Part_RDL_Back_AMS192_Front.png",
         "name": "AMS193",
         "points": 27,
         "category": "Back",
