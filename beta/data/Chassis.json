@@ -49,6 +49,7 @@
         "category": "Chassis",
         "faction": "RDL",
         "frame": true,
+        "visible": false,
 		"mobility": 2,
 		"keywords": ["MovingInStraightLine"]
     },

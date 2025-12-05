@@ -183,6 +183,7 @@
         "faction": "RDL",
         "drop": "Part_RDL_Right_L330_CC85_Dropped.png",
         "intercept": 1,
+        "visible": false,
 		"keywords": ["Intercept(1)", "TwoHanded", "Mutilation", "Concussion"],
 		"dropKeywords": ["Intercept(1)"]
     },
@@ -194,6 +195,7 @@
         "faction": "RDL",
         "drop": "Part_RDL_Right_AC32M_Dropped.png",
 		"keywords": ["TwoHanded"],
+        "visible": false,
 		"dropKeywords": []
     },
     {

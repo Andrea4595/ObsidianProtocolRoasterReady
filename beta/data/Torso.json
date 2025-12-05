@@ -122,6 +122,7 @@
         "faction": "RDL",
         "ammunition": 1,
 		"electronic": 3,
+        "visible": false,
         "subCards": [
             "Projectile_RDL_GS2_Front.png"
         ],

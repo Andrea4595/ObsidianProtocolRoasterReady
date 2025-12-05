@@ -158,6 +158,7 @@
         "faction": "RDL",
         "drop": "Part_RDL_Left_L330_Type77B_Dropped.png",
         "intercept": 1,
+        "visible": false,
 		"keywords": ["Intercept(1)"]
     },
     {
