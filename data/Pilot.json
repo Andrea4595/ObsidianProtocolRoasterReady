@@ -75,7 +75,7 @@
     },
     {
         "fileName": "Dial_RDL_10_ShockTroop_Front.png",
-        "name": "ShockTroop",
+        "name": "ShockTroop10",
         "points": 6,
         "category": "Pilot",
         "faction": "RDL",
@@ -83,7 +83,7 @@
     },
     {
         "fileName": "Dial_RDL_11_ShockTroop_Front.png",
-        "name": "ShockTroop",
+        "name": "ShockTroop11",
         "points": 6,
         "category": "Pilot",
         "faction": "RDL",
@@ -91,7 +91,7 @@
     },
     {
         "fileName": "Dial_RDL_12_ShockTroop_Front.png",
-        "name": "ShockTroop",
+        "name": "ShockTroop12",
         "points": 6,
         "category": "Pilot",
         "faction": "RDL",
@@ -99,7 +99,7 @@
     },
     {
         "fileName": "Dial_RDL_13_ShockTrooper_Front.png",
-        "name": "ShockTrooper",
+        "name": "ShockTrooper13",
         "points": 6,
         "category": "Pilot",
         "faction": "RDL",
@@ -115,7 +115,7 @@
     },
     {
         "fileName": "Dial_RDL_15_Scount_Front.png",
-        "name": "Scount",
+        "name": "Scount15",
         "points": 9,
         "category": "Pilot",
         "faction": "RDL",
@@ -123,7 +123,7 @@
     },
     {
         "fileName": "Dial_RDL_16_Scout_Front.png",
-        "name": "Scout",
+        "name": "Scout16",
         "points": 9,
         "category": "Pilot",
         "faction": "RDL",
@@ -131,7 +131,7 @@
     },
     {
         "fileName": "Dial_RDL_17_Scout_Front.png",
-        "name": "Scout",
+        "name": "Scout17",
         "points": 9,
         "category": "Pilot",
         "faction": "RDL",
@@ -139,7 +139,7 @@
     },
     {
         "fileName": "Dial_RDL_18_Scout_Front.png",
-        "name": "Scout",
+        "name": "Scout18",
         "points": 9,
         "category": "Pilot",
         "faction": "RDL",
@@ -209,7 +209,7 @@
     },
     {
         "fileName": "Dial_UNPilot_28_Rifleman_Front.png",
-        "name": "Rifleman",
+        "name": "Rifleman28",
         "points": 9,
         "category": "Pilot",
         "faction": "UN",
@@ -217,7 +217,7 @@
     },
     {
         "fileName": "Dial_UNPilot_29_Rifleman_Front.png",
-        "name": "Rifleman",
+        "name": "Rifleman29",
         "points": 9,
         "category": "Pilot",
         "faction": "UN",
@@ -225,7 +225,7 @@
     },
     {
         "fileName": "Dial_UNPilot_30_Rifleman_Front.png",
-        "name": "Rifleman",
+        "name": "Rifleman30",
         "points": 9,
         "category": "Pilot",
         "faction": "UN",
@@ -233,7 +233,7 @@
     },
     {
         "fileName": "Dial_UNPilot_66_Rifleman_Front.png",
-        "name": "Rifleman",
+        "name": "Rifleman66",
         "points": 9,
         "category": "Pilot",
         "faction": "UN",
@@ -249,7 +249,7 @@
     },
     {
         "fileName": "Dial_UNPilot_32_Charger_Front.png",
-        "name": "Charger",
+        "name": "Charger32",
         "points": 6,
         "category": "Pilot",
         "faction": "UN",
@@ -257,7 +257,7 @@
     },
     {
         "fileName": "Dial_UNPilot_33_Charger_Front.png",
-        "name": "Charger",
+        "name": "Charger33",
         "points": 6,
         "category": "Pilot",
         "faction": "UN",
@@ -265,7 +265,7 @@
     },
     {
         "fileName": "Dial_UNPilot_34_Charger_Front.png",
-        "name": "Charger",
+        "name": "Charger34",
         "points": 6,
         "category": "Pilot",
         "faction": "UN",
