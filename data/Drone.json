@@ -31,6 +31,14 @@
         ]
     },
     {
+        "fileName": "Drone_RDL_DTG30Art_Front.png",
+        "name": "DTG30Art",
+        "points": 99,
+        "category": "Drone",
+        "faction": "RDL",
+        "frame": true
+    },
+    {
         "fileName": "Drone_UN_ADK15D_Front.png",
         "name": "ADK15D",
         "points": 48,
@@ -90,6 +98,14 @@
         "category": "Drone",
         "faction": "UN",
 		"keywords": ["ElectronicAttack", "FireControlInterference"]
+    },
+    {
+        "fileName": "Drone_UN_ADK15Art_Front.png",
+        "name": "ADK15Art",
+        "points": 99,
+        "category": "Drone",
+        "faction": "UN",
+        "frame": true
     },
     {
         "fileName": "Drone_PL_MD4A_Front.png",
