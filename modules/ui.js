@@ -65,7 +65,7 @@ export const renderRoster = () => {
     });
 
     if (state.isGameMode) {
-        renderSubProjectiles(rosterState);
+        renderSubCards(rosterState);
     }
 
     if (!state.isGameMode) {
@@ -90,21 +90,31 @@ export const adjustOverlayWidths = () => {
     });
 };
 
-const renderSubProjectiles = (rosterState) => {
-    const subProjectilesContainer = document.createElement('div');
-    subProjectilesContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
+const renderSubCards = (rosterState) => {
+    if (!rosterState.subCards || rosterState.subCards.length === 0) return;
 
-    const projectileSubCards = state.getAllSubCards(rosterState);
+    const subCardsContainer = document.createElement('div');
+    subCardsContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
+    
+    const subCardsTitle = document.createElement('h3');
+    subCardsTitle.textContent = '서브 카드';
+    subCardsTitle.className = 'sub-cards-title';
+    subCardsContainer.appendChild(subCardsTitle);
 
-    projectileSubCards.forEach(fileName => {
-        const cardData = state.allCards.byFileName.get(fileName);
+    const cardsArea = document.createElement('div');
+    cardsArea.className = 'sub-cards-area';
+    
+    rosterState.subCards.forEach(cardData => {
         if (cardData) {
-            subProjectilesContainer.appendChild(createCardElement(cardData, false));
+            // 세 번째 인자를 false로 전달하여 클릭 비활성화
+            cardsArea.appendChild(createCardElement(cardData, false));
         }
     });
 
-    if (subProjectilesContainer.hasChildNodes()) {
-        dom.tacticalCardsContainer.after(subProjectilesContainer);
+    subCardsContainer.appendChild(cardsArea);
+
+    if (subCardsContainer.hasChildNodes()) {
+        dom.tacticalCardsContainer.after(subCardsContainer);
     }
 };
 

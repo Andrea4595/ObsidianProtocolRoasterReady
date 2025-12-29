@@ -221,8 +221,8 @@ const generateTacticalCardHtml = (card, shouldHide, settings) => {
     return cardContainer;
 };
 
-const generateSubCardsHtml = (subCardFileNames, settings) => {
-    if (subCardFileNames.size === 0) return null;
+const generateSubCardsHtml = (subCards, settings) => {
+    if (subCards.size === 0) return null;
 
     const container = document.createElement('div');
     const title = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
@@ -238,8 +238,7 @@ const generateSubCardsHtml = (subCardFileNames, settings) => {
         marginTop: '15px'
     });
 
-    subCardFileNames.forEach(fileName => {
-        const card = state.allCards.byFileName.get(fileName);
+    subCards.forEach(card => {
         if (card) {
             const cardWrapper = createElementWithStyles('div', { position: 'relative', width: 'fit-content' });
             const img = createElementWithStyles('img', {
@@ -251,6 +250,23 @@ const generateSubCardsHtml = (subCardFileNames, settings) => {
             });
             img.src = `Cards/${card.category}/${card.fileName}`;
             cardWrapper.appendChild(img);
+
+            if (settings.showCardPoints) {
+                const pointsDiv = createElementWithStyles('div', {
+                    position: 'absolute',
+                    top: '5px',
+                    left: '5px',
+                    padding: '3px 6px',
+                    backgroundColor: 'rgba(24, 119, 242, 0.9)',
+                    color: '#fff',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    borderRadius: '8px',
+                    border: '1px solid #fff'
+                });
+                pointsDiv.textContent = card.points || 0;
+                cardWrapper.appendChild(pointsDiv);
+            }
             cardArea.appendChild(cardWrapper);
         }
     });
@@ -328,18 +344,25 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             exportContainer.appendChild(unitsContainer);
         }
 
-        // 2. Prepare Drone and Sub-card data
-        const otherSubCards = state.getAllSubCards(rosterState);
+        // 드론 및 서브카드 데이터 준비
+        const allSubCardsSet = state.getAllSubCards(rosterState, { includeDrones: true });
 
-        const allSubCards = state.getAllSubCards(rosterState, { includeDrones: true });
-        const subDrones = [...allSubCards]
-            .map(fileName => state.allCards.byFileName.get(fileName))
-            .filter(card => card && card.category === 'Drone');
-
-        const mainDrones = new Set(rosterState.drones.map(d => d.fileName));
-        const uniqueSubDrones = subDrones.filter(subDrone => !mainDrones.has(subDrone.fileName));
+        const mainDroneFileNames = new Set(rosterState.drones.map(d => d.fileName));
         
-        const allDronesToRender = [...rosterState.drones, ...uniqueSubDrones];
+        const subDrones = [];
+        const otherSubCards = new Set();
+
+        allSubCardsSet.forEach(card => {
+            if (card.category === 'Drone') {
+                if (!mainDroneFileNames.has(card.fileName)) {
+                    subDrones.push(card);
+                }
+            } else {
+                otherSubCards.add(card);
+            }
+        });
+
+        const allDronesToRender = [...rosterState.drones, ...subDrones];
 
         if (allDronesToRender.length > 0) {
             const dronesTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
