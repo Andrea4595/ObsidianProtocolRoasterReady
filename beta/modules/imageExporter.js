@@ -1,7 +1,8 @@
 import * as state from './state.js';
 import { updateTotalPoints } from './ui.js';
-import { categoryOrder, CARD_DIMENSIONS } from './constants.js';
+import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
+import { createCardElement } from './cardRenderer.js';
 
 // --- HTML Generation Helpers ---
 
@@ -11,77 +12,50 @@ const createElementWithStyles = (tag, styles) => {
     return element;
 };
 
-const generateCardHtml = (card, shouldHide, settings, imgStyles) => {
-    if (!card) return null;
+/**
+ * Creates a single, consistently styled card element for the exporter.
+ * It determines the correct dimensions based on the card type.
+ */
+const generateCardHtml = (cardData, settings) => {
+    const isDroneLike = cardData.category === 'Drone' || cardData.category === 'Projectile';
+    const slotWidth = isDroneLike ? '390px' : '200px';
+    const slotHeight = '287px'; // Consistent height for all cards in export
 
-    const container = createElementWithStyles('div', { position: 'relative' });
-
-    const img = createElementWithStyles('img', {
-        width: '100%',
-        height: 'auto',
+    const cardSlot = createElementWithStyles('div', {
+        width: slotWidth,
+        height: slotHeight,
+        border: '1px solid #ddd',
         borderRadius: '10px',
-        display: 'block',
-        ...imgStyles
+        backgroundColor: '#fafafa',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        padding: '5px'
     });
-    img.src = `Cards/${card.category}/${card.fileName}`;
-    container.appendChild(img);
 
-    if (shouldHide && card.hidden) {
-        const overlay = createElementWithStyles('div', {
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgb(80, 80, 80)',
-            borderRadius: '10px'
-        });
+    const cardElement = createCardElement(cardData, { mode: 'export', exportSettings: settings });
+    
+    // The card renderer produces a complex element; we need to ensure its contents are sized correctly.
+    const displayCard = cardElement.querySelector('.display-card');
+    const img = cardElement.querySelector('.card-image');
 
-        if (card.hiddenTitle) {
-            const hiddenTitleImg = createElementWithStyles('img', {
-                position: 'absolute',
-                top: '10px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                height: '100px',
-                width: 'auto',
-                boxShadow: 'none'
-            });
-            hiddenTitleImg.src = `icons/${card.hiddenTitle}`;
-            overlay.appendChild(hiddenTitleImg);
-        }
-
-        const unknownIcon = createElementWithStyles('img', {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '50%',
-            height: 'auto',
-            opacity: '0.8'
-        });
-        unknownIcon.src = 'icons/unknown.png';
-        overlay.appendChild(unknownIcon);
-        container.appendChild(overlay);
-    } else if (settings.showCardPoints) {
-        const pointsDiv = createElementWithStyles('div', {
-            position: 'absolute',
-            top: '5px',
-            left: '5px',
-            padding: '3px 6px',
-            backgroundColor: 'rgba(24, 119, 242, 0.9)',
-            color: '#fff',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            borderRadius: '8px',
-            border: '1px solid #fff'
-        });
-        pointsDiv.textContent = card.points || 0;
-        container.appendChild(pointsDiv);
+    if (displayCard) {
+        displayCard.style.width = '100%';
+        displayCard.style.height = '100%';
+    }
+    if (img) {
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
     }
 
-    return container;
+    cardSlot.appendChild(cardElement);
+    return cardSlot;
 };
+
 
 const generateUnitHtml = (unit, shouldHide, settings) => {
     const unitContainer = createElementWithStyles('div', {
@@ -92,7 +66,7 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
         padding: '15px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         alignItems: 'flex-start',
-        position: 'relative' // Added for absolute positioning of unit points
+        position: 'relative'
     });
 
     if (settings.showUnitPoints) {
@@ -115,56 +89,57 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
 
     for (const category of categoryOrder) {
         const card = unit[category];
-        const cardSlot = createElementWithStyles('div', {
-            width: '180px',
-            border: '1px solid #ddd',
-            borderRadius: '10px',
-            backgroundColor: '#fafafa',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '270px',
-            gap: '5px',
-            padding: '5px'
-        });
-
-        if (card) {
-            cardSlot.appendChild(generateCardHtml(card, shouldHide, settings, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
-
-            if (settings.showDiscarded) {
-                const addSeparator = () => {
-                    cardSlot.appendChild(createElementWithStyles('div', {
-                        height: '5px',
-                        width: '80%',
-                        backgroundColor: '#ccc',
-                        margin: '5px 0',
-                        borderRadius: '2px'
-                    }));
-                };
-
-                if (card.drop) {
-                    addSeparator();
-                    const dropImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
-                    dropImg.src = `Cards/${card.category}/${card.drop}`;
-                    cardSlot.appendChild(dropImg);
-                }
-                if (card.changes) {
-                    card.changes.forEach(changeFileName => {
-                        const changedCardData = state.allCards.byFileName.get(changeFileName);
-                        if (changedCardData) {
-                            addSeparator();
-                            const changeImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
-                            changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
-                            cardSlot.appendChild(changeImg);
-                        }
-                    });
-                }
-            }
-        } else {
+        
+        // Use the new helper for both empty and filled slots
+        const cardSlot = generateCardHtml(card || { category }, settings);
+        
+        // If the slot was empty, clear the generated content and add the label
+        if (!card) {
+            cardSlot.innerHTML = '';
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
             categoryLabel.textContent = category;
             cardSlot.appendChild(categoryLabel);
+            // Re-apply some styles for empty slot
+            Object.assign(cardSlot.style, {
+                justifyContent: 'center',
+                padding: '0'
+            });
+        }
+        
+        // Append discarded/changed cards if the setting is enabled
+        if (card && settings.showDiscarded) {
+            const addSeparator = () => {
+                cardSlot.appendChild(createElementWithStyles('div', {
+                    height: '5px',
+                    width: '80%',
+                    backgroundColor: '#ccc',
+                    margin: '5px auto',
+                    borderRadius: '2px',
+                    flexShrink: '0'
+                }));
+            };
+
+            if (card.drop) {
+                addSeparator();
+                const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
+                dropImg.src = `Cards/${card.category}/${card.drop}`;
+                cardSlot.appendChild(dropImg);
+            }
+            if (card.changes) {
+                card.changes.forEach(changeFileName => {
+                    const changedCardData = state.allCards.byFileName.get(changeFileName);
+                    if (changedCardData) {
+                        addSeparator();
+                        const changeImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
+                        changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
+                        cardSlot.appendChild(changeImg);
+                    }
+                });
+            }
+             // If we added discarded cards, the container needs to be allowed to grow
+            if (card.drop || card.changes) {
+                cardSlot.style.height = 'auto';
+            }
         }
         unitContainer.appendChild(cardSlot);
     }
@@ -181,31 +156,22 @@ const generateDroneEntryHtml = (drone, shouldHide, settings) => {
         padding: '15px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
     });
+    
+    // Main drone card
+    const mainCardSlot = generateCardHtml(drone, settings);
+    droneContainer.appendChild(mainCardSlot);
 
-    const mainCol = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' });
-    mainCol.appendChild(generateCardHtml(drone, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
-
-    if (settings.showDiscarded && drone.changes) {
-        drone.changes.forEach(changeFileName => {
-            const changedCardData = state.allCards.byFileName.get(changeFileName);
-            if (changedCardData) {
-                mainCol.appendChild(createElementWithStyles('div', { height: '5px', width: '80%', backgroundColor: '#ccc', margin: '5px 0', borderRadius: '2px' }));
-                mainCol.appendChild(generateCardHtml(changedCardData, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
-            }
-        });
-    }
-    droneContainer.appendChild(mainCol);
-
+    // Drone's back card (if it exists)
     if (drone.backCard) {
-        const backCardCol = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' });
-        backCardCol.appendChild(generateCardHtml(drone.backCard, shouldHide, settings, { height: '270px', width: 'auto', borderRadius: '10px', display: 'block' }));
-        droneContainer.appendChild(backCardCol);
+        const backCardSlot = generateCardHtml(drone.backCard, settings);
+        droneContainer.appendChild(backCardSlot);
     }
 
     return droneContainer;
 };
 
 const generateTacticalCardHtml = (card, shouldHide, settings) => {
+    // Tactical cards have their own unique size, so we don't use generateCardHtml
     const cardContainer = createElementWithStyles('div', {
         display: 'flex',
         flexDirection: 'column',
@@ -217,12 +183,12 @@ const generateTacticalCardHtml = (card, shouldHide, settings) => {
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         width: '270px'
     });
-    cardContainer.appendChild(generateCardHtml(card, shouldHide, settings, { width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }));
+    cardContainer.appendChild(createCardElement(card, { mode: 'export', exportSettings: settings }));
     return cardContainer;
 };
 
-const generateSubCardsHtml = (subCardFileNames, settings) => {
-    if (subCardFileNames.size === 0) return null;
+const generateSubCardsHtml = (subCards, settings) => {
+    if (subCards.size === 0) return null;
 
     const container = document.createElement('div');
     const title = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
@@ -233,25 +199,24 @@ const generateSubCardsHtml = (subCardFileNames, settings) => {
         display: 'flex',
         flexWrap: 'wrap',
         gap: '15px',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        marginTop: '15px'
+        justifyContent: 'center'
     });
 
-    subCardFileNames.forEach(fileName => {
-        const card = state.allCards.byFileName.get(fileName);
+    subCards.forEach(card => {
         if (card) {
-            const cardWrapper = createElementWithStyles('div', { position: 'relative', width: 'fit-content' });
-            const img = createElementWithStyles('img', {
-                height: CARD_DIMENSIONS.UNIT_CARD_HEIGHT,
-                width: 'auto',
-                borderRadius: '10px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                display: 'block'
+            // Sub-cards are rendered like Drones for consistency
+            const subCardContainer = createElementWithStyles('div', {
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '10px',
+                backgroundColor: '#fff',
+                borderRadius: '12px',
+                padding: '15px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
             });
-            img.src = `Cards/${card.category}/${card.fileName}`;
-            cardWrapper.appendChild(img);
-            cardArea.appendChild(cardWrapper);
+            const cardSlot = generateCardHtml(card, settings);
+            subCardContainer.appendChild(cardSlot);
+            cardArea.appendChild(subCardContainer);
         }
     });
     container.appendChild(cardArea);
@@ -302,6 +267,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             padding: '20px',
             fontFamily: 'sans-serif'
         });
+
         document.body.appendChild(exportContainer);
 
         if (settings.showTitle) {
@@ -328,18 +294,25 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             exportContainer.appendChild(unitsContainer);
         }
 
-        // 2. Prepare Drone and Sub-card data
-        const otherSubCards = state.getAllSubCards(rosterState);
+        // 드론 및 서브카드 데이터 준비
+        const allSubCardsSet = state.getAllSubCards(rosterState, { includeDrones: true });
 
-        const allSubCards = state.getAllSubCards(rosterState, { includeDrones: true });
-        const subDrones = [...allSubCards]
-            .map(fileName => state.allCards.byFileName.get(fileName))
-            .filter(card => card && card.category === 'Drone');
-
-        const mainDrones = new Set(rosterState.drones.map(d => d.fileName));
-        const uniqueSubDrones = subDrones.filter(subDrone => !mainDrones.has(subDrone.fileName));
+        const mainDroneFileNames = new Set(rosterState.drones.map(d => d.fileName));
         
-        const allDronesToRender = [...rosterState.drones, ...uniqueSubDrones];
+        const subDrones = [];
+        const otherSubCards = new Set();
+
+        allSubCardsSet.forEach(card => {
+            if (card.category === 'Drone') {
+                if (!mainDroneFileNames.has(card.fileName)) {
+                    subDrones.push(card);
+                }
+            } else {
+                otherSubCards.add(card);
+            }
+        });
+
+        const allDronesToRender = [...rosterState.drones, ...subDrones];
 
         if (allDronesToRender.length > 0) {
             const dronesTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });

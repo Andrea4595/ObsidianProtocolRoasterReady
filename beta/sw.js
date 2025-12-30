@@ -4,7 +4,6 @@ const appShellUrls = [
   'index.html',
   'style.css',
   'script.js',
-  'image-list.json',
   'manifest.json'
   // NOTE: Icon files are removed from here for now, as they don't exist yet.
   // We will add them back once they are created.

@@ -71,21 +71,38 @@ export function performActionAndPreserveScroll(action, eventTarget) {
     });
 }
 
-const initializeSubDrones = (gameRoster) => {
-    const allUnitAndDroneCards = [];
-    Object.values(gameRoster.units).forEach(unit => allUnitAndDroneCards.push(...Object.values(unit)));
-    allUnitAndDroneCards.push(...gameRoster.drones);
+const initializeSubCards = (gameRoster) => {
+    // Roster에 있는 모든 카드를 한 배열에 모읍니다.
+    const allCardsInRoster = [];
+    Object.values(gameRoster.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+    allCardsInRoster.push(...gameRoster.drones);
+    gameRoster.drones.forEach(drone => {
+        if (drone && drone.backCard) {
+            allCardsInRoster.push(drone.backCard);
+        }
+    });
 
-    const processedSubDrones = new Set(gameRoster.drones.map(d => d.fileName));
-    allUnitAndDroneCards.forEach(card => {
-        if (card && card.subCards) {
-            card.subCards.forEach(subCardFileName => {
-                const subCardData = state.allCards.byFileName.get(subCardFileName);
-                if (subCardData && subCardData.category === 'Drone' && !processedSubDrones.has(subCardFileName)) {
-                    const subDroneInstance = JSON.parse(JSON.stringify(subCardData));
-                    subDroneInstance.rosterId = `sub-drone-${subCardFileName}`;
-                    gameRoster.drones.push(subDroneInstance);
-                    processedSubDrones.add(subCardFileName);
+    const processedFileNames = new Set([
+        ...gameRoster.drones.map(d => d.fileName),
+        ...gameRoster.tacticalCards.map(t => t.fileName)
+    ]);
+
+    allCardsInRoster.forEach(card => {
+        // `resolvedSubCards`는 `state.js`에서 생성되며 전체 카드 객체를 포함합니다.
+        if (card && card.resolvedSubCards) {
+            card.resolvedSubCards.forEach(subCardData => {
+                if (subCardData && !processedFileNames.has(subCardData.fileName)) {
+                    const subCardInstance = JSON.parse(JSON.stringify(subCardData));
+
+                    if (subCardInstance.category === 'Drone') {
+                        subCardInstance.rosterId = `sub-drone-${subCardInstance.fileName}`;
+                        gameRoster.drones.push(subCardInstance);
+                    } else {
+                        // 다른 타입의 서브카드는 별도의 배열에 추가
+                        subCardInstance.rosterId = `sub-card-${subCardInstance.fileName}`;
+                        gameRoster.subCards.push(subCardInstance);
+                    }
+                    processedFileNames.add(subCardInstance.fileName);
                 }
             });
         }
@@ -96,6 +113,7 @@ const initializeCardStates = (gameRoster) => {
     const allCardsInGame = [];
     Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
     allCardsInGame.push(...gameRoster.drones);
+    allCardsInGame.push(...gameRoster.subCards); // 서브카드 추가
     if (gameRoster.tacticalCards) {
         allCardsInGame.push(...gameRoster.tacticalCards);
     }
@@ -121,8 +139,9 @@ const initializeCardStates = (gameRoster) => {
 
 const createGameRosterState = (roster) => {
     const gameRoster = JSON.parse(JSON.stringify(roster));
+    gameRoster.subCards = []; // 서브카드 배열 초기화
 
-    initializeSubDrones(gameRoster);
+    initializeSubCards(gameRoster);
 
     // Apply special rules before initializing for game mode
     Object.values(gameRoster.units).forEach(unit => {

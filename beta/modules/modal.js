@@ -1,9 +1,10 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster, createBuilderModeImage, createGameCardImage } from './ui.js';
+import { renderRoster } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
+import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
 
 let currentUnitId = null;
 let currentCategory = null;
@@ -58,15 +59,16 @@ const addTacticalCardToRoster = (cardData) => {
 const createCardItem = (cardData, clickHandler) => {
     const cardItem = document.createElement('div');
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
-    const img = createBuilderModeImage(cardData);
-    cardItem.appendChild(img);
+    
+    // Use the centralized renderer
+    const cardElement = createCardElementFromRenderer(cardData, { 
+        mode: 'modal', 
+        showPoints: true, 
+        onClick: () => clickHandler(cardData) 
+    });
+    
+    cardItem.appendChild(cardElement);
 
-    const points = document.createElement('div');
-    points.className = CSS_CLASSES.CARD_POINTS;
-    points.textContent = cardData.points || 0;
-    cardItem.appendChild(points);
-
-    cardItem.addEventListener('click', () => clickHandler(cardData));
     return cardItem;
 };
 
@@ -248,16 +250,17 @@ export const openCardDetailModal = (cardData) => {
 
     cardDetailContent.innerHTML = ''; // Clear previous content
 
-    const img = createBuilderModeImage(cardData);
+    const cardElement = createCardElementFromRenderer(cardData, { mode: 'modal' });
+    const img = cardElement.querySelector('img');
+
     if (state.isGameMode && cardData.isDropped && cardData.drop) {
         img.src = `Cards/${cardData.category}/${cardData.drop}`;
     }
 
     // Revert to original, simpler styling logic. The modal's width is now handled by CSS.
     img.style.width = '100%';
-    img.style.height = 'auto';
     
-    cardDetailContent.appendChild(img);
+    cardDetailContent.appendChild(cardElement);
 
     const keywords = (state.isGameMode && cardData.isDropped && cardData.dropKeywords) ? cardData.dropKeywords : cardData.keywords;
     const keywordsContainer = createKeywordElements(keywords);

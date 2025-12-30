@@ -43,17 +43,6 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_RDL_Chassis_RL08MII_Front.png",
-        "name": "RL08MII",
-        "points": 45,
-        "category": "Chassis",
-        "faction": "RDL",
-        "frame": true,
-        "visible": false,
-		"mobility": 2,
-		"keywords": ["MovingInStraightLine"]
-    },
-    {
         "fileName": "Part_UN_Chassis_LM231_Front.png",
         "name": "LM231",
         "points": 27,
