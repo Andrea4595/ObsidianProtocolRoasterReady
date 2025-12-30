@@ -1,6 +1,6 @@
 import * as state from './state.js';
 import { updateTotalPoints } from './ui.js';
-import { categoryOrder, CARD_DIMENSIONS } from './constants.js';
+import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
 import { createCardElement } from './cardRenderer.js';
 
@@ -11,6 +11,50 @@ const createElementWithStyles = (tag, styles) => {
     Object.assign(element.style, styles);
     return element;
 };
+
+/**
+ * Creates a single, consistently styled card element for the exporter.
+ * It determines the correct dimensions based on the card type.
+ */
+const generateCardHtml = (cardData, settings) => {
+    const isDroneLike = cardData.category === 'Drone' || cardData.category === 'Projectile';
+    const slotWidth = isDroneLike ? '390px' : '200px';
+    const slotHeight = '287px'; // Consistent height for all cards in export
+
+    const cardSlot = createElementWithStyles('div', {
+        width: slotWidth,
+        height: slotHeight,
+        border: '1px solid #ddd',
+        borderRadius: '10px',
+        backgroundColor: '#fafafa',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        overflow: 'hidden',
+        boxSizing: 'border-box'
+    });
+
+    const cardElement = createCardElement(cardData, { mode: 'export', exportSettings: settings });
+    
+    // The card renderer produces a complex element; we need to ensure its contents are sized correctly.
+    const displayCard = cardElement.querySelector('.display-card');
+    const img = cardElement.querySelector('.card-image');
+
+    if (displayCard) {
+        displayCard.style.width = '100%';
+        displayCard.style.height = '100%';
+    }
+    if (img) {
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+    }
+
+    cardSlot.appendChild(cardElement);
+    return cardSlot;
+};
+
 
 const generateUnitHtml = (unit, shouldHide, settings) => {
     const unitContainer = createElementWithStyles('div', {
@@ -44,49 +88,26 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
 
     for (const category of categoryOrder) {
         const card = unit[category];
-        const cardSlot = createElementWithStyles('div', {
-            width: '200px',
-            minHeight: '287px',
-            border: '1px solid #ddd',
-            borderRadius: '10px',
-            backgroundColor: '#fafafa',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start', // Align items to the top
-            alignItems: 'center',
-            gap: '5px',
-            padding: '5px'
-        });
-
+        
         if (card) {
-            // cardRenderer.js의 createCardElement 사용
-            const cardElement = createCardElement(card, { mode: 'export', exportSettings: settings });
-            cardElement.style.width = '100%';
+            const cardSlot = generateCardHtml(card, settings); // Use the new function
             
-            // Apply styles to the image inside the rendered card
-            const img = cardElement.querySelector('.card-image');
-            if (img) {
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-            }
-
-            cardSlot.appendChild(cardElement);
-
+            // Append discarded/changed cards if the setting is enabled
             if (settings.showDiscarded) {
                 const addSeparator = () => {
                     cardSlot.appendChild(createElementWithStyles('div', {
                         height: '5px',
                         width: '80%',
                         backgroundColor: '#ccc',
-                        margin: '5px 0',
-                        borderRadius: '2px'
+                        margin: '5px auto',
+                        borderRadius: '2px',
+                        flexShrink: '0'
                     }));
                 };
 
                 if (card.drop) {
                     addSeparator();
-                    const dropImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
+                    const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
                     dropImg.src = `Cards/${card.category}/${card.drop}`;
                     cardSlot.appendChild(dropImg);
                 }
@@ -95,19 +116,36 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
                         const changedCardData = state.allCards.byFileName.get(changeFileName);
                         if (changedCardData) {
                             addSeparator();
-                            const changeImg = createElementWithStyles('img', { width: '100%', height: 'auto', display: 'block', borderRadius: '10px' });
+                            const changeImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
                             changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
                             cardSlot.appendChild(changeImg);
                         }
                     });
                 }
+                 // If we added discarded cards, the container needs to be allowed to grow
+                if (card.drop || card.changes) {
+                    cardSlot.style.height = 'auto';
+                }
             }
+            unitContainer.appendChild(cardSlot);
+
         } else {
+            // Handle empty slot
+            const emptySlot = createElementWithStyles('div', {
+                width: '200px',
+                height: '287px',
+                border: '1px solid #ddd',
+                borderRadius: '10px',
+                backgroundColor: '#fafafa',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            });
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
             categoryLabel.textContent = category;
-            cardSlot.appendChild(categoryLabel);
+            emptySlot.appendChild(categoryLabel);
+            unitContainer.appendChild(emptySlot);
         }
-        unitContainer.appendChild(cardSlot);
     }
     return unitContainer;
 };
@@ -123,59 +161,21 @@ const generateDroneEntryHtml = (drone, shouldHide, settings) => {
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
     });
     
-    const options = { mode: 'export', exportSettings: settings };
+    // Main drone card
+    const mainCardSlot = generateCardHtml(drone, settings);
+    droneContainer.appendChild(mainCardSlot);
 
-    const mainCol = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' });
-    const mainCardElement = createCardElement(drone, options);
-    // Adjust styles from cardRenderer if needed
-    mainCol.appendChild(mainCardElement);
-
-    if (settings.showDiscarded && drone.changes) {
-        drone.changes.forEach(changeFileName => {
-            const changedCardData = state.allCards.byFileName.get(changeFileName);
-            if (changedCardData) {
-                mainCol.appendChild(createElementWithStyles('div', { height: '5px', width: '80%', backgroundColor: '#ccc', margin: '5px 0', borderRadius: '2px' }));
-                mainCol.appendChild(createCardElement(changedCardData, options));
-            }
-        });
-    }
-    droneContainer.appendChild(mainCol);
-
+    // Drone's back card (if it exists)
     if (drone.backCard) {
-        // Replicate the logic from generateUnitHtml for a single card slot
-        const cardSlot = createElementWithStyles('div', {
-            width: '200px',
-            height: '287px',
-            border: '1px solid #ddd',
-            borderRadius: '10px',
-            backgroundColor: '#fafafa',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '5px',
-            padding: '5px',
-            overflow: 'hidden'
-        });
-
-        const cardElement = createCardElement(drone.backCard, { mode: 'export', exportSettings: settings });
-        cardElement.style.width = '100%';
-        
-        const img = cardElement.querySelector('.card-image');
-        if (img) {
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.objectFit = 'cover';
-        }
-
-        cardSlot.appendChild(cardElement);
-        droneContainer.appendChild(cardSlot); // Append the styled slot, not a generic column
+        const backCardSlot = generateCardHtml(drone.backCard, settings);
+        droneContainer.appendChild(backCardSlot);
     }
 
     return droneContainer;
 };
 
 const generateTacticalCardHtml = (card, shouldHide, settings) => {
+    // Tactical cards have their own unique size, so we don't use generateCardHtml
     const cardContainer = createElementWithStyles('div', {
         display: 'flex',
         flexDirection: 'column',
@@ -208,7 +208,7 @@ const generateSubCardsHtml = (subCards, settings) => {
 
     subCards.forEach(card => {
         if (card) {
-            // Mimic the structure of generateDroneEntryHtml for consistency
+            // Sub-cards are rendered like Drones for consistency
             const subCardContainer = createElementWithStyles('div', {
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -218,10 +218,8 @@ const generateSubCardsHtml = (subCards, settings) => {
                 padding: '15px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
             });
-            
-            const cardElement = createCardElement(card, { mode: 'export', exportSettings: settings });
-            
-            subCardContainer.appendChild(cardElement);
+            const cardSlot = generateCardHtml(card, settings);
+            subCardContainer.appendChild(cardSlot);
             cardArea.appendChild(subCardContainer);
         }
     });
@@ -278,8 +276,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
         const style = document.createElement('style');
         style.innerHTML = `
             .drone-card {
-                height: 287px !important;
-                width: 390px !important;
+                /* This is handled by the generateCardHtml function now */
             }
         `;
         exportContainer.appendChild(style);
