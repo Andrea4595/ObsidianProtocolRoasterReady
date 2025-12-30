@@ -6,6 +6,12 @@ import { categoryOrder, CSS_CLASSES, CARD_DIMENSIONS } from './constants.js';
 import { applyUnitRules, applyDroneRules } from './rules.js';
 import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
 
+const createElementWithStyles = (tag, styles) => {
+    const element = document.createElement(tag);
+    Object.assign(element.style, styles);
+    return element;
+};
+
 // --- Main Render Functions ---
 
 export const updateTotalPoints = () => {
@@ -100,12 +106,24 @@ const renderSubCards = (rosterState) => {
     subCardsTitle.className = 'sub-cards-title';
     subCardsContainer.appendChild(subCardsTitle);
 
-    const cardsArea = document.createElement('div');
-    cardsArea.className = 'sub-cards-area';
+    const cardsArea = createElementWithStyles('div', {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '15px', // Standard gap for cards
+        justifyContent: 'center' // Center the cards horizontally
+    });
+    cardsArea.className = 'sub-cards-area'; // Keep the class
     
     rosterState.subCards.forEach(cardData => {
         if (cardData) {
-            const cardElement = createCardElement(cardData, { isInteractive: false });
+            // Options needed for sub-cards in game mode
+            const cardElement = createCardElement(cardData, { 
+                mode: 'game', 
+                isInteractive: true, // Sub-cards should be interactive in game mode
+                showPoints: false, // Points are not usually shown on sub-cards in game mode
+                showInfoButton: true, // Show info button
+                onClick: (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target) // Default game mode click action
+            });
             cardsArea.appendChild(cardElement);
         }
     });
@@ -294,15 +312,14 @@ const createFreightBackCardSlot = (cardData) => {
 
     const backCardData = cardData.backCard;
     if (backCardData) {
-        // Use the main UI wrapper to create the back card element
-        // It will handle game mode interactions and builder mode appearance internally
-        const cardElement = createCardElement(backCardData, { isInteractive: true });
+        // Just get the visual part from the renderer
+        const cardElement = createCardElementFromRenderer(backCardData, { 
+            mode: state.isGameMode ? 'game' : 'builder',
+            showPoints: !state.isGameMode,
+            showInfoButton: true
+        });
         const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-        
-        // We only want the inner display card to go into the slot, not the whole wrapper
-        if (cardInner) {
-            slot.appendChild(cardInner);
-        }
+        if(cardInner) slot.appendChild(cardInner);
     } else {
         const label = document.createElement('span');
         label.className = CSS_CLASSES.SLOT_LABEL;
@@ -311,8 +328,11 @@ const createFreightBackCardSlot = (cardData) => {
     }
     wrapper.appendChild(slot);
 
-    // In builder mode, the slot is clickable to open the modal
-    if (!state.isGameMode) {
+    // Now, manually add the game mode interactions around the slot
+    if (state.isGameMode) {
+        wrapper.insertBefore(createActionButtons(backCardData, null), slot);
+        wrapper.appendChild(createTokenArea(backCardData, null));
+    } else {
         slot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
     }
     return wrapper;
