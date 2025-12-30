@@ -255,18 +255,27 @@ const createResourceTracker = (cardData, resourceType) => {
 // --- Card Element Creator (UI-Specific Wrapper) ---
 
 export const createCardElement = (cardData, options = {}) => {
-    const { isInteractive = true, unitId = null } = options;
+    const { isInteractive = true, unitId = null, unitData = null, onClick = null } = options;
     const mode = state.isGameMode ? 'game' : 'builder';
     
-    // Get the base visual element from the renderer
-    const cardElement = createCardElementFromRenderer(cardData, { mode, isInteractive, unitId });
-    const wrapper = cardElement.querySelector(`.${CSS_CLASSES.CARD_WRAPPER}`);
-    const card = wrapper.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-
-    // Add UI-specific interactive elements
+    const rendererOptions = {
+        mode,
+        isInteractive,
+        unit: unitData,
+        showPoints: mode === 'builder',
+        showInfoButton: true, // Info buttons are always shown in the UI
+        showDeleteButton: mode === 'builder' && (cardData.category === 'Drone' || cardData.category === 'Tactical'),
+        onClick: onClick,
+    };
+    
+    const cardElement = createCardElementFromRenderer(cardData, rendererOptions);
+    
+    // Add game-mode-only interactive elements after the base card is created
     if (mode === 'game' && isInteractive) {
-        wrapper.insertBefore(createActionButtons(cardData), card);
-        wrapper.appendChild(createTokenArea(cardData, null));
+        const wrapper = cardElement.querySelector(`.${CSS_CLASSES.CARD_WRAPPER}`);
+        const card = wrapper.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
+        wrapper.insertBefore(createActionButtons(cardData, unitData), card);
+        wrapper.appendChild(createTokenArea(cardData, unitData));
     }
     
     // Handle special freight back card
@@ -278,51 +287,35 @@ export const createCardElement = (cardData, options = {}) => {
 };
 
 const createFreightBackCardSlot = (cardData) => {
-    const backCardWrapper = document.createElement('div');
-    backCardWrapper.className = CSS_CLASSES.CARD_WRAPPER;
-    const backSlot = document.createElement('div');
-    backSlot.className = CSS_CLASSES.CARD_SLOT;
+    const wrapper = document.createElement('div');
+    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+    const slot = document.createElement('div');
+    slot.className = CSS_CLASSES.CARD_SLOT;
 
     const backCardData = cardData.backCard;
     if (backCardData) {
-        const mode = state.isGameMode ? 'game' : 'builder';
-        const renderedCard = createCardElementFromRenderer(backCardData, {mode});
-        const image = renderedCard.querySelector('img');
-        if(mode === 'game') {
-            const cardInner = renderedCard.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-            backSlot.appendChild(cardInner);
-        } else {
-            backSlot.appendChild(image);
-            const points = document.createElement('div');
-            points.className = CSS_CLASSES.CARD_POINTS;
-            points.textContent = backCardData.points || 0;
-            backSlot.appendChild(points);
+        // Use the main UI wrapper to create the back card element
+        // It will handle game mode interactions and builder mode appearance internally
+        const cardElement = createCardElement(backCardData, { isInteractive: true });
+        const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
+        
+        // We only want the inner display card to go into the slot, not the whole wrapper
+        if (cardInner) {
+            slot.appendChild(cardInner);
         }
-
     } else {
         const label = document.createElement('span');
         label.className = CSS_CLASSES.SLOT_LABEL;
         label.textContent = 'Back';
-        backSlot.appendChild(label);
+        slot.appendChild(label);
     }
-    backCardWrapper.appendChild(backSlot);
+    wrapper.appendChild(slot);
 
-    if (state.isGameMode) {
-        if (backCardData) {
-            const card = backCardWrapper.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-            const clickCallback = (e) => performActionAndPreserveScroll(() => advanceCardStatus(backCardData), e.target);
-            card.addEventListener('click', clickCallback);
-            
-            backCardWrapper.appendChild(createTokenArea(backCardData, null));
-            backCardWrapper.insertBefore(createActionButtons(backCardData), backSlot);
-        } else {
-            backCardWrapper.insertBefore(createActionButtons(null), backSlot);
-        }
-    } else {
-        const clickCallback = () => openModal(cardData.rosterId, 'Back', true);
-        backSlot.addEventListener('click', clickCallback);
+    // In builder mode, the slot is clickable to open the modal
+    if (!state.isGameMode) {
+        slot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
     }
-    return backCardWrapper;
+    return wrapper;
 };
 
 // ... (rest of the file remains, createUnitCardSlot, createUnitElement, etc.)
@@ -379,13 +372,18 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     wrapper.className = CSS_CLASSES.CARD_WRAPPER;
     const slot = document.createElement('div');
     slot.className = CSS_CLASSES.CARD_SLOT;
-    slot.style.position = 'relative';
-    
+
     if (cardData) {
-        const mode = state.isGameMode ? 'game' : 'builder';
-        const cardElement = createCardElementFromRenderer(cardData, { mode, unitId, isInteractive: category !== 'Pilot' });
+        const isPilot = category === 'Pilot';
+        const cardElement = createCardElementFromRenderer(cardData, { 
+            mode: state.isGameMode ? 'game' : 'builder',
+            isInteractive: !isPilot,
+            showPoints: !state.isGameMode,
+            showInfoButton: true,
+            unit: unitData
+        });
         const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-        slot.appendChild(cardInner);
+        if(cardInner) slot.appendChild(cardInner);
     } else {
         const label = document.createElement('span');
         label.className = CSS_CLASSES.SLOT_LABEL;
@@ -394,22 +392,17 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     }
     wrapper.appendChild(slot);
 
+    // Handle all game-mode additions outside the renderer call
     if (state.isGameMode) {
-        if (cardData) {
-            wrapper.appendChild(createTokenArea(cardData, unitData));
-            if (category !== 'Pilot') {
-                 wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
-            } else {
-                wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
-            }
+        if (category === 'Pilot') {
+            wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
         } else {
-            wrapper.insertBefore(createActionButtons(null, unitData), slot);
-            wrapper.appendChild(createTokenArea(null, unitData));
+            wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
         }
+        wrapper.appendChild(createTokenArea(cardData, unitData));
     } else {
         // In builder mode, the whole slot is always clickable to change the card.
-        const clickCallback = () => openModal(unitId, category);
-        slot.addEventListener('click', clickCallback);
+        slot.addEventListener('click', () => openModal(unitId, category));
     }
     
     return wrapper;

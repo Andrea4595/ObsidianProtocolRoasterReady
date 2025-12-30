@@ -60,19 +60,15 @@ const createCardItem = (cardData, clickHandler) => {
     const cardItem = document.createElement('div');
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
     
-    // Create a simple image directly, bypassing the complex renderer
-    const img = document.createElement('img');
-    img.className = 'card-image';
-    img.src = `Cards/${cardData.category}/${cardData.fileName}`;
-    cardItem.appendChild(img);
+    // Use the centralized renderer
+    const cardElement = createCardElementFromRenderer(cardData, { 
+        mode: 'modal', 
+        showPoints: true, 
+        onClick: () => clickHandler(cardData) 
+    });
+    
+    cardItem.appendChild(cardElement);
 
-    // Manually add points
-    const points = document.createElement('div');
-    points.className = CSS_CLASSES.CARD_POINTS;
-    points.textContent = cardData.points || 0;
-    cardItem.appendChild(points);
-
-    cardItem.addEventListener('click', () => clickHandler(cardData));
     return cardItem;
 };
 

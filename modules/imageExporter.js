@@ -32,7 +32,8 @@ const generateCardHtml = (cardData, settings) => {
         justifyContent: 'flex-start',
         alignItems: 'center',
         overflow: 'hidden',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        padding: '5px'
     });
 
     const cardElement = createCardElement(cardData, { mode: 'export', exportSettings: settings });
@@ -89,63 +90,58 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
     for (const category of categoryOrder) {
         const card = unit[category];
         
-        if (card) {
-            const cardSlot = generateCardHtml(card, settings); // Use the new function
-            
-            // Append discarded/changed cards if the setting is enabled
-            if (settings.showDiscarded) {
-                const addSeparator = () => {
-                    cardSlot.appendChild(createElementWithStyles('div', {
-                        height: '5px',
-                        width: '80%',
-                        backgroundColor: '#ccc',
-                        margin: '5px auto',
-                        borderRadius: '2px',
-                        flexShrink: '0'
-                    }));
-                };
-
-                if (card.drop) {
-                    addSeparator();
-                    const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
-                    dropImg.src = `Cards/${card.category}/${card.drop}`;
-                    cardSlot.appendChild(dropImg);
-                }
-                if (card.changes) {
-                    card.changes.forEach(changeFileName => {
-                        const changedCardData = state.allCards.byFileName.get(changeFileName);
-                        if (changedCardData) {
-                            addSeparator();
-                            const changeImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
-                            changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
-                            cardSlot.appendChild(changeImg);
-                        }
-                    });
-                }
-                 // If we added discarded cards, the container needs to be allowed to grow
-                if (card.drop || card.changes) {
-                    cardSlot.style.height = 'auto';
-                }
-            }
-            unitContainer.appendChild(cardSlot);
-
-        } else {
-            // Handle empty slot
-            const emptySlot = createElementWithStyles('div', {
-                width: '200px',
-                height: '287px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                backgroundColor: '#fafafa',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            });
+        // Use the new helper for both empty and filled slots
+        const cardSlot = generateCardHtml(card || { category }, settings);
+        
+        // If the slot was empty, clear the generated content and add the label
+        if (!card) {
+            cardSlot.innerHTML = '';
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
             categoryLabel.textContent = category;
-            emptySlot.appendChild(categoryLabel);
-            unitContainer.appendChild(emptySlot);
+            cardSlot.appendChild(categoryLabel);
+            // Re-apply some styles for empty slot
+            Object.assign(cardSlot.style, {
+                justifyContent: 'center',
+                padding: '0'
+            });
         }
+        
+        // Append discarded/changed cards if the setting is enabled
+        if (card && settings.showDiscarded) {
+            const addSeparator = () => {
+                cardSlot.appendChild(createElementWithStyles('div', {
+                    height: '5px',
+                    width: '80%',
+                    backgroundColor: '#ccc',
+                    margin: '5px auto',
+                    borderRadius: '2px',
+                    flexShrink: '0'
+                }));
+            };
+
+            if (card.drop) {
+                addSeparator();
+                const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
+                dropImg.src = `Cards/${card.category}/${card.drop}`;
+                cardSlot.appendChild(dropImg);
+            }
+            if (card.changes) {
+                card.changes.forEach(changeFileName => {
+                    const changedCardData = state.allCards.byFileName.get(changeFileName);
+                    if (changedCardData) {
+                        addSeparator();
+                        const changeImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
+                        changeImg.src = `Cards/${changedCardData.category}/${changedCardData.fileName}`;
+                        cardSlot.appendChild(changeImg);
+                    }
+                });
+            }
+             // If we added discarded cards, the container needs to be allowed to grow
+            if (card.drop || card.changes) {
+                cardSlot.style.height = 'auto';
+            }
+        }
+        unitContainer.appendChild(cardSlot);
     }
     return unitContainer;
 };
@@ -271,15 +267,6 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             padding: '20px',
             fontFamily: 'sans-serif'
         });
-
-        // Inject styles for export consistency
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .drone-card {
-                /* This is handled by the generateCardHtml function now */
-            }
-        `;
-        exportContainer.appendChild(style);
 
         document.body.appendChild(exportContainer);
 
