@@ -1055,3 +1055,22 @@ div.hidden-card-overlay > img.hidden-title-image {
 .detail-view-wide #card-detail-modal-content {
     max-width: 1200px;
 }
+
+#download-watermelon-json-btn {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #6c757d; /* Neutral gray color */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    width: 100%; /* Make it full width */
+    margin-top: 15px; /* Add space above */
+}
+
+#download-watermelon-json-btn:hover {
+    background-color: #5a6268; /* Darker gray on hover */
+    transform: scale(1.01); /* A subtle transform */
+}

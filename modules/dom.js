@@ -42,6 +42,7 @@ export const rosterCodeModalTitle = document.getElementById('roster-code-modal-t
 export const rosterCodeExportContainer = document.getElementById('roster-code-export-container');
 export const rosterCodeDisplay = document.getElementById('roster-code-display');
 export const copyRosterCodeBtn = document.getElementById('copy-roster-code-btn');
+export const downloadWatermelonJsonBtn = document.getElementById('download-watermelon-json-btn');
 export const rosterCodeImportContainer = document.getElementById('roster-code-import-container');
 export const rosterCodeInput = document.getElementById('roster-code-input');
 export const importRosterBtn = document.getElementById('import-roster-btn');

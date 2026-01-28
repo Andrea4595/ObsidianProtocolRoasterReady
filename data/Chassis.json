@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Chassis_RL06_Front.png",
+		"id": 20,
         "name": "RL06",
         "points": 18,
         "category": "Chassis",
@@ -9,6 +10,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL03D_Front.png",
+		"id": 22,
         "name": "RL03D",
         "points": 42,
         "category": "Chassis",
@@ -17,6 +19,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL08_Front.png",
+		"id": 21,
         "name": "RL08",
         "points": 30,
         "category": "Chassis",
@@ -27,6 +30,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
+		"id": 506,
         "name": "RL06M",
         "points": 18,
         "category": "Chassis",
@@ -35,6 +39,7 @@
     },
     {
         "fileName": "Part_RDL_Chassis_RL06MS_Front.png",
+		"id": 507,
         "name": "RL06MS",
         "points": 24,
         "category": "Chassis",
@@ -44,6 +49,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM231_Front.png",
+		"id": 99,
         "name": "LM231",
         "points": 27,
         "category": "Chassis",
@@ -52,6 +58,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM210S_Front.png",
+		"id": 100,
         "name": "LM210S",
         "points": 39,
         "category": "Chassis",
@@ -61,6 +68,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM213B_Front.png",
+		"id": 101,
         "name": "LM213B",
         "points": 57,
         "category": "Chassis",
@@ -70,6 +78,7 @@
     },
     {
         "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+		"id": 250,
         "name": "LM210S_Trial",
         "points": 39,
         "category": "Chassis",
@@ -79,6 +88,7 @@
     },
     {
         "fileName": "Part_WD_Chassis_ACE001_Front.jpg",
+		"id": 289,
         "name": "ACE001",
         "points": 24,
         "category": "Chassis",

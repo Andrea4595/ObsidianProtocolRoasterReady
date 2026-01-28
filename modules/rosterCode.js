@@ -161,3 +161,89 @@ export function copyCodeToClipboard() {
     document.execCommand('copy');
     alert('코드가 클립보드에 복사되었습니다.');
 }
+
+// --- Watermelon JSON Export ---
+
+/**
+ * Formats a card's ID for Watermelon02 compatibility.
+ * It prioritizes 'id_watermelon02', falls back to 'id',
+ * and pads it to a 3-digit string.
+ * @param {object} card The card object.
+ * @returns {string|null} The formatted 3-digit ID string or null if no ID.
+ */
+function formatId(card) {
+    if (!card) return null;
+    const id = card.id_watermelon02 !== undefined ? card.id_watermelon02 : card.id;
+    if (id === undefined) return null;
+    return String(id).padStart(3, '0');
+}
+
+/**
+ * Generates and downloads a roster file compatible with the "watermelon02" format.
+ */
+export function downloadWatermelonJson() {
+    const roster = state.getActiveRoster();
+    if (!roster) {
+        alert('다운로드할 로스터가 없습니다.');
+        return;
+    }
+
+    const watermelonRoster = {
+        id: "1", // Static ID as per the sample
+        faction: roster.faction || 'RDL',
+        mechs: [],
+        drones: [],
+    };
+
+    // Process Mechs (Units)
+    Object.values(roster.units).forEach(unit => {
+        const pilotId = formatId(unit.Pilot);
+        if (!pilotId) return; // A mech must have a pilot
+
+        const mech = {
+            parts: {},
+            pilot: { id: pilotId },
+        };
+
+        const partMappings = {
+            chasis: 'Chassis',
+            torso: 'Torso',
+            leftHand: 'Left',
+            rightHand: 'Right',
+            backpack: 'Back',
+        };
+
+        for (const [watermelonKey, appKey] of Object.entries(partMappings)) {
+            const partCard = unit[appKey];
+            const partId = formatId(partCard);
+            if (partId) {
+                mech.parts[watermelonKey] = { id: partId };
+            }
+        }
+        
+        watermelonRoster.mechs.push(mech);
+    });
+
+    // Process Drones
+    roster.drones.forEach(droneCard => {
+        const droneId = formatId(droneCard);
+        if (droneId) {
+            watermelonRoster.drones.push({ id: droneId });
+        }
+    });
+
+    // Create and download the file
+    const jsonString = JSON.stringify(watermelonRoster, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${roster.name}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+
+}

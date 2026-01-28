@@ -5,7 +5,7 @@ import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
 import { ROSTER_SELECT_ACTIONS } from './constants.js';
-import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard } from './rosterCode.js';
+import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard, downloadWatermelonJson } from './rosterCode.js';
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -42,6 +42,7 @@ export function setupEventListeners() {
     dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
     dom.rosterCodeModalClose.addEventListener('click', closeRosterCodeModal);
     dom.copyRosterCodeBtn.addEventListener('click', copyCodeToClipboard);
+    dom.downloadWatermelonJsonBtn.addEventListener('click', downloadWatermelonJson);
     dom.importRosterBtn.addEventListener('click', importRosterCode);
     dom.rosterCodeModal.addEventListener('click', (event) => {
         if (event.target === dom.rosterCodeModal) closeRosterCodeModal();

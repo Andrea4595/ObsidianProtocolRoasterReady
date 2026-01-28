@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Drone_RDL_DTG30M_Front.png",
+		"id": 78,
         "name": "DTG30M",
         "points": 42,
         "category": "Drone",
@@ -11,6 +12,7 @@
     },
     {
         "fileName": "Drone_RDL_DTG30R_Front.png",
+		"id": 80,
         "name": "DTG30R",
         "points": 27,
         "category": "Drone",
@@ -19,6 +21,7 @@
     },
     {
         "fileName": "Drone_RDL_DTG30S_Front.png",
+		"id": 79,
         "name": "DTG30S",
         "points": 33,
         "category": "Drone",
@@ -32,6 +35,7 @@
     },
     {
         "fileName": "Drone_RDL_DTG30Art_Front.png",
+		"id": 523,
         "name": "DTG30Art",
         "points": 99,
         "category": "Drone",
@@ -40,6 +44,7 @@
     },
     {
         "fileName": "Drone_UN_ADK15D_Front.png",
+		"id": 160,
         "name": "ADK15D",
         "points": 48,
         "category": "Drone",
@@ -49,6 +54,7 @@
     },
     {
         "fileName": "Drone_UN_ADK15MAS_Front.png",
+		"id": 161,
         "name": "ADK15MAS",
         "points": 30,
         "category": "Drone",
@@ -58,6 +64,7 @@
     },
     {
         "fileName": "Drone_UN_ADK30C_Front.png",
+		"id": 162,
         "name": "ADK30C",
         "points": 12,
         "category": "Drone",
@@ -69,6 +76,7 @@
     },
     {
         "fileName": "Drone_UN_ADK30F_Front.png",
+		"id": 163,
         "name": "ADK30F",
         "points": 33,
         "category": "Drone",
@@ -78,6 +86,7 @@
     },
     {
         "fileName": "Drone_UN_ADK60EC_Front.png",
+		"id": 165,
         "name": "ADK60EC",
         "points": 33,
         "category": "Drone",
@@ -86,6 +95,7 @@
     },
     {
         "fileName": "Drone_UN_ADK60R_Front.png",
+		"id": 164,
         "name": "ADK60R",
         "points": 33,
         "category": "Drone",
@@ -93,6 +103,7 @@
     },
     {
         "fileName": "Drone_UN_ADK60S_Front.png",
+		"id": 166,
         "name": "ADK60S",
         "points": 51,
         "category": "Drone",
@@ -101,6 +112,7 @@
     },
     {
         "fileName": "Drone_UN_ADK15Art_Front.png",
+		"id": 524,
         "name": "ADK15Art",
         "points": 99,
         "category": "Drone",
@@ -109,6 +121,8 @@
     },
     {
         "fileName": "Drone_PL_MD4A_Front.png",
+		"id": 269,
+		"id_watermelon02": "PRDR-101",
         "name": "MD4A",
         "points": 90,
         "category": "Drone",
@@ -123,6 +137,8 @@
     },
     {
         "fileName": "Drone_PL_MD4B_Front.png",
+		"id": 272,
+		"id_watermelon02": "PRDR-104",
         "name": "MD4B",
         "points": 114,
         "category": "Drone",
@@ -133,6 +149,8 @@
     },
     {
         "fileName": "Drone_PL_MD4C_Front.png",
+		"id": 270,
+		"id_watermelon02": "PRDR-102",
         "name": "MD4C",
         "points": 99,
         "category": "Drone",
@@ -146,6 +164,8 @@
     },
     {
         "fileName": "Drone_PL_MD4D_Front.png",
+		"id": 271,
+		"id_watermelon02": "PRDR-103",
         "name": "MD4D",
         "points": 105,
         "category": "Drone",
@@ -157,6 +177,8 @@
     },
     {
         "fileName": "Drone_PL_MD4E_Front.png",
+		"id": 296,
+		"id_watermelon02": "PRDR-105",
         "name": "MD4E",
         "points": 90,
         "category": "Drone",
@@ -171,6 +193,8 @@
     },
     {
         "fileName": "Drone_PL_LD5A_Front.png",
+		"id": 526,
+		"id_watermelon02": "PRDR-201",
         "name": "LD5A",
         "points": 48,
         "category": "Drone",
@@ -179,6 +203,8 @@
     },
     {
         "fileName": "Drone_PL_LD5B_Front.png",
+		"id": 528,
+		"id_watermelon02": "PRDR-203",
         "name": "LD5B",
         "points": 45,
         "category": "Drone",
@@ -191,6 +217,8 @@
     },
     {
         "fileName": "Drone_PL_LD5M_Front.png",
+		"id": 527,
+		"id_watermelon02": "PRDR-202",
         "name": "LD5M",
         "points": 42,
         "category": "Drone",
@@ -199,6 +227,8 @@
     },
     {
         "fileName": "Drone_PL_LD5S_Front.png",
+		"id": 529,
+		"id_watermelon02": "PRDR-204",
         "name": "LD5S",
         "points": 48,
         "category": "Drone",
@@ -212,6 +242,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Defense_Front.jpg",
+		"id": 0,
         "name": "ACE001_Defense",
         "points": 0,
         "category": "Drone",
@@ -226,6 +257,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Mobile_Front.jpg",
+		"id": 0,
         "name": "ACE001_Mobile",
         "points": 0,
         "category": "Drone",
@@ -240,6 +272,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Offense_Front.jpg",
+		"id": 0,
         "name": "ACE001_Offense",
         "points": 0,
         "category": "Drone",
