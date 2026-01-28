@@ -1,6 +1,7 @@
 [
     {
         "fileName": "Part_RDL_Right_AC150_Front.png",
+		"id": 30,
         "name": "AC150",
         "points": 42,
         "category": "Right",
@@ -13,6 +14,7 @@
     },
     {
         "fileName": "Part_RDL_Right_R20_Front.png",
+		"id": 33,
         "name": "R20",
         "points": 51,
         "category": "Right",
@@ -22,6 +24,7 @@
     },
     {
         "fileName": "Part_RDL_Right_CC4_Front.png",
+		"id": 36,
         "name": "CC4",
         "points": 39,
         "category": "Right",
@@ -31,6 +34,7 @@
     },
     {
         "fileName": "Part_RDL_Right_ACX350_Front.png",
+		"id": 38,
         "name": "ACX350",
         "points": 48,
         "category": "Right",
@@ -43,6 +47,7 @@
     },
     {
         "fileName": "Part_RDL_Right_R35_Front.png",
+		"id": 43,
         "name": "R35",
         "points": 54,
         "category": "Right",
@@ -55,6 +60,7 @@
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9_Front.png",
+		"id": 46,
         "name": "Type55_PC9",
         "points": 48,
         "category": "Right",
@@ -65,6 +71,7 @@
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9_Grenade_Front.png",
+		"id": 48,
         "name": "Type55_PC9_Grenade",
         "points": 57,
         "category": "Right",
@@ -79,6 +86,7 @@
     },
     {
         "fileName": "Part_RDL_Right_L320_CC90_Front.png",
+		"id": 51,
         "name": "L320_CC90",
         "points": 63,
         "category": "Right",
@@ -90,6 +98,7 @@
     },
     {
         "fileName": "Part_RDL_Right_CC100_Front.png",
+		"id": 55,
         "name": "CC100",
         "points": 48,
         "category": "Right",
@@ -98,6 +107,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC39_Front.png",
+		"id": 58,
         "name": "AC39",
         "points": 45,
         "category": "Right",
@@ -108,6 +118,7 @@
     },
     {
         "fileName": "Part_RDL_Right_Type63_CC20_Front.png",
+		"id": 62,
         "name": "Type63_CC20",
         "points": 66,
         "category": "Right",
@@ -117,6 +128,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC161_Front.png",
+		"id": 68,
         "name": "AC161",
         "points": 45,
         "category": "Right",
@@ -127,6 +139,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC32_Front.png",
+		"id": 25,
         "name": "AC32",
         "points": 24,
         "category": "Right",
@@ -137,6 +150,7 @@
     },
     {
         "fileName": "Part_RDL_Right_Type55_PC9K_Front.png",
+		"id": 508,
         "name": "Type55_PC9K",
         "points": 63,
         "category": "Right",
@@ -147,6 +161,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AH21_CC50_Front.png",
+		"id": 512,
         "name": "AH21_CC50",
         "points": 63,
         "category": "Right",
@@ -157,6 +172,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC35_Front.png",
+		"id": 516,
         "name": "AC35",
         "points": 51,
         "category": "Right",
@@ -167,6 +183,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC32C_Front.png",
+		"id": 518,
         "name": "AC32C",
         "points": 36,
         "category": "Right",
@@ -177,6 +194,7 @@
     },
     {
         "fileName": "Part_RDL_Right_L330_CC85_Front.png",
+		"id": 284,
         "name": "L330_CC85",
         "points": 57,
         "category": "Right",
@@ -189,6 +207,7 @@
     },
     {
         "fileName": "Part_RDL_Right_AC32M_Front.png",
+		"id": 27,
         "name": "AC32M",
         "points": 33,
         "category": "Right",
@@ -200,6 +219,7 @@
     },
     {
         "fileName": "Part_RDL_Right_GT_Front.png",
+		"id": 285,
         "name": "RDL_GT",
         "points": 99,
         "category": "Right",
@@ -207,6 +227,7 @@
     },
     {
         "fileName": "Part_UN_Right_G6_M5_Front.png",
+		"id": 148,
         "name": "G6_M5",
         "points": 69,
         "category": "Right",
@@ -218,6 +239,7 @@
     },
     {
         "fileName": "Part_UN_Right_IGX350_Front.png",
+		"id": 140,
         "name": "IGX350",
         "points": 45,
         "category": "Right",
@@ -229,6 +251,7 @@
     },
     {
         "fileName": "Part_UN_Right_IGX920_Front.png",
+		"id": 122,
         "name": "IGX920",
         "points": 60,
         "category": "Right",
@@ -242,6 +265,7 @@
     },
     {
         "fileName": "Part_UN_Right_M3S_Front.png",
+		"id": 133,
         "name": "M3S",
         "points": 42,
         "category": "Right",
@@ -251,6 +275,7 @@
     },
     {
         "fileName": "Part_UN_Right_M4_Grenade_Front.png",
+		"id": 136,
         "name": "M4_Grenade",
         "points": 54,
         "category": "Right",
@@ -265,6 +290,7 @@
     },
     {
         "fileName": "Part_UN_Right_M15BO_Front.png",
+		"id": 145,
         "name": "M15BO",
         "points": 81,
         "category": "Right",
@@ -275,6 +301,7 @@
     },
     {
         "fileName": "Part_UN_Right_MDXS_R6_Front.png",
+		"id": 119,
         "name": "MDXS_R6",
         "points": 45,
         "category": "Right",
@@ -286,6 +313,7 @@
     },
     {
         "fileName": "Part_UN_Right_R33_Front.png",
+		"id": 106,
         "name": "R33",
         "points": 39,
         "category": "Right",
@@ -295,6 +323,7 @@
     },
     {
         "fileName": "Part_UN_Right_R6_Front.png",
+		"id": 109,
         "name": "R6",
         "points": 54,
         "category": "Right",
@@ -306,6 +335,7 @@
     },
     {
         "fileName": "Part_UN_Right_R6SD_Front.png",
+		"id": 124,
         "name": "R6SD",
         "points": 60,
         "category": "Right",
@@ -317,6 +347,7 @@
     },
     {
         "fileName": "Part_UN_Right_R7_Front.png",
+		"id": 104,
         "name": "R7",
         "points": 42,
         "category": "Right",
@@ -327,6 +358,7 @@
     },
     {
         "fileName": "Part_UN_Right_R9B_Front.png",
+		"id": 127,
         "name": "R9B",
         "points": 48,
         "category": "Right",
@@ -337,6 +369,7 @@
     },
     {
         "fileName": "Part_UN_Right_RH21_M3_Front.png",
+		"id": 113,
         "name": "RH21_M3",
         "points": 45,
         "category": "Right",
@@ -348,6 +381,7 @@
     },
     {
         "fileName": "Part_UN_Right_RHX23_Front.png",
+		"id": 152,
         "name": "RHX23",
         "points": 57,
         "category": "Right",
@@ -359,6 +393,7 @@
     },
     {
         "fileName": "Part_UN_Right_S100R6SS_Front.png",
+		"id": 115,
         "name": "S100R6SS",
         "points": 63,
         "category": "Right",
@@ -369,6 +404,7 @@
     },
     {
         "fileName": "Part_UN_Right_K9_Trial_Front.png",
+		"id": 257,
         "name": "K9_Trial",
         "points": 42,
         "category": "Right",
@@ -378,6 +414,7 @@
     },
     {
         "fileName": "Part_UN_Right_R7MG_Front.png",
+		"id": 556,
         "name": "R7MG",
         "points": 50,
         "category": "Right",
@@ -388,6 +425,7 @@
     },
     {
         "fileName": "Part_UN_Right_GT_Front.png",
+		"id": 259,
         "name": "UN_GT",
         "points": 99,
         "category": "Right",
@@ -395,6 +433,7 @@
     },
     {
         "fileName": "Part_WD_Right_ACE001_Front.jpg",
+		"id": 290,
         "name": "ACE001",
         "points": 72,
         "category": "Right",

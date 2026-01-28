@@ -1,6 +1,8 @@
 [
     {
         "fileName": "Dial_RDL_01_Misty_Front.png",
+		"id": 301,
+		"id_watermelon02": "FPA-01",
         "name": "Misty",
         "points": 15,
         "category": "Pilot",
@@ -10,6 +12,8 @@
     },
     {
         "fileName": "Dial_RDL_02_Spike_Front.png",
+		"id": 302,
+		"id_watermelon02": "FPA-02",
         "name": "Spike",
         "points": 15,
         "category": "Pilot",
@@ -19,6 +23,8 @@
     },
     {
         "fileName": "Dial_RDL_03_Wu_Front.png",
+		"id": 303,
+		"id_watermelon02": "FPA-03",
         "name": "Wu",
         "points": 12,
         "category": "Pilot",
@@ -28,6 +34,8 @@
     },
     {
         "fileName": "Dial_RDL_04_Hammerhead_Front.png",
+		"id": 304,
+		"id_watermelon02": "FPA-04",
         "name": "Hammerhead",
         "points": 10,
         "category": "Pilot",
@@ -37,6 +45,8 @@
     },
     {
         "fileName": "Dial_RDL_05_Anser_Front.png",
+		"id": 305,
+		"id_watermelon02": "FPA-05",
         "name": "Anser",
         "points": 15,
         "category": "Pilot",
@@ -49,6 +59,8 @@
     },
     {
         "fileName": "Dial_RDL_06_Keyhole_Front.png",
+		"id": 306,
+		"id_watermelon02": "FPA-06",
         "name": "Keyhole",
         "points": 12,
         "category": "Pilot",
@@ -58,6 +70,8 @@
     },
     {
         "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.png",
+		"id": 0,
+		"id_watermelon02": "FPA-06-2",
         "name": "Keyhole_Different_1",
         "points": 12,
         "category": "Pilot",
@@ -67,6 +81,8 @@
     },
     {
         "fileName": "Dial_RDL_09_ShockTroop_Front.png",
+		"id": 309,
+		"id_watermelon02": "FPA-09",
         "name": "ShockTroop",
         "points": 6,
         "category": "Pilot",
@@ -75,6 +91,8 @@
     },
     {
         "fileName": "Dial_RDL_10_ShockTroop_Front.png",
+		"id": 310,
+		"id_watermelon02": "FPA-10",
         "name": "ShockTroop10",
         "points": 6,
         "category": "Pilot",
@@ -83,6 +101,8 @@
     },
     {
         "fileName": "Dial_RDL_11_ShockTroop_Front.png",
+		"id": 311,
+		"id_watermelon02": "FPA-11",
         "name": "ShockTroop11",
         "points": 6,
         "category": "Pilot",
@@ -91,6 +111,8 @@
     },
     {
         "fileName": "Dial_RDL_12_ShockTroop_Front.png",
+		"id": 312,
+		"id_watermelon02": "FPA-12",
         "name": "ShockTroop12",
         "points": 6,
         "category": "Pilot",
@@ -99,6 +121,8 @@
     },
     {
         "fileName": "Dial_RDL_13_ShockTrooper_Front.png",
+		"id": 313,
+		"id_watermelon02": "FPA-13",
         "name": "ShockTrooper13",
         "points": 6,
         "category": "Pilot",
@@ -107,6 +131,8 @@
     },
     {
         "fileName": "Dial_RDL_14_ Scout_Front.png",
+		"id": 314,
+		"id_watermelon02": "FPA-14",
         "name": "Scout",
         "points": 9,
         "category": "Pilot",
@@ -115,6 +141,8 @@
     },
     {
         "fileName": "Dial_RDL_15_Scount_Front.png",
+		"id": 315,
+		"id_watermelon02": "FPA-15",
         "name": "Scount15",
         "points": 9,
         "category": "Pilot",
@@ -123,6 +151,8 @@
     },
     {
         "fileName": "Dial_RDL_16_Scout_Front.png",
+		"id": 316,
+		"id_watermelon02": "FPA-16",
         "name": "Scout16",
         "points": 9,
         "category": "Pilot",
@@ -131,6 +161,8 @@
     },
     {
         "fileName": "Dial_RDL_17_Scout_Front.png",
+		"id": 317,
+		"id_watermelon02": "FPA-17",
         "name": "Scout17",
         "points": 9,
         "category": "Pilot",
@@ -139,6 +171,8 @@
     },
     {
         "fileName": "Dial_RDL_18_Scout_Front.png",
+		"id": 318,
+		"id_watermelon02": "FPA-18",
         "name": "Scout18",
         "points": 9,
         "category": "Pilot",
@@ -147,6 +181,8 @@
     },
     {
         "fileName": "Dial_UNPilot_19_Quartz_Front.png",
+		"id": 319,
+		"id_watermelon02": "LPA-19",
         "name": "Quartz",
         "points": 24,
         "category": "Pilot",
@@ -156,6 +192,8 @@
     },
     {
         "fileName": "Dial_UNPilot_20_Panzer_Front.png",
+		"id": 320,
+		"id_watermelon02": "LPA-20",
         "name": "Panzer",
         "points": 15,
         "category": "Pilot",
@@ -165,6 +203,8 @@
     },
     {
         "fileName": "Dial_UNPilot_21_Firefly_Front.png",
+		"id": 321,
+		"id_watermelon02": "LPA-21",
         "name": "Firefly",
         "points": 18,
         "category": "Pilot",
@@ -174,6 +214,8 @@
     },
     {
         "fileName": "Dial_UNPilot_22_Yoyu_Front.png",
+		"id": 322,
+		"id_watermelon02": "LPA-22",
         "name": "Yoyu",
         "points": 21,
         "category": "Pilot",
@@ -183,6 +225,8 @@
     },
     {
         "fileName": "Dial_UNPilot_23_Onyx_Front.png",
+		"id": 323,
+		"id_watermelon02": "LPA-23",
         "name": "Onyx",
         "points": 21,
         "category": "Pilot",
@@ -192,6 +236,8 @@
     },
     {
         "fileName": "Dial_UNPilot_24_Sealock_Front.png",
+		"id": 324,
+		"id_watermelon02": "LPA-24",
         "name": "Sealock",
         "points": 21,
         "category": "Pilot",
@@ -201,6 +247,8 @@
     },
     {
         "fileName": "Dial_UNPilot_27_Rifleman_Front.png",
+		"id": 327,
+		"id_watermelon02": "LPA-27",
         "name": "Rifleman",
         "points": 9,
         "category": "Pilot",
@@ -209,6 +257,8 @@
     },
     {
         "fileName": "Dial_UNPilot_28_Rifleman_Front.png",
+		"id": 328,
+		"id_watermelon02": "LPA-28",
         "name": "Rifleman28",
         "points": 9,
         "category": "Pilot",
@@ -217,6 +267,8 @@
     },
     {
         "fileName": "Dial_UNPilot_29_Rifleman_Front.png",
+		"id": 329,
+		"id_watermelon02": "LPA-29",
         "name": "Rifleman29",
         "points": 9,
         "category": "Pilot",
@@ -225,6 +277,8 @@
     },
     {
         "fileName": "Dial_UNPilot_30_Rifleman_Front.png",
+		"id": 330,
+		"id_watermelon02": "LPA-30",
         "name": "Rifleman30",
         "points": 9,
         "category": "Pilot",
@@ -233,6 +287,8 @@
     },
     {
         "fileName": "Dial_UNPilot_66_Rifleman_Front.png",
+		"id": 0,
+		"id_watermelon02": "LPA-66",
         "name": "Rifleman66",
         "points": 9,
         "category": "Pilot",
@@ -241,6 +297,8 @@
     },
     {
         "fileName": "Dial_UNPilot_31_Charger_Front.png",
+		"id": 331,
+		"id_watermelon02": "LPA-31",
         "name": "Charger",
         "points": 6,
         "category": "Pilot",
@@ -249,6 +307,8 @@
     },
     {
         "fileName": "Dial_UNPilot_32_Charger_Front.png",
+		"id": 332,
+		"id_watermelon02": "LPA-32",
         "name": "Charger32",
         "points": 6,
         "category": "Pilot",
@@ -257,6 +317,8 @@
     },
     {
         "fileName": "Dial_UNPilot_33_Charger_Front.png",
+		"id": 333,
+		"id_watermelon02": "LPA-33",
         "name": "Charger33",
         "points": 6,
         "category": "Pilot",
@@ -265,6 +327,8 @@
     },
     {
         "fileName": "Dial_UNPilot_34_Charger_Front.png",
+		"id": 334,
+		"id_watermelon02": "LPA-34",
         "name": "Charger34",
         "points": 6,
         "category": "Pilot",
@@ -273,6 +337,8 @@
     },
     {
         "fileName": "Dial_WD_ACE001_KarlFried_Front.png",
+		"id": 0,
+		"id_watermelon02": "ACE-01",
         "name": "ACE001_KarlFried",
         "points": 15,
         "category": "Pilot",
