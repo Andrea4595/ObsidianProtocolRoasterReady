@@ -87,6 +87,17 @@
 		"keywords": ["Silence"]
     },
     {
+        "fileName": "Part_GOF_Chassis_PLK400SK_Front.png",
+		"id": 181,
+        "name": "PLK400SK",
+        "points": 90,
+        "frame": true,
+        "category": "Chassis",
+        "faction": "GOF",
+		"mobility": 3,
+		"keywords": ["Heteromorphism(1)", "Unstoppable"]
+    },
+    {
         "fileName": "Part_WD_Chassis_ACE001_Front.jpg",
 		"id": 289,
         "name": "ACE001",

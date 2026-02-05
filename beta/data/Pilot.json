@@ -336,6 +336,16 @@
 		"link": 4
     },
     {
+        "fileName": "Dial_GOFPilot_72_Grenadier_Front.jpg",
+		"id": 0,
+		"id_watermelon02": "FPA-10",
+        "name": "Grenadier72",
+        "points": 4,
+        "category": "Pilot",
+        "faction": "GOF",
+		"link": 4
+    },
+    {
         "fileName": "Dial_WD_ACE001_KarlFried_Front.png",
 		"id": 0,
 		"id_watermelon02": "ACE-01",

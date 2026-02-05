@@ -242,6 +242,17 @@
 		"keywords": ["KCArmor"]
     },
     {
+        "fileName": "Part_GOF_Torso_P7A3SK_Front.png",
+		"id": 173,
+        "name": "P7A3SK",
+        "points": 79,
+        "category": "Torso",
+        "faction": "GOF",
+        "frame": true,
+		"electronic": 3,
+		"keywords": ["CommandCreate(4)", "Aura"]
+    },
+    {
         "fileName": "Part_WD_Torso_ACE001_Cruise_Front.jpg",
 		"id": 287,
         "name": "ACE001_Cruise",
