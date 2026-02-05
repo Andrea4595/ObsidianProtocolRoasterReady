@@ -355,6 +355,18 @@
 		"keywords": ["Silence", "OnHit"]
     },
     {
+        "fileName": "Part_GOF_Left_MHKX_Front.png",
+        "drop": "Part_GOF_Left_MHKX_Drop.png",
+		"id": 0,
+        "id_watermelon02": "ZHLA-304",
+        "name": "MHKX",
+        "points": 47,
+        "category": "Left",
+        "faction": "GOF",
+		"frame": true,
+		"keywords": ["Cleaving", "TwoHanded", "Mutilation"]
+    },
+    {
         "fileName": "Part_WD_Left_ACE001_Front.jpg",
 		"id": 291,
         "name": "ACE001",

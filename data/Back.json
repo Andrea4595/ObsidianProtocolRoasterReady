@@ -298,6 +298,16 @@
 		"keywords": ["KCArmor"]
     },
     {
+        "fileName": "Part_GOF_Back_HALO_Front.png",
+		"id": 0,
+		"id_watermelon02": "ZYBP-302",
+        "name": "HALO",
+        "points": 39,
+        "category": "Back",
+        "faction": "GOF",
+		"mobility": 1
+    },
+    {
         "fileName": "Part_WD_Back_ACE001_Front.jpg",
 		"id": 292,
         "name": "ACE001",

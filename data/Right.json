@@ -432,6 +432,18 @@
         "faction": "UN"
     },
     {
+        "fileName": "Part_GOF_Right_MHKX_Front.png",
+        "drop": "Part_GOF_Right_MHKX_Dropped.png",
+		"id": 0,
+        "id_watermelon02": "ZHRA-304",
+        "name": "MHKX",
+        "points": 56,
+        "category": "Right",
+        "faction": "GOF",
+		"frame": true,
+		"keywords": ["Cleaving", "TwoHanded", "Mutilation"]
+    },
+    {
         "fileName": "Part_WD_Right_ACE001_Front.jpg",
 		"id": 290,
         "name": "ACE001",
