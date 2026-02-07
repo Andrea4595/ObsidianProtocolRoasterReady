@@ -44,7 +44,8 @@ const addDroneToRoster = (cardData) => {
     const newDrone = { ...cardData, rosterId: `d_${state.nextDroneId}` };
     state.setNextDroneId(state.nextDroneId + 1);
     state.getActiveRoster().drones.push(newDrone);
-    renderRoster();
+    addDroneElement(newDrone);
+    updateTotalPoints(); // Update total points after adding a drone
     state.saveAllRosters();
     closeModal();
 };
@@ -53,7 +54,8 @@ const addTacticalCardToRoster = (cardData) => {
     const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
     state.setNextTacticalCardId(state.nextTacticalCardId + 1);
     state.getActiveRoster().tacticalCards.push(newTacticalCard);
-    renderRoster();
+    addTacticalCardElement(newTacticalCard);
+    updateTotalPoints(); // Update total points after adding a tactical card
     state.saveAllRosters();
     closeModal();
 };
@@ -87,8 +89,10 @@ const createDeselectOption = () => {
 const populateModal = (cards, clickHandler, isDeselectable = false) => {
     dom.modalImageContainer.innerHTML = ''; // Clear existing cards
 
+    const fragment = document.createDocumentFragment();
+
     if (isDeselectable) {
-        dom.modalImageContainer.appendChild(createDeselectOption());
+        fragment.appendChild(createDeselectOption());
     }
 
     let sortedCards = [...cards];
@@ -101,8 +105,10 @@ const populateModal = (cards, clickHandler, isDeselectable = false) => {
 
     sortedCards.forEach(cardData => {
         if (cardData.visible === false) return;
-        dom.modalImageContainer.appendChild(createCardItem(cardData, clickHandler));
+        fragment.appendChild(createCardItem(cardData, clickHandler));
     });
+
+    dom.modalImageContainer.appendChild(fragment); // Append all at once
 };
 
 const setupSortButtons = (cards, clickHandler, isDeselectable) => {
