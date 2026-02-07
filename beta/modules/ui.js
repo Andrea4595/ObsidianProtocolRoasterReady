@@ -265,7 +265,7 @@ const createResourceTracker = (cardData, resourceType) => {
 // --- Card Element Creator (UI-Specific Wrapper) ---
 
 export const createCardElement = (cardData, options = {}) => {
-    const { isInteractive = true, unitId = null, unitData = null, onClick = null } = options;
+    const { isInteractive = true, unitId = null, unitData = null, onClick = null, onDeleteCallback = null } = options;
     const mode = state.isGameMode ? 'game' : 'builder';
     
     const rendererOptions = {
@@ -276,6 +276,7 @@ export const createCardElement = (cardData, options = {}) => {
         showInfoButton: true, // Info buttons are always shown in the UI
         showDeleteButton: mode === 'builder' && (cardData.category === 'Drone' || cardData.category === 'Tactical'),
         onClick: onClick,
+        onDeleteCallback: onDeleteCallback, // Pass the callback to the renderer
     };
     
     const cardElement = createCardElementFromRenderer(cardData, rendererOptions);
@@ -565,10 +566,24 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     }
 };
 
-const addDroneElement = (droneData) => {
-    dom.dronesContainer.appendChild(createCardElement(droneData, { unitId: droneData.rosterId }));
+export const addDroneElement = (droneData) => {
+    const cardElement = createCardElement(droneData, {
+        unitId: droneData.rosterId,
+        onDeleteCallback: () => {
+            cardElement.remove(); // Remove the drone's UI element
+            updateTotalPoints(); // Update total points after deletion
+        }
+    });
+    dom.dronesContainer.appendChild(cardElement);
 };
 
-const addTacticalCardElement = (cardData) => {
-    dom.tacticalCardsContainer.appendChild(createCardElement(cardData, { unitId: cardData.rosterId }));
+export const addTacticalCardElement = (cardData) => {
+    const cardElement = createCardElement(cardData, {
+        unitId: cardData.rosterId,
+        onDeleteCallback: () => {
+            cardElement.remove(); // Remove the tactical card's UI element
+            updateTotalPoints(); // Update total points after deletion
+        }
+    });
+    dom.tacticalCardsContainer.appendChild(cardElement);
 };

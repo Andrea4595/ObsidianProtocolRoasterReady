@@ -55,6 +55,7 @@ export function performActionAndPreserveScroll(action, eventTarget) {
     };
 
     action();
+    state.saveAllRosters(); // Ensure state is saved after the action
 
     // renderRoster(); // Removed - will implement targeted update instead
 

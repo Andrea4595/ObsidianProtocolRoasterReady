@@ -49,7 +49,7 @@ const createInfoButton = (cardData) => {
     return infoButton;
 };
 
-const createDeleteButton = (cardData) => {
+const createDeleteButton = (cardData, onDeleteCallback) => {
     const deleteButton = createDomElement('button', { className: CSS_CLASSES.DELETE_DRONE_BUTTON, textContent: '-' });
     deleteButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -58,6 +58,9 @@ const createDeleteButton = (cardData) => {
                 state.getActiveRoster().drones = state.getActiveRoster().drones.filter(d => d.rosterId !== cardData.rosterId);
             } else if (cardData.category === 'Tactical') {
                 state.getActiveRoster().tacticalCards = state.getActiveRoster().tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
+            }
+            if (onDeleteCallback) {
+                onDeleteCallback(); // Trigger UI update after state change
             }
         });
     });
@@ -97,7 +100,8 @@ export const createCardElement = (cardData, options = {}) => {
         showInfoButton = false,
         showDeleteButton = false,
         onClick = null,
-        unit = null // Pass unit data for game mode logic
+        unit = null, // Pass unit data for game mode logic
+        onDeleteCallback = null // New: Callback for when delete button is pressed
     } = options;
 
     const mainContainer = createDomElement('div', { style: { display: 'flex', gap: '0px', alignItems: 'flex-start' } });
@@ -131,7 +135,7 @@ export const createCardElement = (cardData, options = {}) => {
     }
 
     if (showDeleteButton) {
-        wrapper.appendChild(createDeleteButton(cardData));
+        wrapper.appendChild(createDeleteButton(cardData, onDeleteCallback));
     }
     
     // --- Game Mode Specifics ---

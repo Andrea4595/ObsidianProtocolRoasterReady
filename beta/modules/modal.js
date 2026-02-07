@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster, updateUnitDisplay, updateTotalPoints } from './ui.js';
+import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
