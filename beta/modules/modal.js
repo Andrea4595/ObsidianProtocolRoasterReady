@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster } from './ui.js';
+import { renderRoster, updateUnitDisplay, updateTotalPoints } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
@@ -24,7 +24,7 @@ export const closeModal = () => {
 };
 
 const addCardToUnit = (cardData) => {
-    performActionAndPreserveScroll(() => {
+    performActionAndPreserveScroll(async () => { // Make action async
         const roster = state.getActiveRoster();
         if (isBackCard) {
             const drone = roster.drones.find(d => d.rosterId === currentUnitId);
@@ -32,6 +32,8 @@ const addCardToUnit = (cardData) => {
         } else {
             roster.units[currentUnitId][currentCategory] = cardData;
         }
+        await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
+        updateTotalPoints(); // Call directly
     });
 
     state.saveAllRosters();

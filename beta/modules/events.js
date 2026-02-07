@@ -3,8 +3,8 @@ import * as state from './state.js';
 import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal } from './modal.js';
 import { setGameMode } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
-import { renderRoster, updateRosterSelect, adjustOverlayWidths } from './ui.js';
-import { ROSTER_SELECT_ACTIONS } from './constants.js';
+import { renderRoster, updateRosterSelect, adjustOverlayWidths, updateUnitDisplay } from './ui.js';
+import { ROSTER_SELECT_ACTIONS, CSS_CLASSES } from './constants.js';
 import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard, downloadWatermelonJson } from './rosterCode.js';
 
 export function setupEventListeners() {
@@ -160,6 +160,85 @@ export function setupEventListeners() {
         const target = event.target;
         if (target.tagName === 'IMG' && (target.closest('.unit-row') || target.closest('#drones-container') || target.closest('.modal-image-container') || target.closest('.sub-cards-container') || target.closest('#card-detail-content'))) {
             event.preventDefault();
+        }
+    });
+
+    // Event delegation for change and drop buttons on dynamically added unit cards
+    dom.unitsContainer.addEventListener('click', async (e) => {
+        const changeButton = e.target.closest(`.${CSS_CLASSES.CHANGE_BUTTON}`);
+        const dropButton = e.target.closest(`.${CSS_CLASSES.DROP_BUTTON}`);
+
+                    if (changeButton) {
+                        e.stopPropagation();
+        
+                        const unitId = parseInt(changeButton.dataset.unitId);
+                        const cardCategory = changeButton.dataset.cardCategory;
+        
+                        if (isNaN(unitId) || !cardCategory) {
+                            console.error('Missing unitId or cardCategory for change button action.');
+                            return;
+                        }
+        
+                        const rosterState = state.getActiveRoster();
+                        const unitData = rosterState.units[unitId];
+                        if (!unitData) {
+                            console.error(`Unit data not found for unitId: ${unitId}`);
+                            return;
+                        }
+                        const cardData = unitData[cardCategory];
+                        if (!cardData) {
+                            console.error(`Card data not found for category: ${cardCategory} in unitId: ${unitId}`);
+                            return;
+                        }
+            performActionAndPreserveScroll(async () => {
+    
+                const currentCard = unitData[cardCategory];
+                const cycle = [currentCard.fileName, ...currentCard.changes];
+                const currentIndex = cycle.indexOf(currentCard.fileName);
+                const nextFileName = cycle[(currentIndex + 1) % cycle.length];
+                const newCardData = state.allCards.byFileName.get(nextFileName);
+                if (!newCardData) return;
+
+                const propsToPreserve = { cardStatus: currentCard.cardStatus, currentAmmunition: currentCard.currentAmmunition, currentIntercept: currentCard.currentIntercept, isDropped: currentCard.isDropped, rosterId: currentCard.rosterId, isBlackbox: currentCard.isBlackbox };
+                for (const key in currentCard) { delete currentCard[key]; }
+                Object.assign(currentCard, newCardData, propsToPreserve);
+
+                await updateUnitDisplay(unitId, unitData); // unitData is already the active roster's unit
+                state.saveAllRosters();
+                state.updateTotalPoints();
+            }, changeButton); // Pass the button as eventTarget for scroll preservation
+        }
+
+        if (dropButton) {
+            e.stopPropagation();
+
+            const unitId = parseInt(dropButton.dataset.unitId);
+            const cardCategory = dropButton.dataset.cardCategory;
+
+            if (isNaN(unitId) || !cardCategory) {
+                console.error('Missing unitId or cardCategory for drop button action.');
+                return;
+            }
+
+            const rosterState = state.getActiveRoster();
+            const unitData = rosterState.units[unitId];
+            if (!unitData) {
+                console.error(`Unit data not found for unitId: ${unitId}`);
+                return;
+            }
+            const cardData = unitData[cardCategory];
+            if (!cardData) {
+                console.error(`Card data not found for category: ${cardCategory} in unitId: ${unitId}`);
+                return;
+            }
+
+            performActionAndPreserveScroll(async () => { // Make action async
+                cardData.isDropped = !cardData.isDropped;
+
+                await updateUnitDisplay(unitId, unitData); // Update only the unit that changed
+                state.saveAllRosters();
+                state.updateTotalPoints();
+            }, dropButton);
         }
     });
 

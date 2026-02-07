@@ -36,7 +36,7 @@ export const updateTotalPoints = () => {
     return total;
 };
 
-export const renderRoster = () => {
+export const renderRoster = async () => {
     dom.unitsContainer.innerHTML = '';
     dom.dronesContainer.innerHTML = '';
     dom.tacticalCardsContainer.innerHTML = '';
@@ -50,8 +50,11 @@ export const renderRoster = () => {
         rosterState.drones.forEach(drone => applyDroneRules(drone));
     }
 
-    Object.keys(rosterState.units).forEach(unitId => {
-        const unitElement = createUnitElement(parseInt(unitId), rosterState.units[unitId]);
+    const unitElementsPromises = Object.keys(rosterState.units).map(async unitId => {
+        return await createUnitElement(parseInt(unitId), rosterState.units[unitId]);
+    });
+    const unitElements = await Promise.all(unitElementsPromises);
+    unitElements.forEach(unitElement => {
         dom.unitsContainer.appendChild(unitElement);
     });
 
@@ -198,7 +201,7 @@ const createTokenArea = (cardData, unitData) => {
     return tokenArea;
 };
 
-const createActionButtons = (cardData, unitData) => {
+const createActionButtons = (cardData, unitData, unitId) => {
     const placeholder = () => {
         const p = document.createElement('div');
         p.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
@@ -225,20 +228,9 @@ const createActionButtons = (cardData, unitData) => {
         const button = document.createElement('button');
         button.className = `${CSS_CLASSES.ACTION_BUTTON} ${CSS_CLASSES.CHANGE_BUTTON}`;
         button.textContent = '변경';
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            performActionAndPreserveScroll(() => {
-                const currentCard = unitData ? unitData[cardData.category] : cardData;
-                const cycle = [currentCard.fileName, ...currentCard.changes];
-                const currentIndex = cycle.indexOf(currentCard.fileName);
-                const nextFileName = cycle[(currentIndex + 1) % cycle.length];
-                const newCardData = state.allCards.byFileName.get(nextFileName);
-                if (!newCardData) return;
-                const propsToPreserve = { cardStatus: currentCard.cardStatus, currentAmmunition: currentCard.currentAmmunition, currentIntercept: currentCard.currentIntercept, isDropped: currentCard.isDropped, rosterId: currentCard.rosterId, isBlackbox: currentCard.isBlackbox };
-                for (const key in currentCard) { delete currentCard[key]; }
-                Object.assign(currentCard, newCardData, propsToPreserve);
-            }, e.target);
-        });
+        button.dataset.unitId = unitId; // Add data attribute for unitId
+        button.dataset.cardCategory = cardData.category; // Add data attribute for cardCategory
+        // Event listener moved to event delegation in modules/events.js
         wrapper.appendChild(button);
     }
     return wrapper;
@@ -339,6 +331,56 @@ const createFreightBackCardSlot = (cardData) => {
 };
 
 // ... (rest of the file remains, createUnitCardSlot, createUnitElement, etc.)
+
+const createUnitPartsCompositeImage = async (unitData, targetSize) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = targetSize;
+    canvas.height = targetSize;
+    const ctx = canvas.getContext('2d');
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const overlayOrder = ['Back', 'Left', 'Chassis', 'Torso', 'Right', 'Pilot'];
+    const partImagePromises = [];
+
+    for (const partName of overlayOrder) {
+        const part = unitData[partName];
+        // Ensure part exists, has an ID, and the ID is a valid number
+        if (part && typeof part.id === 'number' && !isNaN(part.id)) {
+            let imgSrc;
+            if (part.id === 0 && part.name) {
+                imgSrc = `CharacterParts/${part.name}.png`;
+            } else {
+                imgSrc = `CharacterParts/${part.id}.png`;
+            }
+            partImagePromises.push(
+                new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve({ img, partName });
+                    img.onerror = () => {
+                        console.warn(`Failed to load image: ${imgSrc}`);
+                        resolve(null); // Resolve with null if image fails to load
+                    };
+                    img.src = imgSrc;
+                })
+            );
+        }
+    }
+
+    const loadedPartImages = await Promise.all(partImagePromises);
+
+    loadedPartImages.forEach(item => {
+        if (item && item.img) {
+            // Draw image. Position and size might need adjustment based on actual image dimensions
+            // For now, draw to fill the canvas.
+            ctx.drawImage(item.img, 0, 0, canvas.width, canvas.height);
+        }
+    });
+
+    return canvas;
+};
+
 const createPartStatusIndicator = (unitData) => {
     const indicatorContainer = document.createElement('div');
     indicatorContainer.className = CSS_CLASSES.ACTION_BUTTON_WRAPPER;
@@ -417,7 +459,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (category === 'Pilot') {
             wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
         } else {
-            wrapper.insertBefore(createActionButtons(cardData, unitData), slot);
+            wrapper.insertBefore(createActionButtons(cardData, unitData, unitId), slot);
         }
         wrapper.appendChild(createTokenArea(cardData, unitData));
     } else {
@@ -428,21 +470,52 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     return wrapper;
 };
 
-const createUnitElement = (unitId, unitData) => {
+export const createUnitElement = async (unitId, unitData) => {
     const unitEntry = document.createElement('div');
     unitEntry.className = CSS_CLASSES.UNIT_ENTRY;
     unitEntry.dataset.unitId = unitId;
+    Object.assign(unitEntry.style, {
+        position: 'relative',
+        display: 'flex', // Use flexbox to align the image and the unit cards
+        alignItems: 'center', // Vertically center the items
+        gap: '15px' // Space between the composite image and the unit cards
+    });
 
     const unitRow = document.createElement('div');
     unitRow.className = CSS_CLASSES.UNIT_ROW;
-    unitRow.style.position = 'relative';
+    Object.assign(unitRow.style, {
+        position: 'relative',
+        display: 'flex', // Ensure unitRow is also a flex container
+        overflowX: 'auto' // Allow horizontal scrolling if cards overflow
+        // padding: '10px 0' // Removed to allow CSS to control padding
+    });
     if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
+    // Render cards into unitRow first
     categoryOrder.forEach(category => {
         unitRow.appendChild(createUnitCardSlot(category, unitData, unitId));
     });
 
-    unitEntry.appendChild(unitRow);
+    // --- New robust height calculation ---
+    const clone = unitRow.cloneNode(true);
+    Object.assign(clone.style, {
+        position: 'absolute',
+        left: '-9999px',
+        visibility: 'hidden',
+        width: 'auto' // Allow it to size naturally based on content
+    });
+    document.body.appendChild(clone);
+            const unitRowHeight = clone.offsetHeight;
+            document.body.removeChild(clone);
+            // --- End of new robust height calculation ---
+    // Create and append the composite image
+    if (unitData && unitRowHeight > 0) { // Check for valid height
+        const compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
+        compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
+        unitEntry.prepend(compositeImageCanvas); // Prepend to put it before unitRow
+    }
+
+    unitEntry.appendChild(unitRow); // Append the original unitRow
 
     if (!state.isGameMode) {
         const deleteButton = document.createElement('button');
@@ -479,6 +552,17 @@ const createUnitElement = (unitId, unitData) => {
     }
 
     return unitEntry;
+};
+
+export const updateUnitDisplay = async (unitId, unitData) => {
+    const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
+    if (existingUnitEntry) {
+        // Create a new element with the updated content
+        const newUnitEntry = await createUnitElement(unitId, unitData);
+        existingUnitEntry.replaceWith(newUnitEntry);
+    } else {
+        console.error(`Could not find unit entry for unitId: ${unitId}`);
+    }
 };
 
 const addDroneElement = (droneData) => {

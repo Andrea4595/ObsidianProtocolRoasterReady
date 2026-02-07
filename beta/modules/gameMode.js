@@ -56,7 +56,7 @@ export function performActionAndPreserveScroll(action, eventTarget) {
 
     action();
 
-    renderRoster();
+    // renderRoster(); // Removed - will implement targeted update instead
 
     requestAnimationFrame(() => {
         unitScrolls.forEach(scrollInfo => {
