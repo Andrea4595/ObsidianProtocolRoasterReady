@@ -277,6 +277,7 @@ export const createCardElement = (cardData, options = {}) => {
         showDeleteButton: mode === 'builder' && (cardData.category === 'Drone' || cardData.category === 'Tactical'),
         onClick: onClick,
         onDeleteCallback: onDeleteCallback, // Pass the callback to the renderer
+        unitId: unitId, // <<< IMPORTANT: Pass unitId to the rendererOptions
     };
     
     const cardElement = createCardElementFromRenderer(cardData, rendererOptions);
@@ -290,7 +291,7 @@ export const createCardElement = (cardData, options = {}) => {
     }
     
     // Handle special freight back card
-    if (cardData.hasFreightBack === true) {
+    if (cardData.special && cardData.special.includes('freight_back')) {
         cardElement.appendChild(createFreightBackCardSlot(cardData));
     }
 
@@ -566,7 +567,7 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     }
 };
 
-export const addDroneElement = (droneData) => {
+export const createDroneElement = (droneData) => { // Renamed to createDroneElement
     const cardElement = createCardElement(droneData, {
         unitId: droneData.rosterId,
         onDeleteCallback: () => {
@@ -574,10 +575,27 @@ export const addDroneElement = (droneData) => {
             updateTotalPoints(); // Update total points after deletion
         }
     });
+    return cardElement; // Return the created element
+};
+
+export const addDroneElement = (droneData) => { // New function to append
+    const cardElement = createDroneElement(droneData);
     dom.dronesContainer.appendChild(cardElement);
 };
 
-export const addTacticalCardElement = (cardData) => {
+export const updateDroneDisplay = (droneData) => {
+    const existingDroneElement = document.querySelector(`.roster-card-container[data-roster-id='${droneData.rosterId}']`);
+    if (existingDroneElement) {
+        const newDroneElement = createDroneElement(droneData);
+        existingDroneElement.replaceWith(newDroneElement);
+    } else {
+        console.warn(`Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
+        dom.dronesContainer.innerHTML = '';
+        state.getActiveRoster().drones.forEach(d => addDroneElement(d));
+    }
+};
+
+export const createTacticalCardElement = (cardData) => { // Renamed to createTacticalCardElement
     const cardElement = createCardElement(cardData, {
         unitId: cardData.rosterId,
         onDeleteCallback: () => {
@@ -585,5 +603,22 @@ export const addTacticalCardElement = (cardData) => {
             updateTotalPoints(); // Update total points after deletion
         }
     });
+    return cardElement; // Return the created element
+};
+
+export const addTacticalCardElement = (cardData) => { // New function to append
+    const cardElement = createTacticalCardElement(cardData);
     dom.tacticalCardsContainer.appendChild(cardElement);
+};
+
+export const updateTacticalCardDisplay = (cardData) => {
+    const existingTacticalCardElement = document.querySelector(`.roster-card-container[data-roster-id='${cardData.rosterId}']`);
+    if (existingTacticalCardElement) {
+        const newTacticalCardElement = createTacticalCardElement(cardData);
+        existingTacticalCardElement.replaceWith(newTacticalCardElement);
+    } else {
+        console.warn(`Could not find tactical card entry for rosterId: ${cardData.rosterId} for update. Re-rendering all tactical cards.`);
+        dom.tacticalCardsContainer.innerHTML = '';
+        state.getActiveRoster().tacticalCards.forEach(tc => addTacticalCardElement(tc));
+    }
 };

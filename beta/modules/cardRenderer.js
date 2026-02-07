@@ -101,10 +101,17 @@ export const createCardElement = (cardData, options = {}) => {
         showDeleteButton = false,
         onClick = null,
         unit = null, // Pass unit data for game mode logic
-        onDeleteCallback = null // New: Callback for when delete button is pressed
+        onDeleteCallback = null, // New: Callback for when delete button is pressed
+        unitId = null // This is the rosterId for drones/tactical cards
     } = options;
 
-    const mainContainer = createDomElement('div', { style: { display: 'flex', gap: '0px', alignItems: 'flex-start' } });
+    const mainContainer = createDomElement('div', { 
+        className: 'roster-card-container', // Add a selectable class
+        style: { display: 'flex', gap: '0px', alignItems: 'flex-start' } 
+    });
+    if (unitId !== null) {
+        mainContainer.dataset.rosterId = unitId;
+    }
     const wrapper = createDomElement('div', { className: CSS_CLASSES.CARD_WRAPPER });
     const card = createDomElement('div', { className: CSS_CLASSES.DISPLAY_CARD, style: { position: 'relative' } });
 

@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement } from './ui.js';
+import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
@@ -27,16 +27,20 @@ const addCardToUnit = (cardData) => {
     performActionAndPreserveScroll(async () => { // Make action async
         const roster = state.getActiveRoster();
         if (isBackCard) {
-            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
-            if (drone) drone.backCard = cardData;
+            const droneIndex = roster.drones.findIndex(d => d.rosterId === currentUnitId);
+            if (droneIndex !== -1) {
+                const drone = roster.drones[droneIndex];
+                drone.backCard = cardData; // Update the drone's backCard
+                updateDroneDisplay(drone); // Update the specific drone's display
+            }
         } else {
             roster.units[currentUnitId][currentCategory] = cardData;
+            await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
         }
-        await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
         updateTotalPoints(); // Call directly
     });
 
-    state.saveAllRosters();
+    // state.saveAllRosters(); // Removed as performActionAndPreserveScroll now handles it
     closeModal();
 };
 
