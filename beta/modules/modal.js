@@ -24,43 +24,60 @@ export const closeModal = () => {
 };
 
 const addCardToUnit = (cardData) => {
-    performActionAndPreserveScroll(async () => { // Make action async
-        const roster = state.getActiveRoster();
-        if (isBackCard) {
-            const droneIndex = roster.drones.findIndex(d => d.rosterId === currentUnitId);
-            if (droneIndex !== -1) {
-                const drone = roster.drones[droneIndex];
-                drone.backCard = cardData; // Update the drone's backCard
-                updateDroneDisplay(drone); // Update the specific drone's display
+    performActionAndPreserveScroll(
+        async () => { // action
+            const roster = state.getActiveRoster();
+            if (isBackCard) {
+                const droneIndex = roster.drones.findIndex(d => d.rosterId === currentUnitId);
+                if (droneIndex !== -1) {
+                    const drone = roster.drones[droneIndex];
+                    drone.backCard = cardData; // Update the drone's backCard
+                    updateDroneDisplay(drone); // Update the specific drone's display
+                }
+            } else {
+                roster.units[currentUnitId][currentCategory] = cardData;
+                await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
             }
-        } else {
-            roster.units[currentUnitId][currentCategory] = cardData;
-            await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
-        }
-        updateTotalPoints(); // Call directly
-    });
+            updateTotalPoints(); // Call directly
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
 
     // state.saveAllRosters(); // Removed as performActionAndPreserveScroll now handles it
     closeModal();
 };
 
 const addDroneToRoster = (cardData) => {
-    const newDrone = { ...cardData, rosterId: `d_${state.nextDroneId}` };
-    state.setNextDroneId(state.nextDroneId + 1);
-    state.getActiveRoster().drones.push(newDrone);
-    addDroneElement(newDrone);
-    updateTotalPoints(); // Update total points after adding a drone
-    state.saveAllRosters();
+    performActionAndPreserveScroll(
+        () => {
+            const newDrone = { ...cardData, rosterId: `d_${state.nextDroneId}` };
+            state.setNextDroneId(state.nextDroneId + 1);
+            state.getActiveRoster().drones.push(newDrone);
+            addDroneElement(newDrone); // Directly add to DOM
+            updateTotalPoints(); // Update total points after adding a drone
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
     closeModal();
 };
 
 const addTacticalCardToRoster = (cardData) => {
-    const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
-    state.setNextTacticalCardId(state.nextTacticalCardId + 1);
-    state.getActiveRoster().tacticalCards.push(newTacticalCard);
-    addTacticalCardElement(newTacticalCard);
-    updateTotalPoints(); // Update total points after adding a tactical card
-    state.saveAllRosters();
+    performActionAndPreserveScroll(
+        () => {
+            const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
+            state.setNextTacticalCardId(state.nextTacticalCardId + 1);
+            state.getActiveRoster().tacticalCards.push(newTacticalCard);
+            addTacticalCardElement(newTacticalCard); // Directly add to DOM
+            updateTotalPoints(); // Update total points after adding a tactical card
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
     closeModal();
 };
 

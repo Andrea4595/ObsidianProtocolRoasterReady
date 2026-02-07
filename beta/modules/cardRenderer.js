@@ -1,3 +1,5 @@
+import { renderRoster, updateDroneDisplay, updateTacticalCardDisplay, updateUnitDisplay } from './ui.js';
+
 // modules/cardRenderer.js
 
 /**
@@ -53,16 +55,19 @@ const createDeleteButton = (cardData, onDeleteCallback) => {
     const deleteButton = createDomElement('button', { className: CSS_CLASSES.DELETE_DRONE_BUTTON, textContent: '-' });
     deleteButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        performActionAndPreserveScroll(() => {
-            if (cardData.category === 'Drone') {
-                state.getActiveRoster().drones = state.getActiveRoster().drones.filter(d => d.rosterId !== cardData.rosterId);
-            } else if (cardData.category === 'Tactical') {
-                state.getActiveRoster().tacticalCards = state.getActiveRoster().tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
-            }
-            if (onDeleteCallback) {
-                onDeleteCallback(); // Trigger UI update after state change
-            }
-        });
+        performActionAndPreserveScroll(
+            () => { // action
+                if (cardData.category === 'Drone') {
+                    state.getActiveRoster().drones = state.getActiveRoster().drones.filter(d => d.rosterId !== cardData.rosterId);
+                } else if (cardData.category === 'Tactical') {
+                    state.getActiveRoster().tacticalCards = state.getActiveRoster().tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
+                }
+                if (onDeleteCallback) {
+                    onDeleteCallback(); // Trigger UI update after state change
+                }
+            },
+            e.target  // eventTarget
+        );
     });
     return deleteButton;
 };
@@ -153,9 +158,39 @@ export const createCardElement = (cardData, options = {}) => {
             let gameClickCallback = onClick;
             if (!gameClickCallback) { // Default game mode click action
                  if (cardData.hidden) {
-                    gameClickCallback = (e) => performActionAndPreserveScroll(() => { cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode; }, e.target);
+                    gameClickCallback = (e) => performActionAndPreserveScroll(
+                        async () => { // Make action async
+                            cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode;
+                            // Now, decide which update to call here
+                            if (cardData.category === 'Drone') {
+                                await updateDroneDisplay(cardData); // Await here
+                            } else if (cardData.category === 'Tactical') {
+                                await updateTacticalCardDisplay(cardData); // Await here
+                            } else if (unit && unitId !== undefined && unitId !== null) {
+                                await updateUnitDisplay(unitId, unit); // Await here
+                            } else {
+                                renderRoster();
+                            }
+                        },
+                        e.target  // eventTarget
+                    );
                 } else {
-                    gameClickCallback = (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData, unit), e.target);
+                    gameClickCallback = (e) => performActionAndPreserveScroll(
+                        async () => { // Make action async
+                            advanceCardStatus(cardData, unit);
+                            // Now, decide which update to call here
+                            if (cardData.category === 'Drone') {
+                                await updateDroneDisplay(cardData); // Await here
+                            } else if (cardData.category === 'Tactical') {
+                                await updateTacticalCardDisplay(cardData); // Await here
+                            } else if (unit && unitId !== undefined && unitId !== null) {
+                                await updateUnitDisplay(unitId, unit); // Await here
+                            } else {
+                                renderRoster();
+                            }
+                        },
+                        e.target  // eventTarget
+                    );
                 }
             }
              if(gameClickCallback) card.addEventListener('click', gameClickCallback);

@@ -122,10 +122,10 @@ const renderSubCards = (rosterState) => {
             // Options needed for sub-cards in game mode
             const cardElement = createCardElement(cardData, { 
                 mode: 'game', 
-                isInteractive: true, // Sub-cards should be interactive in game mode
+                isInteractive: false, // Sub-cards should NOT be interactive in game mode
                 showPoints: false, // Points are not usually shown on sub-cards in game mode
                 showInfoButton: true, // Show info button
-                onClick: (e) => performActionAndPreserveScroll(() => advanceCardStatus(cardData), e.target) // Default game mode click action
+                // onClick handler is effectively removed by isInteractive: false
             });
             cardsArea.appendChild(cardElement);
         }
@@ -156,7 +156,7 @@ export const updateRosterSelect = () => {
 
 // --- UI Element Creation Helpers (Interactive Parts) ---
 
-const createTokenArea = (cardData, unitData) => {
+const createTokenArea = (cardData, unitData, unitId) => {
     const tokenArea = document.createElement('div');
     tokenArea.className = CSS_CLASSES.TOKEN_AREA;
     if (!cardData) return tokenArea;
@@ -184,7 +184,19 @@ const createTokenArea = (cardData, unitData) => {
         chargeTokenImg.src = cardData.isCharged ? 'icons/charge_on.png' : 'icons/charge_off.png';
         chargeTokenImg.addEventListener('click', (e) => {
             e.stopPropagation();
-            performActionAndPreserveScroll(() => { cardData.isCharged = !cardData.isCharged; }, e.target);
+            performActionAndPreserveScroll(
+                () => {
+                    cardData.isCharged = !cardData.isCharged;
+                    if (cardData.category === 'Drone') {
+                        updateDroneDisplay(cardData);
+                    } else if (unitId !== undefined && unitId !== null) { // Check for valid unitId
+                        updateUnitDisplay(unitId, unitData);
+                    } else {
+                        renderRoster();
+                    }
+                },
+                e.target
+            );
         });
         tokenArea.appendChild(chargeTokenImg);
     }
@@ -194,14 +206,26 @@ const createTokenArea = (cardData, unitData) => {
         Object.assign(freehandIcon.style, { height: '60px', width: 'auto', cursor: 'pointer' });
         freehandIcon.addEventListener('click', (e) => {
             e.stopPropagation();
-            performActionAndPreserveScroll(() => { cardData.isBlackbox = !cardData.isBlackbox; }, e.target);
+            performActionAndPreserveScroll(
+                () => {
+                    cardData.isBlackbox = !cardData.isBlackbox;
+                    if (cardData.category === 'Drone') {
+                        updateDroneDisplay(cardData);
+                    } else if (unitId !== undefined && unitId !== null) { // Check for valid unitId
+                        updateUnitDisplay(unitId, unitData);
+                    } else {
+                        renderRoster();
+                    }
+                },
+                e.target
+            );
         });
         tokenArea.appendChild(freehandIcon);
     }
     return tokenArea;
 };
 
-const createActionButtons = (cardData, unitData, unitId) => {
+const createActionButtons = (cardData, unitData, contextUnitId) => {
     const placeholder = () => {
         const p = document.createElement('div');
         p.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
@@ -221,14 +245,27 @@ const createActionButtons = (cardData, unitData, unitId) => {
         button.textContent = cardData.isDropped ? '버리기 취소' : '버리기';
         button.addEventListener('click', (e) => {
             e.stopPropagation();
-            performActionAndPreserveScroll(() => { cardData.isDropped = !cardData.isDropped; }, e.target);
+            performActionAndPreserveScroll(
+                () => {
+                    cardData.isDropped = !cardData.isDropped;
+                    if (cardData.category === 'Drone') {
+                        updateDroneDisplay(cardData);
+
+                    } else if (contextUnitId !== undefined && contextUnitId !== null) { // Check for valid contextUnitId
+                        updateUnitDisplay(contextUnitId, unitData);
+                    } else {
+                        renderRoster();
+                    }
+                },
+                e.target
+            );
         });
         wrapper.appendChild(button);
     } else if (cardData.changes && cardData.changes.length > 0) {
         const button = document.createElement('button');
         button.className = `${CSS_CLASSES.ACTION_BUTTON} ${CSS_CLASSES.CHANGE_BUTTON}`;
         button.textContent = '변경';
-        button.dataset.unitId = unitId; // Add data attribute for unitId
+        button.dataset.unitId = contextUnitId; // Add data attribute for unitId
         button.dataset.cardCategory = cardData.category; // Add data attribute for cardCategory
         // Event listener moved to event delegation in modules/events.js
         wrapper.appendChild(button);
@@ -250,14 +287,21 @@ const createResourceTracker = (cardData, resourceType) => {
         icon.src = i <= cardData[currentProp] ? `icons/${resourceType}_on.png` : `icons/${resourceType}_off.png`;
         icon.dataset.index = i;
         Object.assign(icon.style, { width: '24px', height: '24px', cursor: 'pointer' });
-        icon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            cardData[currentProp] = (cardData[currentProp] === i) ? i - 1 : i;
-            container.querySelectorAll(`.${CSS_CLASSES.RESOURCE_ICON}`).forEach(ic => {
-                ic.src = ic.dataset.index <= cardData[currentProp] ? `icons/${resourceType}_on.png` : `icons/${resourceType}_off.png`;
-            });
-        });
-        container.appendChild(icon);
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        performActionAndPreserveScroll(
+                            () => { // action
+                                cardData[currentProp] = (cardData[currentProp] === i) ? i - 1 : i;
+                                // The UI for resources is updated manually here for immediate feedback,
+                                // and the state is saved by performActionAndPreserveScroll.
+                                // No further re-render is needed for this specific action.
+                                container.querySelectorAll(`.${CSS_CLASSES.RESOURCE_ICON}`).forEach(ic => {
+                                    ic.src = ic.dataset.index <= cardData[currentProp] ? `icons/${resourceType}_on.png` : `icons/${resourceType}_off.png`;
+                                });
+                            },
+                            e.target  // eventTarget
+                        );
+                    });        container.appendChild(icon);
     }
     return container;
 };
@@ -309,6 +353,7 @@ const createFreightBackCardSlot = (cardData) => {
         // Just get the visual part from the renderer
         const cardElement = createCardElementFromRenderer(backCardData, { 
             mode: state.isGameMode ? 'game' : 'builder',
+            isInteractive: !state.isGameMode, // Make back card non-interactive in game mode
             showPoints: !state.isGameMode,
             showInfoButton: true
         });
@@ -444,7 +489,8 @@ const createUnitCardSlot = (category, unitData, unitId) => {
             isInteractive: !isPilot,
             showPoints: !state.isGameMode,
             showInfoButton: true,
-            unit: unitData
+            unit: unitData,
+            unitId: unitId // <<< PASS THE unitId
         });
         const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
         if(cardInner) slot.appendChild(cardInner);
@@ -461,9 +507,11 @@ const createUnitCardSlot = (category, unitData, unitId) => {
         if (category === 'Pilot') {
             wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
         } else {
+            // Pass unitId from createUnitCardSlot to createActionButtons
             wrapper.insertBefore(createActionButtons(cardData, unitData, unitId), slot);
         }
-        wrapper.appendChild(createTokenArea(cardData, unitData));
+        // Pass unitId from createUnitCardSlot to createTokenArea
+        wrapper.appendChild(createTokenArea(cardData, unitData, unitId));
     } else {
         // In builder mode, the whole slot is always clickable to change the card.
         slot.addEventListener('click', () => openModal(unitId, category));

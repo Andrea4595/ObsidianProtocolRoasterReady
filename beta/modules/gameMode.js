@@ -43,7 +43,7 @@ export function advanceCardStatus(card, unit) {
     }
 }
 
-export function performActionAndPreserveScroll(action, eventTarget) {
+export async function performActionAndPreserveScroll(action, eventTarget = null) { // Made async
     const allUnitRows = document.querySelectorAll('.unit-row');
     const unitScrolls = Array.from(allUnitRows).map(row => ({
         id: row.parentElement.dataset.unitId,
@@ -54,10 +54,8 @@ export function performActionAndPreserveScroll(action, eventTarget) {
         x: window.scrollX
     };
 
-    action();
-    state.saveAllRosters(); // Ensure state is saved after the action
-
-    // renderRoster(); // Removed - will implement targeted update instead
+    await action(); // Await the action if it's async
+    state.saveAllRosters();
 
     requestAnimationFrame(() => {
         unitScrolls.forEach(scrollInfo => {

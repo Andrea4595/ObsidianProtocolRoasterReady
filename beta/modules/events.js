@@ -190,24 +190,23 @@ export function setupEventListeners() {
                             console.error(`Card data not found for category: ${cardCategory} in unitId: ${unitId}`);
                             return;
                         }
-            performActionAndPreserveScroll(async () => {
-    
-                const currentCard = unitData[cardCategory];
-                const cycle = [currentCard.fileName, ...currentCard.changes];
-                const currentIndex = cycle.indexOf(currentCard.fileName);
-                const nextFileName = cycle[(currentIndex + 1) % cycle.length];
-                const newCardData = state.allCards.byFileName.get(nextFileName);
-                if (!newCardData) return;
+            performActionAndPreserveScroll(
+                async () => {
+                    const currentCard = unitData[cardCategory];
+                    const cycle = [currentCard.fileName, ...currentCard.changes];
+                    const currentIndex = cycle.indexOf(currentCard.fileName);
+                    const nextFileName = cycle[(currentIndex + 1) % cycle.length];
+                    const newCardData = state.allCards.byFileName.get(nextFileName);
+                    if (!newCardData) return;
 
-                const propsToPreserve = { cardStatus: currentCard.cardStatus, currentAmmunition: currentCard.currentAmmunition, currentIntercept: currentCard.currentIntercept, isDropped: currentCard.isDropped, rosterId: currentCard.rosterId, isBlackbox: currentCard.isBlackbox };
-                for (const key in currentCard) { delete currentCard[key]; }
-                Object.assign(currentCard, newCardData, propsToPreserve);
+                    const propsToPreserve = { cardStatus: currentCard.cardStatus, currentAmmunition: currentCard.currentAmmunition, currentIntercept: currentCard.currentIntercept, isDropped: currentCard.isDropped, rosterId: currentCard.rosterId, isBlackbox: currentCard.isBlackbox };
+                    for (const key in currentCard) { delete currentCard[key]; }
+                    Object.assign(currentCard, newCardData, propsToPreserve);
 
-                await updateUnitDisplay(unitId, unitData); // unitData is already the active roster's unit
-                state.saveAllRosters();
-                state.updateTotalPoints();
-            }, changeButton); // Pass the button as eventTarget for scroll preservation
-        }
+                    await updateUnitDisplay(unitId, unitData); // unitData is already the active roster's unit
+                },
+                changeButton // eventTarget
+            );        }
 
         if (dropButton) {
             e.stopPropagation();
@@ -232,14 +231,13 @@ export function setupEventListeners() {
                 return;
             }
 
-            performActionAndPreserveScroll(async () => { // Make action async
-                cardData.isDropped = !cardData.isDropped;
-
-                await updateUnitDisplay(unitId, unitData); // Update only the unit that changed
-                state.saveAllRosters();
-                state.updateTotalPoints();
-            }, dropButton);
-        }
+            performActionAndPreserveScroll(
+                async () => { // action
+                    cardData.isDropped = !cardData.isDropped;
+                    await updateUnitDisplay(unitId, unitData); // Update only the unit that changed
+                },
+                dropButton // eventTarget
+            );        }
     });
 
     window.addEventListener('resize', adjustOverlayWidths);
