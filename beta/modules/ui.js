@@ -528,7 +528,22 @@ export const createUnitElement = async (unitId, unitData) => {
         position: 'relative',
         display: 'flex', // Use flexbox to align the image and the unit cards
         alignItems: 'center', // Vertically center the items
-        gap: '15px' // Space between the composite image and the unit cards
+        gap: '15px', // Space between the composite image and the unit cards
+        overflowX: 'auto', // unitEntry itself is now scrollable horizontally
+        flexWrap: 'nowrap', // Prevent flex items from wrapping to a new line
+        minWidth: '0', // Allow flex item to shrink below its content size
+    });
+
+    // Create the new wrapper for content within unitEntry
+    const unitEntryContentWrapper = document.createElement('div');
+    Object.assign(unitEntryContentWrapper.style, {
+        display: 'flex',
+        alignItems: 'center', // Vertically align the items
+        justifyContent: 'center', // Center content horizontally
+        gap: '15px', // Space between the composite image and the unit cards
+        minWidth: '100%', // Ensure it takes at least 100% of the parent's width for centering
+        width: 'fit-content', // Allows it to grow beyond 100% if content overflows
+        flexShrink: '0', // Prevent it from shrinking
     });
 
     const unitRow = document.createElement('div');
@@ -536,8 +551,9 @@ export const createUnitElement = async (unitId, unitData) => {
     Object.assign(unitRow.style, {
         position: 'relative',
         display: 'flex', // Ensure unitRow is also a flex container
-        overflowX: 'auto' // Allow horizontal scrolling if cards overflow
+        // overflowX: 'auto' // Removed overflow from unitRow, as parent handles it
         // padding: '10px 0' // Removed to allow CSS to control padding
+        flexShrink: '0', // Prevent unitRow from shrinking
     });
     if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
@@ -562,10 +578,10 @@ export const createUnitElement = async (unitId, unitData) => {
     if (unitData && unitRowHeight > 0) { // Check for valid height
         const compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
         compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
-        unitEntry.prepend(compositeImageCanvas); // Prepend to put it before unitRow
+        unitEntryContentWrapper.prepend(compositeImageCanvas); // Prepend to put it before unitRow within the new wrapper
     }
 
-    unitEntry.appendChild(unitRow); // Append the original unitRow
+    unitEntryContentWrapper.appendChild(unitRow); // Append unitRow to the new wrapper
 
     if (!state.isGameMode) {
         const deleteButton = document.createElement('button');
@@ -600,6 +616,8 @@ export const createUnitElement = async (unitId, unitData) => {
         });
         unitRow.appendChild(overlay);
     }
+
+    unitEntry.appendChild(unitEntryContentWrapper); // Append the new wrapper to unitEntry
 
     return unitEntry;
 };

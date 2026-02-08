@@ -20,7 +20,7 @@ body {
     background-color: #f0f2f5;
     color: #333;
     margin: 0;
-    padding: 20px 20px 120px 20px; /* Add padding to bottom for the add button */
+    padding: 20px 50px 120px 50px; /* Adjust padding to 0 50px */
 }
 
 h1 {
@@ -32,9 +32,8 @@ h1 {
 #units-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center rows and cards */
+    /* align-items: center; Removed to allow children to take full width */
     gap: 10px; /* Space between unit entries */
-    margin-left: 50px; /* Add margin to prevent cutoff */
 }
 
 .unit-entry {
@@ -44,7 +43,6 @@ h1 {
     align-items: center; /* Vertically align image and card row */
     gap: 15px; /* Spacing between the composite image and the unit-row */
     margin-bottom: 20px; /* Space between full unit entries */
-    /* padding-left and padding-right removed, now handled by unit-row */
     /* background-color, padding, etc., are removed from here */
 }
 
@@ -54,7 +52,6 @@ h1 {
     /* width and height are now set directly on the canvas element via JavaScript */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-left: -50px; /* Push it outside the container flow */
 }
 
 .unit-row {
@@ -67,7 +64,7 @@ h1 {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     flex-wrap: nowrap;
-    overflow-x: auto;
+    /* Removed overflow-x: auto */
     /* flex-grow: 1; Removed to allow shrink-wrapping */
 }
 
