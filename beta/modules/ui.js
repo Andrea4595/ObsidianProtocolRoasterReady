@@ -633,15 +633,43 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     }
 };
 
-export const createDroneElement = (droneData) => { // Renamed to createDroneElement
+export const createDroneElement = (droneData) => {
+    // Create the card element (the drone card itself)
     const cardElement = createCardElement(droneData, {
         unitId: droneData.rosterId,
         onDeleteCallback: () => {
-            cardElement.remove(); // Remove the drone's UI element
+            droneEntry.remove(); // Remove the drone's UI element
             updateTotalPoints(); // Update total points after deletion
         }
     });
-    return cardElement; // Return the created element
+
+    // Create a container for the drone image and the card
+    const droneEntry = document.createElement('div');
+    droneEntry.className = 'drone-entry'; // Add a class for styling
+
+    // Create the drone image element
+    const droneImg = document.createElement('img');
+    droneImg.src = `CharacterParts/${droneData.id}.png`; // Assuming drone images are in CharacterParts and use an ID
+    droneImg.alt = droneData.name;
+    droneImg.className = 'drone-image'; // Add a class for styling
+
+    // Determine size based on droneData.size property
+    const droneSize = droneData.size || 3; // Default to size 3 if not specified
+    let sizeMultiplier = 1;
+    if (droneSize === 2) {
+        sizeMultiplier = 2 / 3;
+    } else if (droneSize === 1) {
+        sizeMultiplier = 1 / 3;
+    }
+    droneImg.style.setProperty('--drone-image-size-multiplier', sizeMultiplier.toString());
+    droneImg.style.width = 'auto'; // Maintain aspect ratio
+
+
+    // Append the image and the card to the new entry container
+    droneEntry.appendChild(droneImg);
+    droneEntry.appendChild(cardElement);
+
+    return droneEntry; // Return the new container
 };
 
 export const addDroneElement = (droneData) => { // New function to append

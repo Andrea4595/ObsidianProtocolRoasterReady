@@ -493,6 +493,19 @@ div.hidden-card-overlay > img.hidden-title-image {
 ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
 
+.drone-entry {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between the drone image and the card */
+}
+
+.drone-image {
+    height: calc(var(--card-slot-height) * var(--drone-image-size-multiplier, 1)); /* Default to 1 if variable not set */
+    width: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
 /* --- Responsive Styles --- */
 
 @media (max-width: 1400px) {
