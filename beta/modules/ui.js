@@ -633,23 +633,11 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     }
 };
 
-export const createDroneElement = (droneData) => {
-    // Create the card element (the drone card itself)
-    const cardElement = createCardElement(droneData, {
-        unitId: droneData.rosterId,
-        onDeleteCallback: () => {
-            droneEntry.remove(); // Remove the drone's UI element
-            updateTotalPoints(); // Update total points after deletion
-        }
-    });
-
-    // Create a container for the drone image and the card
-    const droneEntry = document.createElement('div');
-    droneEntry.className = 'drone-entry'; // Add a class for styling
-
-    // Create the drone image element
+const createDroneImageElements = (droneData) => {
+    // Create the base drone image element
     const droneImg = document.createElement('img');
-    droneImg.src = `CharacterParts/${droneData.id}.png`; // Assuming drone images are in CharacterParts and use an ID
+    const droneImageId = (droneData.id === 0) ? droneData.name : droneData.id;
+    droneImg.src = `CharacterParts/${droneImageId}.png`; // Assuming drone images are in CharacterParts and use an ID or name
     droneImg.alt = droneData.name;
     droneImg.className = 'drone-image'; // Add a class for styling
 
@@ -664,9 +652,42 @@ export const createDroneElement = (droneData) => {
     droneImg.style.setProperty('--drone-image-size-multiplier', sizeMultiplier.toString());
     droneImg.style.width = 'auto'; // Maintain aspect ratio
 
+    // Create a container for the drone image and potential backpack image
+    const droneImageContainer = document.createElement('div');
+    droneImageContainer.className = 'drone-image-container'; // Add class for styling
+    droneImageContainer.appendChild(droneImg);
 
-    // Append the image and the card to the new entry container
-    droneEntry.appendChild(droneImg);
+    // Conditionally add backpack image
+    if (droneData.special && droneData.special.includes('freight_back') && droneData.backCard && (droneData.backCard.id !== undefined)) {
+        const backpackImg = document.createElement('img');
+        const backpackImageId = (droneData.backCard.id === 0) ? droneData.backCard.name : droneData.backCard.id;
+        backpackImg.src = `CharacterParts/${backpackImageId}_d.png`; // Backpack image format: [id]_d.png, using backCard's ID or name
+        backpackImg.alt = 'Backpack';
+        backpackImg.className = 'backpack-image'; // Add class for styling
+        droneImageContainer.appendChild(backpackImg);
+    }
+    return droneImageContainer;
+};
+
+export const createDroneElement = (droneData) => {
+    // Create the card element (the drone card itself)
+    const cardElement = createCardElement(droneData, {
+        unitId: droneData.rosterId,
+        onDeleteCallback: () => {
+            droneEntry.remove(); // Remove the drone's UI element
+            updateTotalPoints(); // Update total points after deletion
+        }
+    });
+
+    // Create a container for the drone image and the card
+    const droneEntry = document.createElement('div');
+    droneEntry.className = 'drone-entry'; // Add a class for styling
+    droneEntry.dataset.rosterId = droneData.rosterId; // Add rosterId for easier selection
+
+    const droneImageContainer = createDroneImageElements(droneData); // Use the new helper function
+
+    // Append the image container and the card to the new entry container
+    droneEntry.appendChild(droneImageContainer);
     droneEntry.appendChild(cardElement);
 
     return droneEntry; // Return the new container
@@ -678,10 +699,32 @@ export const addDroneElement = (droneData) => { // New function to append
 };
 
 export const updateDroneDisplay = (droneData) => {
-    const existingDroneElement = document.querySelector(`.roster-card-container[data-roster-id='${droneData.rosterId}']`);
-    if (existingDroneElement) {
-        const newDroneElement = createDroneElement(droneData);
-        existingDroneElement.replaceWith(newDroneElement);
+    const existingDroneEntry = document.querySelector(`.drone-entry[data-roster-id='${droneData.rosterId}']`);
+    if (existingDroneEntry) {
+        // Update the card part
+        const existingCardElement = existingDroneEntry.querySelector('.roster-card-container');
+        if (existingCardElement) {
+            const newCardElement = createCardElement(droneData, {
+                unitId: droneData.rosterId,
+                onDeleteCallback: () => {
+                    existingDroneEntry.remove(); // Remove the drone's UI element
+                    updateTotalPoints(); // Update total points after deletion
+                }
+            });
+            existingCardElement.replaceWith(newCardElement);
+        } else {
+            console.error(`Could not find .roster-card-container within .drone-entry[data-roster-id='${droneData.rosterId}']`);
+        }
+
+        // Update the drone image and backpack (droneImageContainer)
+        const existingDroneImageContainer = existingDroneEntry.querySelector('.drone-image-container');
+        if (existingDroneImageContainer) {
+            const newDroneImageContainer = createDroneImageElements(droneData);
+            existingDroneImageContainer.replaceWith(newDroneImageContainer);
+        } else {
+            console.error(`Could not find .drone-image-container within .drone-entry[data-roster-id='${droneData.rosterId}']`);
+        }
+
     } else {
         console.warn(`Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
         dom.dronesContainer.innerHTML = '';

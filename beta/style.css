@@ -506,6 +506,25 @@ div.hidden-card-overlay > img.hidden-title-image {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+.drone-image-container {
+    position: relative;
+    /* The dimensions will be set by the drone-image inside it */
+    display: flex; /* To center/position items if needed */
+    justify-content: center;
+    align-items: center;
+}
+
+.backpack-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure the whole backpack image is visible */
+    z-index: 1; /* Ensure it's above the drone image */
+}
+
+
 /* --- Responsive Styles --- */
 
 @media (max-width: 1400px) {
