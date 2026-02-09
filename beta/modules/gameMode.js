@@ -43,31 +43,35 @@ export function advanceCardStatus(card, unit) {
     }
 }
 
-export async function performActionAndPreserveScroll(action, eventTarget = null) { // Made async
-    const allUnitRows = document.querySelectorAll('.unit-row');
-    const unitScrolls = Array.from(allUnitRows).map(row => ({
-        id: row.parentElement.dataset.unitId,
-        scrollLeft: row.scrollLeft
+export async function performActionAndPreserveScroll(action, eventTarget = null) {
+    // Capture scroll from .unit-entry elements, not .unit-row, as .unit-entry has overflow-x: auto
+    const allUnitEntries = document.querySelectorAll('.unit-entry');
+    const unitScrolls = Array.from(allUnitEntries).map(entry => ({
+        id: entry.dataset.unitId,
+        scrollLeft: entry.scrollLeft
     }));
     const windowScroll = {
         y: window.scrollY,
         x: window.scrollX
     };
 
-    await action(); // Await the action if it's async
-    state.saveAllRosters();
+    await action(); // Executes the UI update
+    state.saveAllRosters(); // Saves the roster
 
-    requestAnimationFrame(() => {
+    // Use setTimeout to ensure the browser has completed layout calculations
+    // for the new elements before we try to restore scroll positions.
+    setTimeout(() => {
         unitScrolls.forEach(scrollInfo => {
             if (scrollInfo.id) {
-                const newUnitRow = document.querySelector(`.unit-entry[data-unit-id='${scrollInfo.id}'] .unit-row`);
-                if (newUnitRow) {
-                    newUnitRow.scrollLeft = scrollInfo.scrollLeft;
+                // Restore scroll to the .unit-entry element
+                const newUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${scrollInfo.id}']`);
+                if (newUnitEntry) {
+                    newUnitEntry.scrollLeft = scrollInfo.scrollLeft;
                 }
             }
         });
         window.scrollTo(windowScroll.x, windowScroll.y);
-    });
+    }, 0);
 }
 
 const initializeSubCards = (gameRoster) => {
@@ -108,15 +112,17 @@ const initializeSubCards = (gameRoster) => {
     });
 };
 
-const initializeCardStates = (gameRoster) => {
+const initializeCardStates = (rosterToInitialize) => {
     const allCardsInGame = [];
-    Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
-    allCardsInGame.push(...gameRoster.drones);
-    allCardsInGame.push(...gameRoster.subCards); // 서브카드 추가
-    if (gameRoster.tacticalCards) {
-        allCardsInGame.push(...gameRoster.tacticalCards);
+    Object.values(rosterToInitialize.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
+    allCardsInGame.push(...rosterToInitialize.drones);
+    if (rosterToInitialize.subCards) { // 서브카드가 있을 경우에만 추가
+        allCardsInGame.push(...rosterToInitialize.subCards);
     }
-    gameRoster.drones.forEach(drone => {
+    if (rosterToInitialize.tacticalCards) {
+        allCardsInGame.push(...rosterToInitialize.tacticalCards);
+    }
+    rosterToInitialize.drones.forEach(drone => {
         if (drone.backCard) {
             allCardsInGame.push(drone.backCard);
         }
@@ -124,34 +130,42 @@ const initializeCardStates = (gameRoster) => {
 
     allCardsInGame.forEach(card => {
         if (!card) return;
-        card.cardStatus = 0;
-        if (card.ammunition > 0) card.currentAmmunition = card.ammunition;
-        if (card.intercept > 0) card.currentIntercept = card.intercept;
-        if (card.link > 0) card.currentLink = card.link;
-        if (card.charge) card.isCharged = false;
-        card.isBlackbox = false;
-        if (card.hidden) {
-            card.isConcealed = true;
+        // Only initialize if undefined, preserving existing values
+        card.cardStatus = card.cardStatus !== undefined ? card.cardStatus : 0;
+        card.currentAmmunition = card.currentAmmunition !== undefined ? card.currentAmmunition : (card.ammunition || 0);
+        card.currentIntercept = card.currentIntercept !== undefined ? card.currentIntercept : (card.intercept || 0);
+        card.currentLink = card.currentLink !== undefined ? card.currentLink : (card.link || 0);
+        card.isCharged = card.isCharged !== undefined ? card.isCharged : false;
+        card.isBlackbox = card.isBlackbox !== undefined ? card.isBlackbox : false;
+        card.isRevealedInGameMode = card.isRevealedInGameMode !== undefined ? card.isRevealedInGameMode : (!card.hidden); // hidden 카드만 false, 아니면 true
+
+        // Ensure rosterId is set if missing
+        if (!card.rosterId) {
+            card.rosterId = `${card.category}_${card.name}_${Math.random().toString(36).substr(2, 9)}`;
         }
     });
 };
 
-const createGameRosterState = (roster) => {
-    const gameRoster = JSON.parse(JSON.stringify(roster));
-    gameRoster.subCards = []; // 서브카드 배열 초기화
+// No longer creates a deep copy, instead prepares the active roster for game mode
+const prepareActiveRosterForGameMode = (roster) => {
+    // Ensure subCards array exists for the active roster
+    roster.subCards = roster.subCards || [];
 
-    initializeSubCards(gameRoster);
-
-    // Apply special rules before initializing for game mode
-    Object.values(gameRoster.units).forEach(unit => {
-        applyUnitRules(unit);
-        unit.isOut = false; // 유닛 파괴 상태 초기화
+    // Reset unit isOut status if it exists
+    Object.values(roster.units).forEach(unit => {
+        if (unit.isOut !== undefined) {
+            unit.isOut = false;
+        }
     });
-    gameRoster.drones.forEach(drone => applyDroneRules(drone));
 
-    initializeCardStates(gameRoster);
+    initializeSubCards(roster);
+    initializeCardStates(roster); // Apply defaults / ensure existence
+    
+    // Apply rules that might depend on fully initialized card states
+    Object.values(roster.units).forEach(unit => applyUnitRules(unit));
+    roster.drones.forEach(drone => applyDroneRules(drone));
 
-    return gameRoster;
+    return roster; // Return reference to the same roster
 };
 
 export function setGameMode(enabled) {
@@ -164,10 +178,14 @@ export function setGameMode(enabled) {
     dom.appTitle.style.display = enabled ? 'block' : 'none';
 
     if (enabled) {
-        const gameRoster = createGameRosterState(state.getActiveRoster());
-        state.setGameRosterState(gameRoster);
+        const activeRoster = state.getActiveRoster();
+        // Prepare the active roster for game mode, initializing states if needed
+        prepareActiveRosterForGameMode(activeRoster);
+        state.setGameRosterState(activeRoster); // Set gameRoster to be a reference to the active roster
     } else {
-        state.setGameRosterState({});
+        // When exiting game mode, save the current state of the active roster
+        state.saveAllRosters(); 
+        state.setGameRosterState({}); // Clear gameRoster (no longer active)
     }
     renderRoster();
 }

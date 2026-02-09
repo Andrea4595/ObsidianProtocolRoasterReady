@@ -448,7 +448,7 @@ export const initializeApp = async () => {
             // Migration check: If 'version' is missing, it's a v0 save.
             if (!rosterData.version) {
                 console.warn(`Migrating v0 roster format for: ${rosterName}`);
-                rosterData = migrateFromVersion0ToVersion1(roosterData);
+                rosterData = migrateFromVersion0ToVersion1(rosterData);
             }
 
             // If version is 1, migrate to v2.
@@ -466,6 +466,24 @@ export const initializeApp = async () => {
         activeRosterName = '기본 로스터';
         allRosters[activeRosterName] = createNewRoster(activeRosterName);
     }
+
+    // --- 추가될 로그 시작 ---
+    console.groupCollapsed("APP INIT: Initial Roster State");
+    const activeRoster = getActiveRoster();
+    if (activeRoster && activeRoster.units) {
+        Object.keys(activeRoster.units).forEach(unitId => {
+            console.log(`Unit ID: ${unitId}`);
+            Object.keys(activeRoster.units[unitId]).forEach(category => {
+                const card = activeRoster.units[unitId][category];
+                console.log(`  - Category: ${category}, Card Name: ${card ? card.name : 'N/A'}`);
+                if (card) {
+                    console.log(`    Card Details (all props):`, JSON.parse(JSON.stringify(card)));
+                }
+            });
+        });
+    }
+    console.groupEnd();
+    // --- 추가될 로그 끝 ---
 
     factionSelect.value = getActiveRoster().faction || 'RDL';
     calculateNextIds();

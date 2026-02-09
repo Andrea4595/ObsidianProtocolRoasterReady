@@ -207,12 +207,12 @@ const createTokenArea = (cardData, unitData, unitId) => {
         freehandIcon.addEventListener('click', (e) => {
             e.stopPropagation();
             performActionAndPreserveScroll(
-                () => {
+                async () => {
                     cardData.isBlackbox = !cardData.isBlackbox;
                     if (cardData.category === 'Drone') {
-                        updateDroneDisplay(cardData);
+                        await updateDroneDisplay(cardData);
                     } else if (unitId !== undefined && unitId !== null) { // Check for valid unitId
-                        updateUnitDisplay(unitId, unitData);
+                        await updateUnitDisplay(unitId, unitData);
                     } else {
                         renderRoster();
                     }
@@ -476,10 +476,29 @@ const isUnitOut = (unitData) => {
 };
 
 const createUnitCardSlot = (category, unitData, unitId) => {
+
     const cardData = unitData ? unitData[category] : null;
+
+
+
+    // --- 추가될 로그 시작 (createUnitCardSlot 내부) ---
+
+    console.groupCollapsed(`UI: createUnitCardSlot for Unit ID: ${unitId}, Category: ${category}`);
+
+    console.log(`  - cardData received by createUnitCardSlot:`, JSON.parse(JSON.stringify(cardData)));
+
+    console.groupEnd();
+
+    // --- 추가될 로그 끝 ---
+
+
+
     const wrapper = document.createElement('div');
+
     wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+
     const slot = document.createElement('div');
+
     slot.className = CSS_CLASSES.CARD_SLOT;
 
     if (cardData) {
@@ -623,6 +642,11 @@ export const createUnitElement = async (unitId, unitData) => {
 };
 
 export const updateUnitDisplay = async (unitId, unitData) => {
+    // --- 추가될 로그 시작 (updateUnitDisplay 시작) ---
+    console.groupCollapsed(`UI: updateUnitDisplay called for Unit ID: ${unitId}`);
+    console.log(`  - unitData received by updateUnitDisplay:`, JSON.parse(JSON.stringify(unitData)));
+    // --- 추가될 로그 끝 ---
+
     const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
     if (existingUnitEntry) {
         // Create a new element with the updated content
@@ -631,6 +655,9 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     } else {
         console.error(`Could not find unit entry for unitId: ${unitId}`);
     }
+    // --- 추가될 로그 시작 (updateUnitDisplay 끝) ---
+    console.groupEnd();
+    // --- 추가될 로그 끝 ---
 };
 
 const createDroneImageElements = (droneData) => {

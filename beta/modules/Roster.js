@@ -49,6 +49,43 @@ export class Roster {
     }
 
     static deserialize(name, savedData, allCardsMap) {
+        // Helper function to apply default runtime properties
+        const applyRuntimeDefaults = (card) => {
+            if (!card) return null;
+            const newCard = { ...card }; // Start with a copy of the base card
+            
+            // Default game state properties if not already set (e.g., from a saved roster)
+            newCard.cardStatus = newCard.cardStatus !== undefined ? newCard.cardStatus : 0; // 0 for healthy
+            newCard.isDropped = newCard.isDropped !== undefined ? newCard.isDropped : false;
+            newCard.isBlackbox = newCard.isBlackbox !== undefined ? newCard.isBlackbox : false;
+            newCard.isCharged = newCard.isCharged !== undefined ? newCard.isCharged : false;
+
+            // Resource properties (current value defaults to max if not explicitly set)
+            if (newCard.ammunition !== undefined) {
+                newCard.currentAmmunition = newCard.currentAmmunition !== undefined ? newCard.currentAmmunition : newCard.ammunition;
+            } else {
+                newCard.currentAmmunition = newCard.currentAmmunition !== undefined ? newCard.currentAmmunition : 0;
+            }
+
+            if (newCard.intercept !== undefined) {
+                newCard.currentIntercept = newCard.currentIntercept !== undefined ? newCard.currentIntercept : newCard.intercept;
+            } else {
+                newCard.currentIntercept = newCard.currentIntercept !== undefined ? newCard.currentIntercept : 0;
+            }
+
+            if (newCard.link !== undefined && newCard.category === 'Pilot') { // Only Pilot cards have 'link'
+                newCard.currentLink = newCard.currentLink !== undefined ? newCard.currentLink : newCard.link;
+            } else {
+                newCard.currentLink = newCard.currentLink !== undefined ? newCard.currentLink : 0;
+            }
+
+            // Ensure rosterId is present for game mode tracking (will be assigned later if null)
+            newCard.rosterId = newCard.rosterId !== undefined ? newCard.rosterId : null;
+
+            return newCard;
+        };
+
+
         const units = {};
         for (const unitId in savedData.units) {
             const savedUnit = savedData.units[unitId];
@@ -57,7 +94,9 @@ export class Roster {
                 const item = savedUnit[category];
                 if (item && item.name) {
                     const key = `${item.category}_${item.name}`;
-                    units[unitId][category] = allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
+                    const baseCard = allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
+                    // Apply runtime defaults
+                    units[unitId][category] = applyRuntimeDefaults(baseCard);
                 } else {
                     units[unitId][category] = null;
                 }
@@ -69,11 +108,12 @@ export class Roster {
             
             const key = `${item.category}_${item.name}`;
             if (allCardsMap.has(key)) {
-                const reconstructedDrone = { ...allCardsMap.get(key) };
+                let reconstructedDrone = applyRuntimeDefaults({ ...allCardsMap.get(key) }); // Apply defaults to the drone itself
+                
                 if (item.backCard && item.backCard.name) {
                     const backKey = `${item.backCard.category}_${item.backCard.name}`;
                     if (allCardsMap.has(backKey)) {
-                        reconstructedDrone.backCard = { ...allCardsMap.get(backKey) };
+                        reconstructedDrone.backCard = applyRuntimeDefaults({ ...allCardsMap.get(backKey) }); // Apply defaults to the backCard
                     }
                 }
                 return reconstructedDrone;
@@ -84,7 +124,8 @@ export class Roster {
         const tacticalCards = (savedData.tacticalCards || []).map(item => {
             if (!item || !item.name) return null;
             const key = `${item.category}_${item.name}`;
-            return allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
+            const baseCard = allCardsMap.has(key) ? { ...allCardsMap.get(key) } : null;
+            return applyRuntimeDefaults(baseCard); // Apply defaults to tactical cards
         }).filter(Boolean);
 
         return new Roster({

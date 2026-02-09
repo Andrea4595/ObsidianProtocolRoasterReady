@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal } from './modal.js';
-import { setGameMode } from './gameMode.js';
+import { setGameMode, performActionAndPreserveScroll } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { renderRoster, updateRosterSelect, adjustOverlayWidths, updateUnitDisplay } from './ui.js';
 import { ROSTER_SELECT_ACTIONS, CSS_CLASSES } from './constants.js';
@@ -196,14 +196,51 @@ export function setupEventListeners() {
                     const cycle = [currentCard.fileName, ...currentCard.changes];
                     const currentIndex = cycle.indexOf(currentCard.fileName);
                     const nextFileName = cycle[(currentIndex + 1) % cycle.length];
-                    const newCardData = state.allCards.byFileName.get(nextFileName);
-                    if (!newCardData) return;
+                    const newCardDataTemplate = state.allCards.byFileName.get(nextFileName);
+                    if (!newCardDataTemplate) return;
 
-                    const propsToPreserve = { cardStatus: currentCard.cardStatus, currentAmmunition: currentCard.currentAmmunition, currentIntercept: currentCard.currentIntercept, isDropped: currentCard.isDropped, rosterId: currentCard.rosterId, isBlackbox: currentCard.isBlackbox };
-                    for (const key in currentCard) { delete currentCard[key]; }
-                    Object.assign(currentCard, newCardData, propsToPreserve);
+                    // --- 추가될 로그 시작 (업데이트 전) ---
+                    console.groupCollapsed(`CHANGE BUTTON: Unit ${unitId} - Card ${cardCategory} Update`);
+                    console.log(`[BEFORE UPDATE] Unit ID: ${unitId}, Category: ${cardCategory}`);
+                    console.log(`  - currentCard (Old):`, JSON.parse(JSON.stringify(currentCard)));
+                    console.log(`  - newCardDataTemplate (New Template):`, JSON.parse(JSON.stringify(newCardDataTemplate)));
+                    console.log(`  - Full unitData (before this card update):`, JSON.parse(JSON.stringify(unitData)));
+                    // --- 추가될 로그 끝 ---
 
-                    await updateUnitDisplay(unitId, unitData); // unitData is already the active roster's unit
+                    // Define the runtime properties that should be carried over to the new card.
+                    const runtimePropsToPreserve = {
+                        cardStatus: currentCard.cardStatus,
+                        currentAmmunition: currentCard.currentAmmunition,
+                        currentIntercept: currentCard.currentIntercept,
+                        isDropped: currentCard.isDropped,
+                        rosterId: currentCard.rosterId,
+                        isBlackbox: currentCard.isBlackbox,
+                        isCharged: currentCard.isCharged
+                    };
+
+                    // Filter out any properties that are undefined on the current card
+                    // to avoid accidentally overwriting values on the new template.
+                    const preservedProps = Object.fromEntries(
+                        Object.entries(runtimePropsToPreserve).filter(([_, v]) => v !== undefined)
+                    );
+                    // --- 추가될 로그 시작 (preservedProps 확인) ---
+                    console.log(`  - preservedProps:`, JSON.parse(JSON.stringify(preservedProps)));
+                    // --- 추가될 로그 끝 ---
+
+                    // Create a new card object by combining the template and preserved runtime state.
+                    const newCard = { ...newCardDataTemplate, ...preservedProps };
+
+                    // Replace the old card object in the unit's state with the new one.
+                    unitData[cardCategory] = newCard;
+
+                    // --- 추가될 로그 시작 (업데이트 후) ---
+                    console.log(`[AFTER UPDATE] Unit ID: ${unitId}, Category: ${cardCategory}`);
+                    console.log(`  - newCard (Assigned):`, JSON.parse(JSON.stringify(newCard)));
+                    console.log(`  - Full unitData (after this card update):`, JSON.parse(JSON.stringify(unitData)));
+                    console.groupEnd();
+                    // --- 추가될 로그 끝 ---
+
+                    await updateUnitDisplay(unitId, unitData);
                 },
                 changeButton // eventTarget
             );        }
