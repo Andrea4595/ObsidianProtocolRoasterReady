@@ -532,6 +532,21 @@ const isUnitOut = (unitData) => {
     return remainingPartsCount <= 2;
 };
 
+// Helper function for robust height calculation
+const getUnitRowRenderedHeight = (unitRowElement) => {
+    const clone = unitRowElement.cloneNode(true);
+    Object.assign(clone.style, {
+        position: 'absolute',
+        left: '-9999px',
+        visibility: 'hidden',
+        width: 'auto' // Allow it to size naturally based on content
+    });
+    document.body.appendChild(clone);
+    const height = clone.offsetHeight;
+    document.body.removeChild(clone);
+    return height;
+};
+
 const createUnitCardSlot = (category, unitData, unitId) => {
 
     const cardData = unitData ? unitData[category] : null;
@@ -638,18 +653,8 @@ export const createUnitElement = async (unitId, unitData) => {
         unitRow.appendChild(createUnitCardSlot(category, unitData, unitId));
     });
 
-    // --- New robust height calculation ---
-    const clone = unitRow.cloneNode(true);
-    Object.assign(clone.style, {
-        position: 'absolute',
-        left: '-9999px',
-        visibility: 'hidden',
-        width: 'auto' // Allow it to size naturally based on content
-    });
-    document.body.appendChild(clone);
-            const unitRowHeight = clone.offsetHeight;
-            document.body.removeChild(clone);
-            // --- End of new robust height calculation ---
+    // Use the new helper function for robust height calculation
+    const unitRowHeight = getUnitRowRenderedHeight(unitRow);
     // Create and append the composite image
     if (unitData && unitRowHeight > 0) { // Check for valid height
         const compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
