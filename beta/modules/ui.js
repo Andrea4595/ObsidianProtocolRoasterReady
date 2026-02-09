@@ -246,13 +246,13 @@ const createActionButtons = (cardData, unitData, contextUnitId) => {
         button.addEventListener('click', (e) => {
             e.stopPropagation();
             performActionAndPreserveScroll(
-                () => {
+                async () => {
                     cardData.isDropped = !cardData.isDropped;
                     if (cardData.category === 'Drone') {
-                        updateDroneDisplay(cardData);
+                        await updateDroneDisplay(cardData);
 
                     } else if (contextUnitId !== undefined && contextUnitId !== null) { // Check for valid contextUnitId
-                        updateUnitDisplay(contextUnitId, unitData);
+                        await updateUnitDisplay(contextUnitId, unitData);
                     } else {
                         renderRoster();
                     }
@@ -379,53 +379,97 @@ const createFreightBackCardSlot = (cardData) => {
 
 // ... (rest of the file remains, createUnitCardSlot, createUnitElement, etc.)
 
+// Helper function to get the image path for a character part
+const getCharacterPartImagePath = (part) => {
+    if (!part) return null;
+    if (part.id === 0 && part.name) {
+        return `CharacterParts/${part.name}.png`;
+    } else if (typeof part.id === 'number' && !isNaN(part.id)) {
+        return `CharacterParts/${part.id}.png`;
+    }
+    return null; // Return null if no valid image source can be determined
+};
+
+// Helper function to load a single character part image
+const loadCharacterPartImage = (part, partName) => {
+    return new Promise(resolve => {
+        const imgSrc = getCharacterPartImagePath(part);
+        if (!imgSrc) {
+            console.warn(`Could not determine image source for part:`, part);
+            resolve(null);
+            return;
+        }
+
+        const img = new Image();
+        img.onload = () => resolve({ img, partName });
+        img.onerror = () => {
+            console.warn(`Failed to load image: ${imgSrc} for part:`, part);
+            resolve(null);
+        };
+        img.src = imgSrc;
+    });
+};
+
 const createUnitPartsCompositeImage = async (unitData, targetSize) => {
+
     const canvas = document.createElement('canvas');
+
     canvas.width = targetSize;
+
     canvas.height = targetSize;
+
     const ctx = canvas.getContext('2d');
 
+
+
     // Clear canvas
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+
+
     const overlayOrder = ['Back', 'Left', 'Chassis', 'Torso', 'Right', 'Pilot'];
+
     const partImagePromises = [];
 
+
+
     for (const partName of overlayOrder) {
+
         const part = unitData[partName];
-        // Ensure part exists, has an ID, and the ID is a valid number
-        if (part && typeof part.id === 'number' && !isNaN(part.id)) {
-            let imgSrc;
-            if (part.id === 0 && part.name) {
-                imgSrc = `CharacterParts/${part.name}.png`;
-            } else {
-                imgSrc = `CharacterParts/${part.id}.png`;
-            }
-            partImagePromises.push(
-                new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve({ img, partName });
-                    img.onerror = () => {
-                        console.warn(`Failed to load image: ${imgSrc}`);
-                        resolve(null); // Resolve with null if image fails to load
-                    };
-                    img.src = imgSrc;
-                })
-            );
+
+        // Ensure part exists and has a valid ID or name
+
+        if (part && (typeof part.id === 'number' && !isNaN(part.id) || (part.id === 0 && part.name))) {
+
+            // Use the new helper to load the image
+
+            partImagePromises.push(loadCharacterPartImage(part, partName));
+
         }
+
     }
+
+
 
     const loadedPartImages = await Promise.all(partImagePromises);
 
+
+
     loadedPartImages.forEach(item => {
+
         if (item && item.img) {
-            // Draw image. Position and size might need adjustment based on actual image dimensions
-            // For now, draw to fill the canvas.
+
             ctx.drawImage(item.img, 0, 0, canvas.width, canvas.height);
+
         }
+
     });
 
+
+
     return canvas;
+
 };
 
 const createPartStatusIndicator = (unitData) => {
