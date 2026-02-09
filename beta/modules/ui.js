@@ -410,6 +410,17 @@ const loadCharacterPartImage = (part, partName) => {
     });
 };
 
+// Helper function to draw loaded images onto the canvas
+const drawLoadedImagesToCanvas = (ctx, loadedImages, canvasWidth, canvasHeight) => {
+    loadedImages.forEach(item => {
+        if (item && item.img) {
+            // Draw image. Position and size might need adjustment based on actual image dimensions
+            // For now, draw to fill the canvas.
+            ctx.drawImage(item.img, 0, 0, canvasWidth, canvasHeight);
+        }
+    });
+};
+
 const createUnitPartsCompositeImage = async (unitData, targetSize) => {
 
     const canvas = document.createElement('canvas');
@@ -452,25 +463,27 @@ const createUnitPartsCompositeImage = async (unitData, targetSize) => {
 
 
 
-    const loadedPartImages = await Promise.all(partImagePromises);
+        const loadedPartImages = await Promise.all(partImagePromises);
 
 
 
-    loadedPartImages.forEach(item => {
-
-        if (item && item.img) {
-
-            ctx.drawImage(item.img, 0, 0, canvas.width, canvas.height);
-
-        }
-
-    });
+    
 
 
 
-    return canvas;
+        drawLoadedImagesToCanvas(ctx, loadedPartImages, canvas.width, canvas.height);
 
-};
+
+
+    
+
+
+
+        return canvas;
+
+
+
+    };
 
 const createPartStatusIndicator = (unitData) => {
     const indicatorContainer = document.createElement('div');
