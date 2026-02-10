@@ -553,15 +553,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
 
 
 
-    // --- 추가될 로그 시작 (createUnitCardSlot 내부) ---
-
-    console.groupCollapsed(`UI: createUnitCardSlot for Unit ID: ${unitId}, Category: ${category}`);
-
-    console.log(`  - cardData received by createUnitCardSlot:`, JSON.parse(JSON.stringify(cardData)));
-
-    console.groupEnd();
-
-    // --- 추가될 로그 끝 ---
+    
 
 
 
@@ -704,10 +696,7 @@ export const createUnitElement = async (unitId, unitData) => {
 };
 
 export const updateUnitDisplay = async (unitId, unitData) => {
-    // --- 추가될 로그 시작 (updateUnitDisplay 시작) ---
-    console.groupCollapsed(`UI: updateUnitDisplay called for Unit ID: ${unitId}`);
-    console.log(`  - unitData received by updateUnitDisplay:`, JSON.parse(JSON.stringify(unitData)));
-    // --- 추가될 로그 끝 ---
+
 
     const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
     if (existingUnitEntry) {
@@ -717,9 +706,7 @@ export const updateUnitDisplay = async (unitId, unitData) => {
     } else {
         console.error(`Could not find unit entry for unitId: ${unitId}`);
     }
-    // --- 추가될 로그 시작 (updateUnitDisplay 끝) ---
-    console.groupEnd();
-    // --- 추가될 로그 끝 ---
+
 };
 
 const createDroneImageElements = (droneData) => {
