@@ -7,9 +7,6 @@ export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: ne
 export let allKeywords = new Map();
 export let allRosters = {}; // This will store Roster instances
 export let activeRosterName = '';
-export let nextUnitId = 0;
-export let nextDroneId = 0;
-export let nextTacticalCardId = 0;
 export let isGameMode = false;
 export let gameRoster = {};
 export let imageExportSettings = {
@@ -60,18 +57,6 @@ export function setActiveRosterName(name) {
     activeRosterName = name;
 }
 
-export function setNextUnitId(id) {
-    nextUnitId = id;
-}
-
-export function setNextDroneId(id) {
-    nextDroneId = id;
-}
-
-export function setNextTacticalCardId(id) {
-    nextTacticalCardId = id;
-}
-
 export function setGameMode(mode) {
     isGameMode = mode;
 }
@@ -90,52 +75,10 @@ export const saveAllRosters = () => {
     localStorage.setItem('activeRosterName', activeRosterName);
 };
 
-export const calculateNextIds = () => {
-    const roster = getActiveRoster();
-    if (!roster) {
-        nextUnitId = 0;
-        nextDroneId = 0;
-        nextTacticalCardId = 0;
-        return;
-    }
-
-    let maxUnitId = -1;
-    if (roster.units && Object.keys(roster.units).length > 0) {
-        const unitIds = Object.keys(roster.units).map(id => parseInt(id)).filter(id => !isNaN(id));
-        if(unitIds.length > 0) {
-             maxUnitId = Math.max(...unitIds);
-        }
-    }
-    nextUnitId = maxUnitId + 1;
-
-    let maxDroneId = -1;
-    if (roster.drones && roster.drones.length > 0) {
-        const droneIds = roster.drones
-            .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
-            .filter(id => !isNaN(id));
-        if (droneIds.length > 0) {
-            maxDroneId = Math.max(...droneIds);
-        }
-    }
-    nextDroneId = maxDroneId + 1;
-
-    let maxTacticalCardId = -1;
-    if (roster.tacticalCards && roster.tacticalCards.length > 0) {
-        const tacticalCardIds = roster.tacticalCards
-            .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
-            .filter(id => !isNaN(id));
-        if (tacticalCardIds.length > 0) {
-            maxTacticalCardId = Math.max(...tacticalCardIds);
-        }
-    }
-    nextTacticalCardId = maxTacticalCardId + 1;
-};
-
 export const switchActiveRoster = (rosterName) => {
     if (!allRosters[rosterName] || isGameMode) return;
     activeRosterName = rosterName;
     factionSelect.value = getActiveRoster().faction || 'RDL';
-    calculateNextIds();
     renderRoster();
     updateRosterSelect();
     saveAllRosters();
@@ -416,7 +359,7 @@ async function loadKeywordData() {
     try {
         const response = await fetch(`data/keywords.json?v=${new Date().getTime()}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} for file keywords.json`);
+            throw new Error(`HTTP error! status: ${res.status} for file keywords.json`);
         }
         const keywordData = await response.json();
         allKeywords = new Map(keywordData.map(kw => [kw.keyword, kw]));
@@ -486,7 +429,6 @@ export const initializeApp = async () => {
     // --- 추가될 로그 끝 ---
 
     factionSelect.value = getActiveRoster().faction || 'RDL';
-    calculateNextIds();
     updateRosterSelect();
     renderRoster();
     saveAllRosters(); // Save in new format after migration

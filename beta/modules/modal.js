@@ -52,9 +52,10 @@ const addCardToUnit = (cardData) => {
 const addDroneToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const newDrone = { ...cardData, rosterId: `d_${state.nextDroneId}` };
-            state.setNextDroneId(state.nextDroneId + 1);
-            state.getActiveRoster().drones.push(newDrone);
+            const roster = state.getActiveRoster();
+            const newDrone = { ...cardData, rosterId: `d_${roster._nextDroneId}` };
+            roster._nextDroneId++;
+            roster.drones.push(newDrone);
             addDroneElement(newDrone); // Directly add to DOM
             updateTotalPoints(); // Update total points after adding a drone
         },
@@ -68,9 +69,10 @@ const addDroneToRoster = (cardData) => {
 const addTacticalCardToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
-            state.setNextTacticalCardId(state.nextTacticalCardId + 1);
-            state.getActiveRoster().tacticalCards.push(newTacticalCard);
+            const roster = state.getActiveRoster();
+            const newTacticalCard = { ...cardData, rosterId: `t_${roster._nextTacticalCardId}` };
+            roster._nextTacticalCardId++;
+            roster.tacticalCards.push(newTacticalCard);
             addTacticalCardElement(newTacticalCard); // Directly add to DOM
             updateTotalPoints(); // Update total points after adding a tactical card
         },

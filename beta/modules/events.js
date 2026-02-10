@@ -10,8 +10,9 @@ import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeTo
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
         if (state.isGameMode) return;
-        state.getActiveRoster().units[state.nextUnitId] = {};
-        state.calculateNextIds();
+        const activeRoster = state.getActiveRoster();
+        const newUnitId = activeRoster._nextUnitId++; // Use and increment the roster's internal counter
+        activeRoster.units[newUnitId] = {};
         renderRoster();
         state.saveAllRosters();
     });
