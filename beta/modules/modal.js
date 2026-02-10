@@ -26,17 +26,20 @@ export const closeModal = () => {
 const addCardToUnit = (cardData) => {
     performActionAndPreserveScroll(
         async () => { // action
-            const roster = state.getActiveRoster();
+            state.addCardToUnitOrDroneBack(currentUnitId, currentCategory, cardData, isBackCard);
+
             if (isBackCard) {
-                const droneIndex = roster.drones.findIndex(d => d.rosterId === currentUnitId);
-                if (droneIndex !== -1) {
-                    const drone = roster.drones[droneIndex];
-                    drone.backCard = cardData; // Update the drone's backCard
-                    updateDroneDisplay(drone); // Update the specific drone's display
+                // Find the updated drone from the state to re-render it
+                const updatedDrone = state.getActiveRoster().drones.find(d => d.rosterId === currentUnitId);
+                if (updatedDrone) {
+                    updateDroneDisplay(updatedDrone);
                 }
             } else {
-                roster.units[currentUnitId][currentCategory] = cardData;
-                await updateUnitDisplay(currentUnitId, roster.units[currentUnitId]); // Update UI for the specific unit
+                // Find the updated unit from the state to re-render it
+                const updatedUnit = state.getActiveRoster().units[currentUnitId];
+                if (updatedUnit) {
+                    await updateUnitDisplay(currentUnitId, updatedUnit);
+                }
             }
             updateTotalPoints(); // Call directly
         },
@@ -45,19 +48,17 @@ const addCardToUnit = (cardData) => {
         null  // eventTarget - not relevant here
     );
 
-    // state.saveAllRosters(); // Removed as performActionAndPreserveScroll now handles it
     closeModal();
 };
 
 const addDroneToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const roster = state.getActiveRoster();
-            const newDrone = { ...cardData, rosterId: `d_${roster._nextDroneId}` };
-            roster._nextDroneId++;
-            roster.drones.push(newDrone);
-            addDroneElement(newDrone); // Directly add to DOM
-            updateTotalPoints(); // Update total points after adding a drone
+            const newDrone = state.addDroneToRoster(cardData); // Use state mutation function
+            if (newDrone) {
+                addDroneElement(newDrone); // Directly add to DOM
+                updateTotalPoints(); // Update total points after adding a drone
+            }
         },
         null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
         null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
@@ -69,12 +70,11 @@ const addDroneToRoster = (cardData) => {
 const addTacticalCardToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const roster = state.getActiveRoster();
-            const newTacticalCard = { ...cardData, rosterId: `t_${roster._nextTacticalCardId}` };
-            roster._nextTacticalCardId++;
-            roster.tacticalCards.push(newTacticalCard);
-            addTacticalCardElement(newTacticalCard); // Directly add to DOM
-            updateTotalPoints(); // Update total points after adding a tactical card
+            const newTacticalCard = state.addTacticalCardToRoster(cardData); // Use state mutation function
+            if (newTacticalCard) {
+                addTacticalCardElement(newTacticalCard); // Directly add to DOM
+                updateTotalPoints(); // Update total points after adding a tactical card
+            }
         },
         null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
         null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
@@ -320,7 +320,6 @@ export const openImageExportSettingsModal = () => {
     document.getElementById('setting-show-total-points').checked = state.imageExportSettings.showTotalPoints;
     document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
     document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
-    document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
     document.getElementById('setting-reveal-hidden').checked = state.imageExportSettings.revealHidden;
 
     // Trigger change event to correctly set sub-option states

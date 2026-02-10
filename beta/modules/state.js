@@ -93,31 +93,172 @@ export function addNewRoster(name) {
     return true;
 }
 
-export function renameActiveRoster(newName) {
-    if (!newName || allRosters[newName]) {
-        return false; // 새 이름이 없거나 중복
+// --- NEW STATE MUTATION FUNCTIONS ---
+
+// Adds a new empty unit to the active roster
+export function addUnitToActiveRoster(unitId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        roster.units[unitId] = {};
+        // Note: _nextUnitId is incremented in events.js when adding (so it's ready for the next one)
+        saveAllRosters();
+        renderRoster();
     }
-    const oldName = activeRosterName;
-    allRosters[newName] = allRosters[oldName];
-    allRosters[newName].name = newName;
-    delete allRosters[oldName];
-    
-    setActiveRosterName(newName);
+}
+
+// Renames an existing roster
+export function renameRoster(oldName, newName) {
+    if (!newName || allRosters[newName]) {
+        return false; // New name is empty or already exists
+    }
+    const roster = allRosters[oldName];
+    if (roster) {
+        allRosters[newName] = roster;
+        allRosters[newName].name = newName;
+        delete allRosters[oldName];
+        if (activeRosterName === oldName) {
+            setActiveRosterName(newName);
+        }
+        updateRosterSelect();
+        saveAllRosters();
+        return true;
+    }
+    return false;
+}
+
+// Deletes a roster
+export function deleteRoster(rosterName) {
+    if (Object.keys(allRosters).length <= 1) {
+        return false; // Cannot delete the last roster
+    }
+    delete allRosters[rosterName];
+    if (activeRosterName === rosterName) {
+        const newActiveName = Object.keys(allRosters)[0];
+        setActiveRosterName(newActiveName);
+        factionSelect.value = getActiveRoster().faction || 'RDL'; // Update faction select
+        renderRoster();
+    }
     updateRosterSelect();
     saveAllRosters();
     return true;
 }
 
-export function deleteActiveRoster() {
-    if (Object.keys(allRosters).length <= 1) {
-        return false; // 마지막 로스터는 삭제 불가
+// Sets the faction for the active roster
+export function setFactionForActiveRoster(newFaction) {
+    const roster = getActiveRoster();
+    if (roster) {
+        roster.faction = newFaction;
+        saveAllRosters();
     }
-    const oldName = activeRosterName;
-    delete allRosters[oldName];
-    const newActiveName = Object.keys(allRosters)[0];
-    switchActiveRoster(newActiveName);
-    return true;
 }
+
+// Updates a card within a unit (replaces the card object)
+export function updateUnitCard(unitId, cardCategory, newCard) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId]) {
+        roster.units[unitId][cardCategory] = newCard;
+        saveAllRosters();
+        // UI update for unit is handled by the caller (events.js performActionAndPreserveScroll)
+    }
+}
+
+// Toggles the isDropped status of a card within a unit
+export function toggleCardIsDropped(unitId, cardCategory) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId] && roster.units[unitId][cardCategory]) {
+        const card = roster.units[unitId][cardCategory];
+        card.isDropped = !card.isDropped;
+        saveAllRosters();
+        // UI update for unit is handled by the caller (events.js performActionAndPreserveScroll)
+    }
+}
+
+// Adds a card to a unit slot or assigns a back card to a drone
+export function addCardToUnitOrDroneBack(currentUnitId, currentCategory, cardData, isBackCard) {
+    const roster = getActiveRoster();
+    if (roster) {
+        if (isBackCard) {
+            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
+            if (drone) {
+                drone.backCard = cardData;
+            }
+        } else {
+            if (roster.units[currentUnitId]) {
+                roster.units[currentUnitId][currentCategory] = cardData;
+            }
+        }
+        saveAllRosters();
+    }
+}
+
+// Adds a new drone to the active roster
+export function addDroneToRoster(cardData) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const newDrone = { ...cardData, rosterId: `d_${roster._nextDroneId}` };
+        roster._nextDroneId++;
+        roster.drones.push(newDrone);
+        saveAllRosters();
+        return newDrone; // Return the new drone for UI update
+    }
+    return null;
+}
+
+// Adds a new tactical card to the active roster
+export function addTacticalCardToRoster(cardData) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const newTacticalCard = { ...cardData, rosterId: `t_${roster._nextTacticalCardId}` };
+        roster._nextTacticalCardId++;
+        roster.tacticalCards.push(newTacticalCard);
+        saveAllRosters();
+        return newTacticalCard; // Return the new tactical card for UI update
+    }
+    return null;
+}
+
+// Deletes a specific unit from the active roster
+export function deleteUnit(unitId) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId]) {
+        delete roster.units[unitId];
+        saveAllRosters();
+        renderRoster(); // Rerender to reflect the change
+    }
+}
+
+// Deletes a specific drone from the active roster
+export function deleteDrone(rosterId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const initialLength = roster.drones.length;
+        roster.drones = roster.drones.filter(drone => drone.rosterId !== rosterId);
+        if (roster.drones.length < initialLength) {
+            saveAllRosters();
+            renderRoster(); // Rerender to reflect the change
+            return true;
+        }
+    }
+    return false;
+}
+
+// Deletes a specific tactical card from the active roster
+export function deleteTacticalCard(rosterId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const initialLength = roster.tacticalCards.length;
+        roster.tacticalCards = roster.tacticalCards.filter(card => card.rosterId !== rosterId);
+        if (roster.tacticalCards.length < initialLength) {
+            saveAllRosters();
+            renderRoster(); // Rerender to reflect the change
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// --- END NEW STATE MUTATION FUNCTIONS ---
 
 export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
     const allCardsInRoster = [];

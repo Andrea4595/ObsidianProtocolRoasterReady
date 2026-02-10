@@ -58,19 +58,13 @@ export const renderRoster = async () => {
         dom.unitsContainer.appendChild(unitElement);
     });
 
+    // rosterId should already be assigned during deserialization or creation,
+    // so no need to check or assign nextDroneId/nextTacticalCardId here.
     rosterState.drones.forEach((droneData) => {
-        if (droneData.rosterId == null) {
-            droneData.rosterId = `d_${state.nextDroneId}`;
-            state.setNextDroneId(state.nextDroneId + 1);
-        }
         addDroneElement(droneData);
     });
 
     rosterState.tacticalCards.forEach((cardData) => {
-        if (cardData.rosterId == null) {
-            cardData.rosterId = `t_${state.nextTacticalCardId}`;
-            state.setNextTacticalCardId(state.nextTacticalCardId + 1);
-        }
         addTacticalCardElement(cardData);
     });
 
@@ -556,7 +550,6 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     
 
 
-
     const wrapper = document.createElement('div');
 
     wrapper.className = CSS_CLASSES.CARD_WRAPPER;
@@ -636,7 +629,7 @@ export const createUnitElement = async (unitId, unitData) => {
         display: 'flex', // Ensure unitRow is also a flex container
         // overflowX: 'auto' // Removed overflow from unitRow, as parent handles it
         // padding: '10px 0' // Removed to allow CSS to control padding
-        flexShrink: '0', // Prevent unitRow from shrinking
+        flexShrink: '0', // Prevent it from shrinking
     });
     if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
@@ -661,9 +654,7 @@ export const createUnitElement = async (unitId, unitData) => {
         deleteButton.className = CSS_CLASSES.DELETE_UNIT_BUTTON;
         deleteButton.textContent = '-';
         deleteButton.addEventListener('click', () => {
-            delete state.allRosters[state.activeRosterName].units[unitId];
-            renderRoster();
-            state.saveAllRosters();
+            state.deleteUnit(unitId); // Use state mutation function
         });
         unitRow.appendChild(deleteButton);
 
@@ -750,8 +741,7 @@ export const createDroneElement = (droneData) => {
     const cardElement = createCardElement(droneData, {
         unitId: droneData.rosterId,
         onDeleteCallback: () => {
-            droneEntry.remove(); // Remove the drone's UI element
-            updateTotalPoints(); // Update total points after deletion
+            state.deleteDrone(droneData.rosterId); // Use state mutation function
         }
     });
 
@@ -783,8 +773,7 @@ export const updateDroneDisplay = (droneData) => {
             const newCardElement = createCardElement(droneData, {
                 unitId: droneData.rosterId,
                 onDeleteCallback: () => {
-                    existingDroneEntry.remove(); // Remove the drone's UI element
-                    updateTotalPoints(); // Update total points after deletion
+                    state.deleteDrone(droneData.rosterId); // Use state mutation function
                 }
             });
             existingCardElement.replaceWith(newCardElement);
@@ -812,8 +801,7 @@ export const createTacticalCardElement = (cardData) => { // Renamed to createTac
     const cardElement = createCardElement(cardData, {
         unitId: cardData.rosterId,
         onDeleteCallback: () => {
-            cardElement.remove(); // Remove the tactical card's UI element
-            updateTotalPoints(); // Update total points after deletion
+            state.deleteTacticalCard(cardData.rosterId); // Use state mutation function
         }
     });
     return cardElement; // Return the created element

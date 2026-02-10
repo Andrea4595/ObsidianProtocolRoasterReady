@@ -12,9 +12,7 @@ export function setupEventListeners() {
         if (state.isGameMode) return;
         const activeRoster = state.getActiveRoster();
         const newUnitId = activeRoster._nextUnitId++; // Use and increment the roster's internal counter
-        activeRoster.units[newUnitId] = {};
-        renderRoster();
-        state.saveAllRosters();
+        state.addUnitToActiveRoster(newUnitId); // Use state mutation function
     });
 
     dom.addDroneButton.addEventListener('click', openDroneModal);
@@ -130,7 +128,7 @@ export function setupEventListeners() {
         const oldName = state.activeRosterName;
         const newName = prompt('새로운 이름을 입력하세요:', oldName);
         if (newName && newName !== oldName) {
-            if (!state.renameActiveRoster(newName)) {
+            if (!state.renameRoster(oldName, newName)) { // Use state mutation function
                 alert('이미 존재하는 이름입니다.');
             }
         }
@@ -142,7 +140,7 @@ export function setupEventListeners() {
             return;
         }
         if (confirm(`'${state.activeRosterName}' 로스터를 정말로 삭제하시겠습니까?`)) {
-            state.deleteActiveRoster();
+            state.deleteRoster(state.activeRosterName); // Use state mutation function
         }
     });
 
@@ -153,8 +151,7 @@ export function setupEventListeners() {
     dom.factionSelect.addEventListener('change', (e) => {
         if (state.isGameMode) return;
         const newFaction = e.target.value;
-        state.getActiveRoster().faction = newFaction;
-        state.saveAllRosters();
+        state.setFactionForActiveRoster(newFaction); // Use state mutation function
     });
 
     document.addEventListener('contextmenu', (event) => {
@@ -200,14 +197,6 @@ export function setupEventListeners() {
                     const newCardDataTemplate = state.allCards.byFileName.get(nextFileName);
                     if (!newCardDataTemplate) return;
 
-                    // --- 추가될 로그 시작 (업데이트 전) ---
-                    console.groupCollapsed(`CHANGE BUTTON: Unit ${unitId} - Card ${cardCategory} Update`);
-                    console.log(`[BEFORE UPDATE] Unit ID: ${unitId}, Category: ${cardCategory}`);
-                    console.log(`  - currentCard (Old):`, JSON.parse(JSON.stringify(currentCard)));
-                    console.log(`  - newCardDataTemplate (New Template):`, JSON.parse(JSON.stringify(newCardDataTemplate)));
-                    console.log(`  - Full unitData (before this card update):`, JSON.parse(JSON.stringify(unitData)));
-                    // --- 추가될 로그 끝 ---
-
                     // Define the runtime properties that should be carried over to the new card.
                     const runtimePropsToPreserve = {
                         cardStatus: currentCard.cardStatus,
@@ -224,22 +213,12 @@ export function setupEventListeners() {
                     const preservedProps = Object.fromEntries(
                         Object.entries(runtimePropsToPreserve).filter(([_, v]) => v !== undefined)
                     );
-                    // --- 추가될 로그 시작 (preservedProps 확인) ---
-                    console.log(`  - preservedProps:`, JSON.parse(JSON.stringify(preservedProps)));
-                    // --- 추가될 로그 끝 ---
-
+                    
                     // Create a new card object by combining the template and preserved runtime state.
                     const newCard = { ...newCardDataTemplate, ...preservedProps };
 
                     // Replace the old card object in the unit's state with the new one.
-                    unitData[cardCategory] = newCard;
-
-                    // --- 추가될 로그 시작 (업데이트 후) ---
-                    console.log(`[AFTER UPDATE] Unit ID: ${unitId}, Category: ${cardCategory}`);
-                    console.log(`  - newCard (Assigned):`, JSON.parse(JSON.stringify(newCard)));
-                    console.log(`  - Full unitData (after this card update):`, JSON.parse(JSON.stringify(unitData)));
-                    console.groupEnd();
-                    // --- 추가될 로그 끝 ---
+                    state.updateUnitCard(unitId, cardCategory, newCard); // Use state mutation function
 
                     await updateUnitDisplay(unitId, unitData);
                 },
@@ -271,7 +250,7 @@ export function setupEventListeners() {
 
             performActionAndPreserveScroll(
                 async () => { // action
-                    cardData.isDropped = !cardData.isDropped;
+                    state.toggleCardIsDropped(unitId, cardCategory); // Use state mutation function
                     await updateUnitDisplay(unitId, unitData); // Update only the unit that changed
                 },
                 dropButton // eventTarget
