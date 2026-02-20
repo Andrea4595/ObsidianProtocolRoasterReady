@@ -1,5 +1,5 @@
 import * as state from './state.js';
-import { updateTotalPoints } from './ui.js';
+// import { updateTotalPoints } from './ui.js'; // Removed direct import of updateTotalPoints
 import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
 import { createCardElement } from './cardRenderer.js';
@@ -11,6 +11,29 @@ const createElementWithStyles = (tag, styles) => {
     Object.assign(element.style, styles);
     return element;
 };
+
+// Helper to calculate total points for the export image
+const calculateTotalPointsForExport = () => {
+    const rosterState = state.getActiveRoster();
+    if (!rosterState) return 0;
+    let total = 0;
+    Object.values(rosterState.units).forEach(unit => {
+        Object.values(unit).forEach(card => {
+            if (card) total += card.points || 0;
+        });
+    });
+    rosterState.drones.forEach(drone => {
+        if (drone) {
+            total += drone.points || 0;
+            if (drone.backCard) total += drone.backCard.points || 0;
+        }
+    });
+    rosterState.tacticalCards.forEach(card => {
+        if (card) total += card.points || 0;
+    });
+    return total;
+};
+
 
 /**
  * Creates a single, consistently styled card element for the exporter.
@@ -278,7 +301,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         if (settings.showTotalPoints) {
             const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
-            h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
+            h2.textContent = `총합 포인트: ${calculateTotalPointsForExport()}`; // Use new helper
             exportContainer.appendChild(h2);
         }
 
@@ -347,7 +370,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const canvas = await html2canvas(exportContainer, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#f0f2f5' });
+        const canvas = await html2canvas(exportContainer, { scale: 2, backgroundColor: '#f0f2f5' });
 
         const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();

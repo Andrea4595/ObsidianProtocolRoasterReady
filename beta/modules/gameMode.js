@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { renderRoster } from './ui.js';
+// import { renderRoster } from './ui.js'; // Removed direct import of renderRoster
 import { applyUnitRules, applyDroneRules, unitHasAbility } from './rules.js';
 
 const cardStatusTransitions = {
@@ -55,8 +55,8 @@ export async function performActionAndPreserveScroll(action, eventTarget = null)
         x: window.scrollX
     };
 
-    await action(); // Executes the UI update
-    state.saveAllRosters(); // Saves the roster
+    await action(); // Executes the UI update (which calls state mutation functions that dispatch events)
+    // state.saveAllRosters(); // Removed: state mutation functions now handle saving via event dispatch
 
     // Use setTimeout to ensure the browser has completed layout calculations
     // for the new elements before we try to restore scroll positions.
@@ -74,20 +74,23 @@ export async function performActionAndPreserveScroll(action, eventTarget = null)
     }, 0);
 }
 
-const initializeSubCards = (gameRoster) => {
+const initializeSubCards = (rosterToInitialize) => { // Renamed parameter for clarity
     // Roster에 있는 모든 카드를 한 배열에 모읍니다.
     const allCardsInRoster = [];
-    Object.values(gameRoster.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-    allCardsInRoster.push(...gameRoster.drones);
-    gameRoster.drones.forEach(drone => {
+    Object.values(rosterToInitialize.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+    allCardsInRoster.push(...rosterToInitialize.drones);
+    rosterToInitialize.drones.forEach(drone => {
         if (drone && drone.backCard) {
             allCardsInRoster.push(drone.backCard);
         }
     });
 
+    // Ensure subCards array exists on the roster if it doesn't
+    rosterToInitialize.subCards = rosterToInitialize.subCards || [];
+
     const processedFileNames = new Set([
-        ...gameRoster.drones.map(d => d.fileName),
-        ...gameRoster.tacticalCards.map(t => t.fileName)
+        ...rosterToInitialize.drones.map(d => d.fileName),
+        ...rosterToInitialize.tacticalCards.map(t => t.fileName)
     ]);
 
     allCardsInRoster.forEach(card => {
@@ -99,11 +102,11 @@ const initializeSubCards = (gameRoster) => {
 
                     if (subCardInstance.category === 'Drone') {
                         subCardInstance.rosterId = `sub-drone-${subCardInstance.fileName}`;
-                        gameRoster.drones.push(subCardInstance);
+                        rosterToInitialize.drones.push(subCardInstance);
                     } else {
                         // 다른 타입의 서브카드는 별도의 배열에 추가
                         subCardInstance.rosterId = `sub-card-${subCardInstance.fileName}`;
-                        gameRoster.subCards.push(subCardInstance);
+                        rosterToInitialize.subCards.push(subCardInstance);
                     }
                     processedFileNames.add(subCardInstance.fileName);
                 }
@@ -139,7 +142,7 @@ const initializeCardStates = (rosterToInitialize) => {
         card.isBlackbox = card.isBlackbox !== undefined ? card.isBlackbox : false;
         card.isRevealedInGameMode = card.isRevealedInGameMode !== undefined ? card.isRevealedInGameMode : (!card.hidden); // hidden 카드만 false, 아니면 true
 
-        // Ensure rosterId is set if missing
+        // Ensure rosterId is set if missing (should be handled by deserialize, but as a fallback)
         if (!card.rosterId) {
             card.rosterId = `${card.category}_${card.name}_${Math.random().toString(36).substr(2, 9)}`;
         }
@@ -169,13 +172,10 @@ const prepareActiveRosterForGameMode = (roster) => {
 };
 
 export function setGameMode(enabled) {
-    state.setGameMode(enabled);
-    dom.rosterControls.style.display = enabled ? 'none' : 'flex';
-    dom.rosterSummary.style.display = enabled ? 'none' : 'block';
-    dom.gameModeHeader.style.display = enabled ? 'block' : 'none';
-    dom.addButtonContainer.style.display = enabled ? 'none' : 'flex';
-    dom.appTitle.textContent = enabled ? state.activeRosterName : '로스터';
-    dom.appTitle.style.display = enabled ? 'block' : 'none';
+    // State change is now handled by state.js
+    // We only perform UI updates here that are specific to gameMode.js,
+    // general roster rendering will be triggered by event from state.js
+
 
     if (enabled) {
         const activeRoster = state.getActiveRoster();
@@ -183,9 +183,9 @@ export function setGameMode(enabled) {
         prepareActiveRosterForGameMode(activeRoster);
         state.setGameRosterState(activeRoster); // Set gameRoster to be a reference to the active roster
     } else {
-        // When exiting game mode, save the current state of the active roster
-        state.saveAllRosters(); 
+        // When exiting game mode, ensure the state knows to save
+        state.saveAllRosters(); // Explicitly save builder state when exiting game mode
         state.setGameRosterState({}); // Clear gameRoster (no longer active)
     }
-    renderRoster();
+    // renderRoster(); // Removed: UI will react to 'gameModeChanged' event from state.js
 }

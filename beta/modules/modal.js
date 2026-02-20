@@ -1,7 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js';
+// import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js'; // Removed direct UI imports
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
 import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
@@ -27,21 +27,8 @@ const addCardToUnit = (cardData) => {
     performActionAndPreserveScroll(
         async () => { // action
             state.addCardToUnitOrDroneBack(currentUnitId, currentCategory, cardData, isBackCard);
-
-            if (isBackCard) {
-                // Find the updated drone from the state to re-render it
-                const updatedDrone = state.getActiveRoster().drones.find(d => d.rosterId === currentUnitId);
-                if (updatedDrone) {
-                    updateDroneDisplay(updatedDrone);
-                }
-            } else {
-                // Find the updated unit from the state to re-render it
-                const updatedUnit = state.getActiveRoster().units[currentUnitId];
-                if (updatedUnit) {
-                    await updateUnitDisplay(currentUnitId, updatedUnit);
-                }
-            }
-            updateTotalPoints(); // Call directly
+            // UI updates are now handled by ui.js reacting to state change events.
+            // Specifically, 'cardAddedToUnitOrDroneBack' will trigger appropriate UI updates.
         },
         null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
         null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
@@ -54,11 +41,8 @@ const addCardToUnit = (cardData) => {
 const addDroneToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const newDrone = state.addDroneToRoster(cardData); // Use state mutation function
-            if (newDrone) {
-                addDroneElement(newDrone); // Directly add to DOM
-                updateTotalPoints(); // Update total points after adding a drone
-            }
+            state.addDroneToRoster(cardData); // Use state mutation function. ui.js will react to 'droneAdded'
+            // UI updates are now handled by ui.js reacting to state change events.
         },
         null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
         null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
@@ -70,11 +54,8 @@ const addDroneToRoster = (cardData) => {
 const addTacticalCardToRoster = (cardData) => {
     performActionAndPreserveScroll(
         () => {
-            const newTacticalCard = state.addTacticalCardToRoster(cardData); // Use state mutation function
-            if (newTacticalCard) {
-                addTacticalCardElement(newTacticalCard); // Directly add to DOM
-                updateTotalPoints(); // Update total points after adding a tactical card
-            }
+            state.addTacticalCardToRoster(cardData); // Use state mutation function. ui.js will react to 'tacticalCardAdded'
+            // UI updates are now handled by ui.js reacting to state change events.
         },
         null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
         null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here

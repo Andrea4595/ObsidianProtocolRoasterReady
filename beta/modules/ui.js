@@ -12,11 +12,14 @@ const createElementWithStyles = (tag, styles) => {
     return element;
 };
 
-// --- Main Render Functions ---
+// --- Internal Render Functions ---
 
-export const updateTotalPoints = () => {
+const _updateTotalPoints = () => {
     const rosterState = state.getActiveRoster();
-    if (!rosterState) return 0;
+    if (!rosterState) {
+
+        return 0;
+    }
     let total = 0;
     Object.values(rosterState.units).forEach(unit => {
         Object.values(unit).forEach(card => {
@@ -33,67 +36,159 @@ export const updateTotalPoints = () => {
         if (card) total += card.points || 0;
     });
     dom.totalPointsSpan.textContent = total;
+
     return total;
 };
 
-export const renderRoster = async () => {
-    dom.unitsContainer.innerHTML = '';
-    dom.dronesContainer.innerHTML = '';
-    dom.tacticalCardsContainer.innerHTML = '';
-    document.querySelectorAll(`.${CSS_CLASSES.SUB_CARDS_CONTAINER}`).forEach(el => el.remove());
+const _renderRoster = async () => {
+
+
+
 
     const rosterState = state.isGameMode ? state.gameRoster : state.getActiveRoster();
-    if (!rosterState) return;
+    if (!rosterState) {
+        console.warn("UI: _renderRoster - No roster state to render.");
+        return;
+    }
+
 
     if (!state.isGameMode) {
         Object.values(rosterState.units).forEach(unit => applyUnitRules(unit));
         rosterState.drones.forEach(drone => applyDroneRules(drone));
     }
 
-    const unitElementsPromises = Object.keys(rosterState.units).map(async unitId => {
-        return await createUnitElement(parseInt(unitId), rosterState.units[unitId]);
-    });
-    const unitElements = await Promise.all(unitElementsPromises);
-    unitElements.forEach(unitElement => {
-        dom.unitsContainer.appendChild(unitElement);
+
+
+
+    // Unit rendering optimization
+    const existingUnitElements = new Map();
+    dom.unitsContainer.querySelectorAll('.unit-entry').forEach(el => {
+        existingUnitElements.set(el.dataset.unitId, el);
     });
 
-    // rosterId should already be assigned during deserialization or creation,
-    // so no need to check or assign nextDroneId/nextTacticalCardId here.
-    rosterState.drones.forEach((droneData) => {
-        addDroneElement(droneData);
+    const unitsToAdd = [];
+    const unitsToUpdate = [];
+    const unitsToRemove = new Set(existingUnitElements.keys());
+
+    for (const unitId in rosterState.units) {
+        if (existingUnitElements.has(unitId)) {
+            unitsToUpdate.push({ id: parseInt(unitId), data: rosterState.units[unitId] });
+            unitsToRemove.delete(unitId);
+        } else {
+            unitsToAdd.push({ id: parseInt(unitId), data: rosterState.units[unitId] });
+        }
+    }
+
+    // Remove obsolete units
+    unitsToRemove.forEach(unitId => {
+        existingUnitElements.get(unitId).remove();
     });
 
-    rosterState.tacticalCards.forEach((cardData) => {
-        addTacticalCardElement(cardData);
+    // Add new units
+    for (const unit of unitsToAdd) {
+        const newElement = await createUnitElement(unit.id, unit.data);
+        dom.unitsContainer.appendChild(newElement);
+    }
+
+    // Update existing units
+    for (const unit of unitsToUpdate) {
+        await _updateUnitDisplay(unit.id, unit.data);
+    }
+
+
+
+
+    // Drone rendering optimization
+    const existingDroneElements = new Map();
+    dom.dronesContainer.querySelectorAll('.drone-entry').forEach(el => {
+        existingDroneElements.set(el.dataset.rosterId, el);
     });
+
+    const dronesToAdd = [];
+    const dronesToUpdate = [];
+    const dronesToRemove = new Set(existingDroneElements.keys());
+
+    for (const droneData of rosterState.drones) {
+        if (existingDroneElements.has(droneData.rosterId)) {
+            dronesToUpdate.push(droneData);
+            dronesToRemove.delete(droneData.rosterId);
+        } else {
+            dronesToAdd.push(droneData);
+        }
+    }
+
+    // Remove obsolete drones
+    dronesToRemove.forEach(rosterId => {
+        existingDroneElements.get(rosterId).remove();
+    });
+
+    // Add new drones
+    for (const drone of dronesToAdd) {
+        _addDroneElement(drone);
+    }
+
+    // Update existing drones
+    for (const drone of dronesToUpdate) {
+        _updateDroneDisplay(drone);
+    }
+
+
+
+    // Tactical cards rendering optimization
+    const existingTacticalCardElements = new Map();
+    dom.tacticalCardsContainer.querySelectorAll('.roster-card-container').forEach(el => {
+        existingTacticalCardElements.set(el.dataset.rosterId, el);
+    });
+
+    const tacticalCardsToAdd = [];
+    const tacticalCardsToUpdate = [];
+    const tacticalCardsToRemove = new Set(existingTacticalCardElements.keys());
+
+    for (const cardData of rosterState.tacticalCards) {
+        if (existingTacticalCardElements.has(cardData.rosterId)) {
+            tacticalCardsToUpdate.push(cardData);
+            tacticalCardsToRemove.delete(cardData.rosterId);
+        } else {
+            tacticalCardsToAdd.push(cardData);
+        }
+    }
+
+    // Remove obsolete tactical cards
+    tacticalCardsToRemove.forEach(rosterId => {
+        existingTacticalCardElements.get(rosterId).remove();
+    });
+
+    // Add new tactical cards
+    for (const card of tacticalCardsToAdd) {
+        _addTacticalCardElement(card);
+    }
+
+    // Update existing tactical cards
+    for (const card of tacticalCardsToUpdate) {
+        _updateTacticalCardDisplay(card);
+    }
+
+
+
+    // Sub-card rendering optimization
+    // Always remove and re-add the sub-cards container for simplicity for now,
+    // as their content is highly dynamic based on resolved sub-cards.
+    // This can be further optimized if needed, but for now, full re-render for sub-cards is acceptable.
+    document.querySelectorAll(`.${CSS_CLASSES.SUB_CARDS_CONTAINER}`).forEach(el => el.remove());
 
     if (state.isGameMode) {
-        renderSubCards(rosterState);
+        _renderSubCards(rosterState);
     }
 
-    if (!state.isGameMode) {
-        updateTotalPoints();
-    }
+
 
     adjustOverlayWidths();
+
 };
 
-export const adjustOverlayWidths = () => {
-    requestAnimationFrame(() => {
-        document.querySelectorAll('.unit-out-overlay').forEach(overlay => {
-            const unitRow = overlay.parentElement;
-            if (unitRow && unitRow.scrollWidth > unitRow.clientWidth + 1) {
-                overlay.style.width = `${unitRow.scrollWidth}px`;
-            } else {
-                overlay.style.width = '100%';
-            }
-        });
-    });
-};
-
-const renderSubCards = (rosterState) => {
+const _renderSubCards = (rosterState) => {
     if (!rosterState.subCards || rosterState.subCards.length === 0) return;
+
 
     const subCardsContainer = document.createElement('div');
     subCardsContainer.className = CSS_CLASSES.SUB_CARDS_CONTAINER;
@@ -115,7 +210,7 @@ const renderSubCards = (rosterState) => {
         if (cardData) {
             // Options needed for sub-cards in game mode
             const cardElement = createCardElement(cardData, { 
-                mode: 'game', 
+                mode: state.isGameMode ? 'game' : 'builder',
                 isInteractive: false, // Sub-cards should NOT be interactive in game mode
                 showPoints: false, // Points are not usually shown on sub-cards in game mode
                 showInfoButton: true, // Show info button
@@ -130,11 +225,16 @@ const renderSubCards = (rosterState) => {
     if (subCardsContainer.hasChildNodes()) {
         dom.tacticalCardsContainer.after(subCardsContainer);
     }
+
 };
 
-export const updateRosterSelect = () => {
+
+const _updateRosterSelect = () => {
+
     dom.rosterSelect.innerHTML = '';
-    Object.keys(state.allRosters).forEach(name => {
+    const rosterNames = Object.keys(state.allRosters);
+
+    rosterNames.forEach(name => {
         const option = document.createElement('option');
         option.value = name;
         option.textContent = name;
@@ -146,6 +246,21 @@ export const updateRosterSelect = () => {
     newRosterOption.value = '__NEW__';
     newRosterOption.textContent = '< 새 로스터 추가 >';
     dom.rosterSelect.appendChild(newRosterOption);
+
+};
+
+
+export const adjustOverlayWidths = () => {
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.unit-out-overlay').forEach(overlay => {
+            const unitRow = overlay.parentElement;
+            if (unitRow && unitRow.scrollWidth > unitRow.clientWidth + 1) {
+                overlay.style.width = `${unitRow.scrollWidth}px`;
+            } else {
+                overlay.style.width = '100%';
+            }
+        });
+    });
 };
 
 // --- UI Element Creation Helpers (Interactive Parts) ---
@@ -182,11 +297,11 @@ const createTokenArea = (cardData, unitData, unitId) => {
                 () => {
                     cardData.isCharged = !cardData.isCharged;
                     if (cardData.category === 'Drone') {
-                        updateDroneDisplay(cardData);
+                        _updateDroneDisplay(cardData);
                     } else if (unitId !== undefined && unitId !== null) { // Check for valid unitId
-                        updateUnitDisplay(unitId, unitData);
+                        _updateUnitDisplay(unitId, unitData);
                     } else {
-                        renderRoster();
+                        _renderRoster();
                     }
                 },
                 e.target
@@ -204,11 +319,11 @@ const createTokenArea = (cardData, unitData, unitId) => {
                 async () => {
                     cardData.isBlackbox = !cardData.isBlackbox;
                     if (cardData.category === 'Drone') {
-                        await updateDroneDisplay(cardData);
+                        await _updateDroneDisplay(cardData);
                     } else if (unitId !== undefined && unitId !== null) { // Check for valid unitId
-                        await updateUnitDisplay(unitId, unitData);
+                        await _updateUnitDisplay(unitId, unitData);
                     } else {
-                        renderRoster();
+                        _renderRoster();
                     }
                 },
                 e.target
@@ -243,12 +358,12 @@ const createActionButtons = (cardData, unitData, contextUnitId) => {
                 async () => {
                     cardData.isDropped = !cardData.isDropped;
                     if (cardData.category === 'Drone') {
-                        await updateDroneDisplay(cardData);
+                        await _updateDroneDisplay(cardData);
 
                     } else if (contextUnitId !== undefined && contextUnitId !== null) { // Check for valid contextUnitId
-                        await updateUnitDisplay(contextUnitId, unitData);
+                        await _updateUnitDisplay(contextUnitId, unitData);
                     } else {
-                        renderRoster();
+                        _renderRoster();
                     }
                 },
                 e.target
@@ -566,7 +681,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
             showPoints: !state.isGameMode,
             showInfoButton: true,
             unit: unitData,
-            unitId: unitId // <<< PASS THE unitId
+            unitId: unitId // <<< IMPORTANT: Pass unitId to the rendererOptions
         });
         const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
         if(cardInner) slot.appendChild(cardInner);
@@ -596,7 +711,7 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     return wrapper;
 };
 
-export const createUnitElement = async (unitId, unitData) => {
+const createUnitElement = async (unitId, unitData) => {
     const unitEntry = document.createElement('div');
     unitEntry.className = CSS_CLASSES.UNIT_ENTRY;
     unitEntry.dataset.unitId = unitId;
@@ -631,7 +746,7 @@ export const createUnitElement = async (unitId, unitData) => {
         // padding: '10px 0' // Removed to allow CSS to control padding
         flexShrink: '0', // Prevent it from shrinking
     });
-    if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
+    // Removed: if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
 
     // Render cards into unitRow first
     categoryOrder.forEach(category => {
@@ -686,30 +801,28 @@ export const createUnitElement = async (unitId, unitData) => {
     return unitEntry;
 };
 
-export const updateUnitDisplay = async (unitId, unitData) => {
-
+const _updateUnitDisplay = async (unitId, unitData) => {
 
     const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
     if (existingUnitEntry) {
         // Create a new element with the updated content
         const newUnitEntry = await createUnitElement(unitId, unitData);
         existingUnitEntry.replaceWith(newUnitEntry);
-    } else {
-        console.error(`Could not find unit entry for unitId: ${unitId}`);
-    }
 
+    } else {
+        console.error(`UI: _updateUnitDisplay - Could not find unit entry for unitId: ${unitId}. Re-rendering full roster.`);
+        await _renderRoster(); // Fallback to full render if specific update fails
+    }
 };
 
 const createDroneImageElements = (droneData) => {
-    // Create the base drone image element
     const droneImg = document.createElement('img');
     const droneImageId = (droneData.id === 0) ? droneData.name : droneData.id;
-    droneImg.src = `CharacterParts/${droneImageId}.png`; // Assuming drone images are in CharacterParts and use an ID or name
+    droneImg.src = `CharacterParts/${droneImageId}.png`;
     droneImg.alt = droneData.name;
-    droneImg.className = 'drone-image'; // Add a class for styling
+    droneImg.className = 'drone-image';
 
-    // Determine size based on droneData.size property
-    const droneSize = droneData.size || 3; // Default to size 3 if not specified
+    const droneSize = droneData.size || 3;
     let sizeMultiplier = 1;
     if (droneSize === 2) {
         sizeMultiplier = 2 / 3;
@@ -717,109 +830,207 @@ const createDroneImageElements = (droneData) => {
         sizeMultiplier = 1 / 3;
     }
     droneImg.style.setProperty('--drone-image-size-multiplier', sizeMultiplier.toString());
-    droneImg.style.width = 'auto'; // Maintain aspect ratio
+    droneImg.style.width = 'auto';
 
-    // Create a container for the drone image and potential backpack image
     const droneImageContainer = document.createElement('div');
-    droneImageContainer.className = 'drone-image-container'; // Add class for styling
+    droneImageContainer.className = 'drone-image-container';
     droneImageContainer.appendChild(droneImg);
 
-    // Conditionally add backpack image
     if (droneData.special && droneData.special.includes('freight_back') && droneData.backCard && (droneData.backCard.id !== undefined)) {
         const backpackImg = document.createElement('img');
         const backpackImageId = (droneData.backCard.id === 0) ? droneData.backCard.name : droneData.backCard.id;
-        backpackImg.src = `CharacterParts/${backpackImageId}_d.png`; // Backpack image format: [id]_d.png, using backCard's ID or name
+        backpackImg.src = `CharacterParts/${backpackImageId}_d.png`;
         backpackImg.alt = 'Backpack';
-        backpackImg.className = 'backpack-image'; // Add class for styling
+        backpackImg.className = 'backpack-image';
         droneImageContainer.appendChild(backpackImg);
     }
     return droneImageContainer;
 };
 
-export const createDroneElement = (droneData) => {
-    // Create the card element (the drone card itself)
+const createDroneElement = (droneData) => {
     const cardElement = createCardElement(droneData, {
         unitId: droneData.rosterId,
         onDeleteCallback: () => {
-            state.deleteDrone(droneData.rosterId); // Use state mutation function
+            state.deleteDrone(droneData.rosterId);
         }
     });
 
-    // Create a container for the drone image and the card
     const droneEntry = document.createElement('div');
-    droneEntry.className = 'drone-entry'; // Add a class for styling
-    droneEntry.dataset.rosterId = droneData.rosterId; // Add rosterId for easier selection
+    droneEntry.className = 'drone-entry';
+    droneEntry.dataset.rosterId = droneData.rosterId;
 
-    const droneImageContainer = createDroneImageElements(droneData); // Use the new helper function
+    const droneImageContainer = createDroneImageElements(droneData);
 
-    // Append the image container and the card to the new entry container
     droneEntry.appendChild(droneImageContainer);
     droneEntry.appendChild(cardElement);
 
-    return droneEntry; // Return the new container
+    return droneEntry;
 };
 
-export const addDroneElement = (droneData) => { // New function to append
+const _addDroneElement = (droneData) => {
     const cardElement = createDroneElement(droneData);
     dom.dronesContainer.appendChild(cardElement);
+
 };
 
-export const updateDroneDisplay = (droneData) => {
+const _updateDroneDisplay = (droneData) => {
+
     const existingDroneEntry = document.querySelector(`.drone-entry[data-roster-id='${droneData.rosterId}']`);
     if (existingDroneEntry) {
-        // Update the card part
-        const existingCardElement = existingDroneEntry.querySelector('.roster-card-container');
-        if (existingCardElement) {
-            const newCardElement = createCardElement(droneData, {
-                unitId: droneData.rosterId,
-                onDeleteCallback: () => {
-                    state.deleteDrone(droneData.rosterId); // Use state mutation function
-                }
-            });
-            existingCardElement.replaceWith(newCardElement);
-        } else {
-            console.error(`Could not find .roster-card-container within .drone-entry[data-roster-id='${droneData.rosterId}']`);
-        }
-
-        // Update the drone image and backpack (droneImageContainer)
-        const existingDroneImageContainer = existingDroneEntry.querySelector('.drone-image-container');
-        if (existingDroneImageContainer) {
-            const newDroneImageContainer = createDroneImageElements(droneData);
-            existingDroneImageContainer.replaceWith(newDroneImageContainer);
-        } else {
-            console.error(`Could not find .drone-image-container within .drone-entry[data-roster-id='${droneData.rosterId}']`);
-        }
+        const newDroneEntry = createDroneElement(droneData);
+        existingDroneEntry.replaceWith(newDroneEntry);
 
     } else {
-        console.warn(`Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
+        console.warn(`UI: _updateDroneDisplay - Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
+        // Fallback to re-rendering all drones if a specific one can't be found
         dom.dronesContainer.innerHTML = '';
-        state.getActiveRoster().drones.forEach(d => addDroneElement(d));
+        state.getActiveRoster().drones.forEach(d => _addDroneElement(d));
     }
 };
 
-export const createTacticalCardElement = (cardData) => { // Renamed to createTacticalCardElement
+const createTacticalCardElement = (cardData) => {
     const cardElement = createCardElement(cardData, {
         unitId: cardData.rosterId,
         onDeleteCallback: () => {
-            state.deleteTacticalCard(cardData.rosterId); // Use state mutation function
+            state.deleteTacticalCard(cardData.rosterId);
         }
     });
-    return cardElement; // Return the created element
+    return cardElement;
 };
 
-export const addTacticalCardElement = (cardData) => { // New function to append
+const _addTacticalCardElement = (cardData) => {
     const cardElement = createTacticalCardElement(cardData);
     dom.tacticalCardsContainer.appendChild(cardElement);
+
 };
 
-export const updateTacticalCardDisplay = (cardData) => {
+const _updateTacticalCardDisplay = (cardData) => {
+
     const existingTacticalCardElement = document.querySelector(`.roster-card-container[data-roster-id='${cardData.rosterId}']`);
     if (existingTacticalCardElement) {
         const newTacticalCardElement = createTacticalCardElement(cardData);
         existingTacticalCardElement.replaceWith(newTacticalCardElement);
+
     } else {
-        console.warn(`Could not find tactical card entry for rosterId: ${cardData.rosterId} for update. Re-rendering all tactical cards.`);
+        console.warn(`UI: _updateTacticalCardDisplay - Could not find tactical card entry for rosterId: ${cardData.rosterId} for update. Re-rendering all tactical cards.`);
         dom.tacticalCardsContainer.innerHTML = '';
-        state.getActiveRoster().tacticalCards.forEach(tc => addTacticalCardElement(tc));
+        state.getActiveRoster().tacticalCards.forEach(tc => _addTacticalCardElement(tc));
     }
 };
+
+// --- Event Handler ---
+const handleStateChange = async (event) => {
+
+
+
+    // Always update roster select, as roster names or active roster might have changed
+    _updateRosterSelect();
+    _updateTotalPoints(); // Always update total points as any change might affect it
+
+    // Handle major layout changes or full re-renders
+    if (event.type === 'appInitialized' || 
+        event.type === 'rosterSwitched' || 
+        event.type === 'rosterAdded' || 
+        event.type === 'rosterRenamed' || 
+        event.type === 'rosterDeleted' ||
+        event.type === 'rosterLoadedFromCode' ||
+        event.type === 'rosterCleared' || // Added this line
+        event.type === 'gameModeChanged') {
+
+        await _renderRoster();
+
+        if (event.type === 'gameModeChanged') {
+            const enabled = event.detail.isGameMode;
+            dom.rosterControls.style.display = enabled ? 'none' : 'flex';
+            dom.rosterSummary.style.display = enabled ? 'none' : 'block';
+            dom.gameModeHeader.style.display = enabled ? 'block' : 'none';
+            dom.addButtonContainer.style.display = enabled ? 'none' : 'flex';
+            dom.appTitle.textContent = enabled ? state.activeRosterName : '로스터';
+            dom.appTitle.style.display = enabled ? 'block' : 'none';
+        }
+    }
+    
+    // Handle specific updates that don't require full roster re-render
+    if (event.type === 'unitCardUpdated' || 
+        event.type === 'unitCardStatusChanged' ||
+        event.type === 'cardRevealedStatusToggled' ||
+        event.type === 'cardStatusAdvanced') {
+
+        const { unitId, cardCategory, rosterId } = event.detail; // Extract detail for specific update
+        
+        if (unitId !== undefined && unitId !== null) { // It's a card within a unit
+            const unitData = state.getActiveRoster().units[unitId];
+            if (unitData) {
+                await _updateUnitDisplay(unitId, unitData);
+            }
+        } else if (cardCategory === 'Drone' && rosterId) { // It's a drone (main or sub)
+            const droneData = state.getActiveRoster().drones.find(d => d.rosterId === rosterId);
+            if (droneData) {
+                _updateDroneDisplay(droneData);
+            }
+        } else if (cardCategory === 'Tactical' && rosterId) { // It's a tactical card
+            const tacticalCardData = state.getActiveRoster().tacticalCards.find(tc => tc.rosterId === rosterId);
+            if (tacticalCardData) {
+                _updateTacticalCardDisplay(tacticalCardData);
+            }
+        } else {
+            console.warn(`UI: handleStateChange - Specific card update for ${event.type} could not find target. Falling back to full render.`);
+            await _renderRoster(); // Fallback to full render if specific update fails
+        }
+    }
+
+    // Specific additions/deletions might need full render for now, but could be optimized later
+    if (event.type === 'unitAdded' || 
+        event.type === 'unitDeleted' || 
+        event.type === 'droneAdded' || 
+        event.type === 'droneDeleted' || 
+        event.type === 'tacticalCardAdded' || 
+        event.type === 'tacticalCardDeleted' ||
+        event.type === 'cardAddedToUnitOrDroneBack' || // Can be optimized, but full render is safe for now
+        event.type === 'rosterFactionChanged') {
+
+        await _renderRoster();
+    }
+
+    // Update image export settings (no immediate UI update on main screen)
+    if (event.type === 'imageExportSettingsChanged') {
+        // Handled by modal.js when opening the export settings modal, or if any UI element
+        // specifically reflects these settings on the main page. For now, no action.
+
+    }
+
+    // Update sort option (usually triggers repopulating modal, not main roster render)
+    if (event.type === 'sortOptionChanged') {
+        // This event is typically handled by modal.js for sorting modal images.
+        // If sorting affected the main roster display directly, _renderRoster() would be needed.
+
+    }
+
+    adjustOverlayWidths(); // Always adjust after any potential layout change
+
+};
+
+// --- Event Listeners ---
+document.addEventListener('appInitialized', handleStateChange);
+document.addEventListener('rosterSwitched', handleStateChange);
+document.addEventListener('activeRosterChanged', handleStateChange);
+document.addEventListener('rosterAdded', handleStateChange);
+document.addEventListener('rosterRenamed', handleStateChange);
+document.addEventListener('rosterDeleted', handleStateChange);
+document.addEventListener('rosterFactionChanged', handleStateChange);
+document.addEventListener('unitAdded', handleStateChange);
+document.addEventListener('unitDeleted', handleStateChange);
+document.addEventListener('droneAdded', handleStateChange);
+document.addEventListener('droneDeleted', handleStateChange);
+document.addEventListener('tacticalCardAdded', handleStateChange);
+document.addEventListener('tacticalCardDeleted', handleStateChange);
+document.addEventListener('cardAddedToUnitOrDroneBack', handleStateChange);
+document.addEventListener('unitCardUpdated', handleStateChange);
+document.addEventListener('unitCardStatusChanged', handleStateChange);
+document.addEventListener('cardRevealedStatusToggled', handleStateChange);
+document.addEventListener('cardStatusAdvanced', handleStateChange);
+document.addEventListener('gameModeChanged', handleStateChange);
+document.addEventListener('sortOptionChanged', handleStateChange);
+document.addEventListener('imageExportSettingsChanged', handleStateChange);
+document.addEventListener('rosterLoadedFromCode', handleStateChange);
+document.addEventListener('rosterCleared', handleStateChange);

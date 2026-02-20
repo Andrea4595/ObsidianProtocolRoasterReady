@@ -3,7 +3,7 @@ import * as state from './state.js';
 import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal } from './modal.js';
 import { setGameMode, performActionAndPreserveScroll } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
-import { renderRoster, updateRosterSelect, adjustOverlayWidths, updateUnitDisplay } from './ui.js';
+import { adjustOverlayWidths } from './ui.js'; // Imported separately
 import { ROSTER_SELECT_ACTIONS, CSS_CLASSES } from './constants.js';
 import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard, downloadWatermelonJson } from './rosterCode.js';
 
@@ -219,8 +219,7 @@ export function setupEventListeners() {
 
                     // Replace the old card object in the unit's state with the new one.
                     state.updateUnitCard(unitId, cardCategory, newCard); // Use state mutation function
-
-                    await updateUnitDisplay(unitId, unitData);
+                    // UI update for unit is now handled by ui.js reacting to 'unitCardUpdated' event.
                 },
                 changeButton // eventTarget
             );        }
@@ -251,7 +250,7 @@ export function setupEventListeners() {
             performActionAndPreserveScroll(
                 async () => { // action
                     state.toggleCardIsDropped(unitId, cardCategory); // Use state mutation function
-                    await updateUnitDisplay(unitId, unitData); // Update only the unit that changed
+                    // UI update for unit is now handled by ui.js reacting to 'unitCardStatusChanged' event.
                 },
                 dropButton // eventTarget
             );        }

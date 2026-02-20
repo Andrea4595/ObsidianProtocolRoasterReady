@@ -1,5 +1,3 @@
-import { renderRoster, updateDroneDisplay, updateTacticalCardDisplay, updateUnitDisplay } from './ui.js';
-
 // modules/cardRenderer.js
 
 /**
@@ -10,7 +8,8 @@ import { renderRoster, updateDroneDisplay, updateTacticalCardDisplay, updateUnit
 import * as state from './state.js';
 import { CSS_CLASSES } from './constants.js';
 import { openCardDetailModal } from './modal.js';
-import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
+// import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js'; // Removed advanceCardStatus, will use state.advanceCardStatusInState
+import { performActionAndPreserveScroll } from './gameMode.js'; // performActionAndPreserveScroll is still needed
 
 // --- Internal Helper Functions ---
 
@@ -58,12 +57,12 @@ const createDeleteButton = (cardData, onDeleteCallback) => {
         performActionAndPreserveScroll(
             () => { // action
                 if (cardData.category === 'Drone') {
-                    state.getActiveRoster().drones = state.getActiveRoster().drones.filter(d => d.rosterId !== cardData.rosterId);
+                    state.deleteDrone(cardData.rosterId); // Use state mutation function
                 } else if (cardData.category === 'Tactical') {
-                    state.getActiveRoster().tacticalCards = state.getActiveRoster().tacticalCards.filter(t => t.rosterId !== cardData.rosterId);
+                    state.deleteTacticalCard(cardData.rosterId); // Use state mutation function
                 }
                 if (onDeleteCallback) {
-                    onDeleteCallback(); // Trigger UI update after state change
+                    onDeleteCallback(); // Trigger UI update after state change (e.g., remove element)
                 }
             },
             e.target  // eventTarget
@@ -107,7 +106,7 @@ export const createCardElement = (cardData, options = {}) => {
         onClick = null,
         unit = null, // Pass unit data for game mode logic
         onDeleteCallback = null, // New: Callback for when delete button is pressed
-        unitId = null // This is the rosterId for drones/tactical cards
+        unitId = null // This is the rosterId for drones/tactical cards, or unitId for unit parts
     } = options;
 
     const mainContainer = createDomElement('div', { 
@@ -159,35 +158,15 @@ export const createCardElement = (cardData, options = {}) => {
             if (!gameClickCallback) { // Default game mode click action
                  if (cardData.hidden) {
                     gameClickCallback = (e) => performActionAndPreserveScroll(
-                        async () => { // Make action async
-                            cardData.isRevealedInGameMode = !cardData.isRevealedInGameMode;
-                            // Now, decide which update to call here
-                            if (cardData.category === 'Drone') {
-                                await updateDroneDisplay(cardData); // Await here
-                            } else if (cardData.category === 'Tactical') {
-                                await updateTacticalCardDisplay(cardData); // Await here
-                            } else if (unit && unitId !== undefined && unitId !== null) {
-                                await updateUnitDisplay(unitId, unit); // Await here
-                            } else {
-                                renderRoster();
-                            }
+                        async () => { // Action to perform
+                            state.toggleCardRevealedStatus(cardData.category, cardData.rosterId, unitId); // Use state mutation
                         },
                         e.target  // eventTarget
                     );
                 } else {
                     gameClickCallback = (e) => performActionAndPreserveScroll(
-                        async () => { // Make action async
-                            advanceCardStatus(cardData, unit);
-                            // Now, decide which update to call here
-                            if (cardData.category === 'Drone') {
-                                await updateDroneDisplay(cardData); // Await here
-                            } else if (cardData.category === 'Tactical') {
-                                await updateTacticalCardDisplay(cardData); // Await here
-                            } else if (unit && unitId !== undefined && unitId !== null) {
-                                await updateUnitDisplay(unitId, unit); // Await here
-                            } else {
-                                renderRoster();
-                            }
+                        async () => { // Action to perform
+                            state.advanceCardStatusInState(cardData.category, cardData.rosterId, unitId); // Use state mutation
                         },
                         e.target  // eventTarget
                     );
