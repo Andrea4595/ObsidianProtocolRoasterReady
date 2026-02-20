@@ -20,6 +20,10 @@ export let imageExportSettings = {
     revealHidden: true,
 };
 
+export let settings = {
+    showUnitCompositeImage: false,
+};
+
 export let currentSort = 'datasheet';
 
 // --- Private Helper for State Changes ---
@@ -33,6 +37,12 @@ function _dispatchStateChangeEvent(eventType, detail = {}) {
 export function setImageExportSettings(settings) {
     imageExportSettings = settings;
     _dispatchStateChangeEvent('imageExportSettingsChanged', { settings });
+}
+
+export function setSettings(newSettings) {
+    settings = { ...settings, ...newSettings };
+    localStorage.setItem('settings', JSON.stringify(settings)); // Save to localStorage
+    _dispatchStateChangeEvent('settingsChanged', { newSettings: settings });
 }
 export function getActiveRoster() {
     return allRosters[activeRosterName];
@@ -588,6 +598,12 @@ export const initializeApp = async () => {
     if (savedSettingsRaw) {
         const savedSettings = JSON.parse(savedSettingsRaw);
         imageExportSettings = { ...imageExportSettings, ...savedSettings };
+    }
+
+    const savedGeneralSettingsRaw = localStorage.getItem('settings');
+    if (savedGeneralSettingsRaw) {
+        const savedGeneralSettings = JSON.parse(savedGeneralSettingsRaw);
+        settings = { ...settings, ...savedGeneralSettings };
     }
 
     const savedRostersRaw = localStorage.getItem('rosters');

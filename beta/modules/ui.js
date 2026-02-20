@@ -756,7 +756,7 @@ const createUnitElement = async (unitId, unitData) => {
     // Use the new helper function for robust height calculation
     const unitRowHeight = getUnitRowRenderedHeight(unitRow);
     // Create and append the composite image
-    if (unitData && unitRowHeight > 0) { // Check for valid height
+    if (state.settings.showUnitCompositeImage && unitData && unitRowHeight > 0) { // Check for valid height and setting
         const compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
         compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
         unitEntryContentWrapper.prepend(compositeImageCanvas); // Prepend to put it before unitRow within the new wrapper
@@ -935,7 +935,8 @@ const handleStateChange = async (event) => {
         event.type === 'rosterDeleted' ||
         event.type === 'rosterLoadedFromCode' ||
         event.type === 'rosterCleared' || // Added this line
-        event.type === 'gameModeChanged') {
+        event.type === 'gameModeChanged' ||
+        event.type === 'settingsChanged') {
 
         await _renderRoster();
 
@@ -1034,3 +1035,4 @@ document.addEventListener('sortOptionChanged', handleStateChange);
 document.addEventListener('imageExportSettingsChanged', handleStateChange);
 document.addEventListener('rosterLoadedFromCode', handleStateChange);
 document.addEventListener('rosterCleared', handleStateChange);
+document.addEventListener('settingsChanged', handleStateChange);

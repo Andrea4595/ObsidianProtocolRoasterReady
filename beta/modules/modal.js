@@ -332,3 +332,16 @@ export const closeImageExportSettingsModal = () => {
     dom.imageExportSettingsModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 };
+
+export const openSettingsModal = () => {
+    // Apply saved settings to the form
+    dom.settingShowUnitCompositeImage.checked = state.settings.showUnitCompositeImage;
+
+    dom.settingsModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+export const closeSettingsModal = () => {
+    dom.settingsModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};

@@ -1073,6 +1073,18 @@ div.hidden-card-overlay > img.hidden-title-image {
     max-width: 500px;
 }
 
+/* General Settings Modal */
+#settings-modal .modal-content {
+    height: auto;
+    max-height: none;
+    max-width: 500px; /* Same max-width as image export settings modal */
+}
+
+#general-settings-form small {
+    color: lightgray;
+    font-size: 0.8em;
+}
+
 .modal-sort-options {
     margin-bottom: 15px;
     text-align: center;

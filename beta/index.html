@@ -38,6 +38,9 @@
             <button id="roster-code-btn" class="image-button" title="로스터 코드">
                 <img src="icons/toCode.png" alt="로스터 코드">
             </button>
+            <button id="settings-btn" class="image-button" title="설정">
+                <img src="icons/settings.png" alt="설정">
+            </button>
             <button id="game-mode-btn" class="image-button" title="게임 모드">
                 <img src="icons/gameMode.png" alt="게임 모드">
             </button>
@@ -144,6 +147,23 @@
                 <div class="modal-buttons">
                     <button type="button" id="generate-image-btn">이미지 생성</button>
                     <button type="button" id="cancel-export-btn">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for General Settings -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span id="settings-close" class="modal-close">&times;</span>
+            <h2>설정</h2>
+            <form id="general-settings-form">
+                <div class="setting-row">
+                    <label for="setting-show-unit-composite-image">유닛 조합 이미지 표시하기</label>
+                    <input type="checkbox" id="setting-show-unit-composite-image">
+                </div>
+                <div class="setting-row sub-setting">
+                    <small style="color: lightgray;">Special thanks to Watermelon</small>
                 </div>
             </form>
         </div>

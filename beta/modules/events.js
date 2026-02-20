@@ -1,6 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal } from './modal.js';
+import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal, openSettingsModal, closeSettingsModal } from './modal.js';
 import { setGameMode, performActionAndPreserveScroll } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { adjustOverlayWidths } from './ui.js'; // Imported separately
@@ -52,6 +52,20 @@ export function setupEventListeners() {
     dom.cancelExportBtn.addEventListener('click', closeImageExportSettingsModal);
     dom.imageExportSettingsModal.addEventListener('click', (event) => {
         if (event.target === dom.imageExportSettingsModal) closeImageExportSettingsModal();
+    });
+
+    // Settings Modal
+    dom.settingsBtn.addEventListener('click', openSettingsModal);
+    dom.settingsClose.addEventListener('click', closeSettingsModal);
+    dom.settingsModal.addEventListener('click', (event) => {
+        if (event.target === dom.settingsModal) closeSettingsModal();
+    });
+
+    dom.generalSettingsForm.addEventListener('change', () => {
+        const newSettings = {
+            showUnitCompositeImage: dom.settingShowUnitCompositeImage.checked,
+        };
+        state.setSettings(newSettings); // This will dispatch 'settingsChanged' event
     });
 
     document.getElementById('setting-show-points').addEventListener('change', (event) => {
