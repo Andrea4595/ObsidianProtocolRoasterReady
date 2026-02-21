@@ -45,6 +45,9 @@ export function setSettings(newSettings) {
     _dispatchStateChangeEvent('settingsChanged', { newSettings: settings });
 }
 export function getActiveRoster() {
+    if (isGameMode && gameRoster && Object.keys(gameRoster).length > 0) {
+        return gameRoster;
+    }
     return allRosters[activeRosterName];
 }
 

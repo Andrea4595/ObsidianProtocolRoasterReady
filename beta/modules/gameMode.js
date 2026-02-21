@@ -1,5 +1,6 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
+import { Roster } from './Roster.js';
 // import { renderRoster } from './ui.js'; // Removed direct import of renderRoster
 import { applyUnitRules, applyDroneRules, unitHasAbility } from './rules.js';
 
@@ -178,21 +179,20 @@ const prepareActiveRosterForGameMode = (roster) => {
 };
 
 export function setGameMode(enabled) {
-    // State change is now handled by state.js
-    // We only perform UI updates here that are specific to gameMode.js,
-    // general roster rendering will be triggered by event from state.js
-
-
     if (enabled) {
         const activeRoster = state.getActiveRoster();
-        // Prepare the active roster for game mode, initializing states if needed
-        prepareActiveRosterForGameMode(activeRoster);
-        state.setGameRosterState(activeRoster); // Set gameRoster to be a reference to the active roster
+        // 깊은 복사본 생성
+        const rosterData = activeRoster.serialize();
+        const gameRosterInstance = Roster.deserialize(activeRoster.name, rosterData, state.allCards.byName);
+        
+        prepareActiveRosterForGameMode(gameRosterInstance);
+        state.setGameRosterState(gameRosterInstance);
     } else {
-        // When exiting game mode, ensure the state knows to save
-        state.saveAllRosters(); // Explicitly save builder state when exiting game mode
-        state.setGameRosterState({}); // Clear gameRoster (no longer active)
+        // 종료 시 플래그를 먼저 꺼서 getActiveRoster()가 원본을 보게 한 뒤 저장합니다.
+        state.setGameMode(false);
+        state.saveAllRosters();
+        state.setGameRosterState({});
+        return;
     }
-    state.setGameMode(enabled); // Update state.isGameMode and dispatch 'gameModeChanged' event
-    // renderRoster(); // Removed: UI will react to 'gameModeChanged' event from state.js
+    state.setGameMode(enabled);
 }
