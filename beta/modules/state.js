@@ -21,7 +21,8 @@ export let imageExportSettings = {
 };
 
 export let settings = {
-    showUnitCompositeImage: false,
+    showUnitCompositeImageRoster: false,
+    showUnitCompositeImageGame: false,
 };
 
 export let currentSort = 'datasheet';
@@ -612,6 +613,18 @@ export const initializeApp = async () => {
     const savedGeneralSettingsRaw = localStorage.getItem('settings');
     if (savedGeneralSettingsRaw) {
         const savedGeneralSettings = JSON.parse(savedGeneralSettingsRaw);
+        
+        // Migration for split composite image settings
+        if (savedGeneralSettings.showUnitCompositeImage !== undefined) {
+            savedGeneralSettings.showUnitCompositeImageRoster = savedGeneralSettings.showUnitCompositeImageRoster !== undefined 
+                ? savedGeneralSettings.showUnitCompositeImageRoster 
+                : savedGeneralSettings.showUnitCompositeImage;
+            savedGeneralSettings.showUnitCompositeImageGame = savedGeneralSettings.showUnitCompositeImageGame !== undefined 
+                ? savedGeneralSettings.showUnitCompositeImageGame 
+                : savedGeneralSettings.showUnitCompositeImage;
+            delete savedGeneralSettings.showUnitCompositeImage;
+        }
+
         settings = { ...settings, ...savedGeneralSettings };
     }
 

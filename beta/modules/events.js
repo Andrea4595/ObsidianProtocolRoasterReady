@@ -63,7 +63,8 @@ export function setupEventListeners() {
 
     dom.generalSettingsForm.addEventListener('change', () => {
         const newSettings = {
-            showUnitCompositeImage: dom.settingShowUnitCompositeImage.checked,
+            showUnitCompositeImageRoster: dom.settingShowUnitCompositeImageRoster.checked,
+            showUnitCompositeImageGame: dom.settingShowUnitCompositeImageGame.checked,
         };
         state.setSettings(newSettings); // This will dispatch 'settingsChanged' event
     });

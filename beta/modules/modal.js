@@ -335,7 +335,8 @@ export const closeImageExportSettingsModal = () => {
 
 export const openSettingsModal = () => {
     // Apply saved settings to the form
-    dom.settingShowUnitCompositeImage.checked = state.settings.showUnitCompositeImage;
+    dom.settingShowUnitCompositeImageRoster.checked = state.settings.showUnitCompositeImageRoster;
+    dom.settingShowUnitCompositeImageGame.checked = state.settings.showUnitCompositeImageGame;
 
     dom.settingsModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';

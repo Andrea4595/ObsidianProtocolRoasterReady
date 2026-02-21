@@ -60,4 +60,5 @@ export const settingRevealHiddenRow = document.getElementById('setting-reveal-hi
 export const settingsModal = document.getElementById('settings-modal');
 export const settingsClose = document.getElementById('settings-close');
 export const generalSettingsForm = document.getElementById('general-settings-form');
-export const settingShowUnitCompositeImage = document.getElementById('setting-show-unit-composite-image');
+export const settingShowUnitCompositeImageRoster = document.getElementById('setting-show-unit-composite-image-roster');
+export const settingShowUnitCompositeImageGame = document.getElementById('setting-show-unit-composite-image-game');

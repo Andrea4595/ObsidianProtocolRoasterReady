@@ -817,7 +817,8 @@ const createUnitElement = async (unitId, unitData, existingUnitEntry = null) => 
     // Use the new helper function for robust height calculation
     const unitRowHeight = getUnitRowRenderedHeight(unitRow);
     // Create and append/update the composite image
-    if (state.settings.showUnitCompositeImage && unitData && unitRowHeight > 0) { // Check for valid height and setting
+    const showCompositeSetting = state.isGameMode ? state.settings.showUnitCompositeImageGame : state.settings.showUnitCompositeImageRoster;
+    if (showCompositeSetting && unitData && unitRowHeight > 0) { // Check for valid height and setting
         if (!compositeImageCanvas) { // Create if it doesn't exist
             compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
             compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
@@ -969,7 +970,8 @@ const createDroneElement = async (droneData) => {
     droneEntry.className = 'drone-entry';
     droneEntry.dataset.rosterId = droneData.rosterId;
 
-    if (state.settings.showUnitCompositeImage) {
+    const showCompositeSetting = state.isGameMode ? state.settings.showUnitCompositeImageGame : state.settings.showUnitCompositeImageRoster;
+    if (showCompositeSetting) {
         // 드론 이미지 상단에도 공백을 추가하여 카드와 높이를 맞춥니다.
         const imgWrapper = document.createElement('div');
         imgWrapper.className = CSS_CLASSES.CARD_WRAPPER;
