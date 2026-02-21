@@ -385,7 +385,7 @@ const createActionButtons = (cardData, unitData, contextUnitId) => {
         button.className = `${CSS_CLASSES.ACTION_BUTTON} ${CSS_CLASSES.CHANGE_BUTTON}`;
         button.textContent = '변경';
         button.dataset.unitId = contextUnitId; // Add data attribute for unitId
-        button.dataset.cardCategory = cardData.category; // Add data attribute for cardCategory
+        button.dataset.cardCategory = cardData.category; // cardData.category를 직접 사용하여 정확한 카테고리 전달
         // Event listener moved to event delegation in modules/events.js
         wrapper.appendChild(button);
     }
