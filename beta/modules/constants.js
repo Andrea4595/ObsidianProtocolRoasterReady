@@ -3,6 +3,7 @@ export const categoryOrder = ['Pilot', 'Torso', 'Chassis', 'Left', 'Right', 'Bac
 export const CSS_CLASSES = {
     UNIT_ENTRY: 'unit-entry',
     UNIT_ROW: 'unit-row',
+    UNIT_ENTRY_CONTENT_WRAPPER: 'unit-entry-content-wrapper',
     CARD_WRAPPER: 'card-wrapper',
     CARD_SLOT: 'card-slot',
     DISPLAY_CARD: 'display-card',

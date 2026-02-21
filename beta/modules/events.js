@@ -159,7 +159,9 @@ export function setupEventListeners() {
     });
 
     dom.exportImageBtn.addEventListener('click', openImageExportSettingsModal);
-    dom.gameModeBtn.addEventListener('click', () => setGameMode(true));
+    dom.gameModeBtn.addEventListener('click', () => {
+        setGameMode(true);
+    });
     dom.exitGameModeBtn.addEventListener('click', () => setGameMode(false));
 
     dom.factionSelect.addEventListener('change', (e) => {

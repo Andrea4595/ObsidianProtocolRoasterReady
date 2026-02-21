@@ -4,7 +4,7 @@ import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
 // import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js'; // Removed direct UI imports
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
-import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
+import { renderCardElement } from './cardRenderer.js';
 
 let currentUnitId = null;
 let currentCategory = null;
@@ -69,7 +69,7 @@ const createCardItem = (cardData, clickHandler) => {
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
     
     // Use the centralized renderer
-    const cardElement = createCardElementFromRenderer(cardData, { 
+    const cardElement = renderCardElement(cardData, null, { 
         mode: 'modal', 
         showPoints: true, 
         onClick: () => clickHandler(cardData) 
@@ -262,7 +262,7 @@ export const openCardDetailModal = (cardData) => {
 
     cardDetailContent.innerHTML = ''; // Clear previous content
 
-    const cardElement = createCardElementFromRenderer(cardData, { mode: 'modal' });
+    const cardElement = renderCardElement(cardData, null, { mode: 'modal' });
     const img = cardElement.querySelector('img');
 
     if (state.isGameMode && cardData.isDropped && cardData.drop) {

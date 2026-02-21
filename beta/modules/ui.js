@@ -4,7 +4,7 @@ import { openModal } from './modal.js';
 import { advanceCardStatus, performActionAndPreserveScroll } from './gameMode.js';
 import { categoryOrder, CSS_CLASSES, CARD_DIMENSIONS } from './constants.js';
 import { applyUnitRules, applyDroneRules } from './rules.js';
-import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
+import { renderCardElement } from './cardRenderer.js';
 
 const createElementWithStyles = (tag, styles) => {
     const element = document.createElement(tag);
@@ -41,6 +41,7 @@ const _updateTotalPoints = () => {
 };
 
 const _renderRoster = async () => {
+
 
 
 
@@ -160,7 +161,13 @@ const _renderRoster = async () => {
 
     // Add new tactical cards
     for (const card of tacticalCardsToAdd) {
-        _addTacticalCardElement(card);
+        const cardElement = createCardElement(card, null, {
+            unitId: card.rosterId,
+            onDeleteCallback: () => {
+                state.deleteTacticalCard(card.rosterId);
+            }
+        });
+        dom.tacticalCardsContainer.appendChild(cardElement);
     }
 
     // Update existing tactical cards
@@ -182,9 +189,15 @@ const _renderRoster = async () => {
 
 
 
-    adjustOverlayWidths();
+        adjustOverlayWidths();
 
-};
+
+
+
+
+
+
+    };
 
 const _renderSubCards = (rosterState) => {
     if (!rosterState.subCards || rosterState.subCards.length === 0) return;
@@ -208,13 +221,12 @@ const _renderSubCards = (rosterState) => {
     
     rosterState.subCards.forEach(cardData => {
         if (cardData) {
-            // Options needed for sub-cards in game mode
-            const cardElement = createCardElement(cardData, { 
+            // 서브 카드는 게임 모드에서 단순히 정보를 보여주는 용도이므로 상호작용을 비활성화합니다.
+            const cardElement = createCardElement(cardData, null, {
                 mode: state.isGameMode ? 'game' : 'builder',
-                isInteractive: false, // Sub-cards should NOT be interactive in game mode
-                showPoints: false, // Points are not usually shown on sub-cards in game mode
-                showInfoButton: true, // Show info button
-                // onClick handler is effectively removed by isInteractive: false
+                isInteractive: false, 
+                showPoints: false,
+                showInfoButton: true
             });
             cardsArea.appendChild(cardElement);
         }
@@ -335,17 +347,15 @@ const createTokenArea = (cardData, unitData, unitId) => {
 };
 
 const createActionButtons = (cardData, unitData, contextUnitId) => {
-    const placeholder = () => {
-        const p = document.createElement('div');
-        p.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
-        return p;
-    };
-    if (!cardData || (!cardData.drop && (!cardData.changes || cardData.changes.length === 0))) {
-        return placeholder();
-    }
-
     const wrapper = document.createElement('div');
     wrapper.className = CSS_CLASSES.ACTION_BUTTON_WRAPPER;
+
+    if (!cardData || (!cardData.drop && (!cardData.changes || cardData.changes.length === 0))) {
+        const p = document.createElement('div');
+        p.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
+        wrapper.appendChild(p);
+        return wrapper;
+    }
 
     if (cardData.drop) {
         const button = document.createElement('button');
@@ -417,11 +427,11 @@ const createResourceTracker = (cardData, resourceType) => {
 
 // --- Card Element Creator (UI-Specific Wrapper) ---
 
-export const createCardElement = (cardData, options = {}) => {
+export const createCardElement = (cardData, existingCardElement = null, options = {}) => {
     const { isInteractive = true, unitId = null, unitData = null, onClick = null, onDeleteCallback = null } = options;
     const mode = state.isGameMode ? 'game' : 'builder';
     
-    const rendererOptions = {
+    const renderOptions = {
         mode,
         isInteractive,
         unit: unitData,
@@ -429,26 +439,12 @@ export const createCardElement = (cardData, options = {}) => {
         showInfoButton: true, // Info buttons are always shown in the UI
         showDeleteButton: mode === 'builder' && (cardData.category === 'Drone' || cardData.category === 'Tactical'),
         onClick: onClick,
-        onDeleteCallback: onDeleteCallback, // Pass the callback to the renderer
-        unitId: unitId, // <<< IMPORTANT: Pass unitId to the rendererOptions
+        onDeleteCallback: onDeleteCallback,
+        unitId: unitId,
     };
     
-    const cardElement = createCardElementFromRenderer(cardData, rendererOptions);
-    
-    // Add game-mode-only interactive elements after the base card is created
-    if (mode === 'game' && isInteractive) {
-        const wrapper = cardElement.querySelector(`.${CSS_CLASSES.CARD_WRAPPER}`);
-        const card = wrapper.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-        wrapper.insertBefore(createActionButtons(cardData, unitData), card);
-        wrapper.appendChild(createTokenArea(cardData, unitData));
-    }
-    
-    // Handle special freight back card
-    if (cardData.special && cardData.special.includes('freight_back')) {
-        cardElement.appendChild(createFreightBackCardSlot(cardData));
-    }
-
-    return cardElement;
+    // Call the refactored renderCardElement from cardRenderer.js
+    return renderCardElement(cardData, existingCardElement, renderOptions);
 };
 
 const createFreightBackCardSlot = (cardData) => {
@@ -459,28 +455,32 @@ const createFreightBackCardSlot = (cardData) => {
 
     const backCardData = cardData.backCard;
     if (backCardData) {
-        // Just get the visual part from the renderer
-        const cardElement = createCardElementFromRenderer(backCardData, { 
+        // 백팩 카드를 게임 모드 혹은 빌더 모드에 맞춰 렌더링
+        const cardElement = createCardElement(backCardData, null, { 
             mode: state.isGameMode ? 'game' : 'builder',
-            isInteractive: !state.isGameMode, // Make back card non-interactive in game mode
+            isInteractive: true,
             showPoints: !state.isGameMode,
-            showInfoButton: true
+            showInfoButton: true,
+            unitId: cardData.rosterId // 드론의 rosterId를 상속받아 업데이트 가능하게 함
         });
-        const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-        if(cardInner) slot.appendChild(cardInner);
+        slot.appendChild(cardElement);
     } else {
         const label = document.createElement('span');
         label.className = CSS_CLASSES.SLOT_LABEL;
-        label.textContent = 'Back';
+        label.textContent = 'Backpack';
         slot.appendChild(label);
     }
     wrapper.appendChild(slot);
 
-    // Now, manually add the game mode interactions around the slot
-    if (state.isGameMode) {
-        wrapper.insertBefore(createActionButtons(backCardData, null), slot);
-        wrapper.appendChild(createTokenArea(backCardData, null));
-    } else {
+    // 게임 모드에서 조작 UI 추가
+    if (state.isGameMode && backCardData) {
+        const actionButtons = createActionButtons(backCardData, null, cardData.rosterId);
+        if (actionButtons.children.length > 0) wrapper.insertBefore(actionButtons, slot);
+        
+        const tokenArea = createTokenArea(backCardData, null, cardData.rosterId);
+        if (tokenArea.children.length > 0) wrapper.appendChild(tokenArea);
+    } else if (!state.isGameMode) {
+        // 빌더 모드에서 클릭 시 백팩 모달 오픈
         slot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
     }
     return wrapper;
@@ -531,6 +531,7 @@ const drawLoadedImagesToCanvas = (ctx, loadedImages, canvasWidth, canvasHeight) 
 };
 
 const createUnitPartsCompositeImage = async (unitData, targetSize) => {
+
 
     const canvas = document.createElement('canvas');
 
@@ -588,7 +589,8 @@ const createUnitPartsCompositeImage = async (unitData, targetSize) => {
 
 
 
-        return canvas;
+    
+    return canvas;
 
 
 
@@ -656,7 +658,7 @@ const getUnitRowRenderedHeight = (unitRowElement) => {
     return height;
 };
 
-const createUnitCardSlot = (category, unitData, unitId) => {
+const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null) => {
 
     const cardData = unitData ? unitData[category] : null;
 
@@ -665,17 +667,27 @@ const createUnitCardSlot = (category, unitData, unitId) => {
     
 
 
-    const wrapper = document.createElement('div');
+    let wrapper;
+    let slot;
 
-    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
-
-    const slot = document.createElement('div');
-
-    slot.className = CSS_CLASSES.CARD_SLOT;
+    if (!existingCardSlot) {
+        wrapper = document.createElement('div');
+        wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+        slot = document.createElement('div');
+        slot.className = CSS_CLASSES.CARD_SLOT;
+    } else {
+        wrapper = existingCardSlot.parentElement; // Assuming parent is the wrapper
+        slot = existingCardSlot;
+        slot.innerHTML = ''; // Clear existing content for re-render
+    }
 
     if (cardData) {
         const isPilot = category === 'Pilot';
-        const cardElement = createCardElementFromRenderer(cardData, { 
+        // In createUnitCardSlot, we need to pass the existing .roster-card-container element to createCardElement
+        // for in-place updates, or null if it doesn't exist.
+        // The `slot` itself is the .card-slot or similar, which will contain the .roster-card-container.
+        const existingRosterCardContainer = slot.querySelector('.roster-card-container'); // This is the element renderCardElement expects for updates.
+        const cardElement = createCardElement(cardData, existingRosterCardContainer, { 
             mode: state.isGameMode ? 'game' : 'builder',
             isInteractive: !isPilot,
             showPoints: !state.isGameMode,
@@ -683,102 +695,201 @@ const createUnitCardSlot = (category, unitData, unitId) => {
             unit: unitData,
             unitId: unitId // <<< IMPORTANT: Pass unitId to the rendererOptions
         });
-        const cardInner = cardElement.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
-        if(cardInner) slot.appendChild(cardInner);
-    } else {
-        const label = document.createElement('span');
-        label.className = CSS_CLASSES.SLOT_LABEL;
-        label.textContent = category;
-        slot.appendChild(label);
-    }
-    wrapper.appendChild(slot);
-
+        // createCardElement already handles appending/replacing within the slot's existing content.
+        // We only append if createCardElement created a *new* roster-card-container (i.e., existingRosterCardContainer was null).
+        if (cardElement && !existingRosterCardContainer) { 
+            slot.appendChild(cardElement);
+        }
+                } else {
+                    // No card data, so ensure slot is empty or has a label
+                    slot.innerHTML = ''; // Clear slot content
+                    const label = document.createElement('span');
+                    label.className = CSS_CLASSES.SLOT_LABEL;
+                    label.textContent = category;
+                    slot.appendChild(label);
+                }
+            if (!existingCardSlot) { // Only append if it's a new slot wrapper
+                wrapper.appendChild(slot);
+            }
     // Handle all game-mode additions outside the renderer call
     if (state.isGameMode) {
+        // 게임 모드에서 카드 상단 영역(상태 표시 혹은 액션 버튼)을 하나로 통합하여 높이를 맞춥니다.
+        let headerElement;
         if (category === 'Pilot') {
-            wrapper.insertBefore(createPartStatusIndicator(unitData), slot);
+            headerElement = createPartStatusIndicator(unitData);
         } else {
-            // Pass unitId from createUnitCardSlot to createActionButtons
-            wrapper.insertBefore(createActionButtons(cardData, unitData, unitId), slot);
+            headerElement = createActionButtons(cardData, unitData, unitId);
         }
-        // Pass unitId from createUnitCardSlot to createTokenArea
-        wrapper.appendChild(createTokenArea(cardData, unitData, unitId));
+
+        // 기존에 이미 붙어있는 상태 표시기나 액션 버튼이 있다면 제거/교체합니다.
+        const existingHeader = wrapper.querySelector(`.${CSS_CLASSES.ACTION_BUTTON_WRAPPER}`);
+        if (existingHeader) {
+            existingHeader.replaceWith(headerElement);
+        } else {
+            wrapper.insertBefore(headerElement, slot);
+        }
+
+        // Token Area
+        const newTokenArea = createTokenArea(cardData, unitData, unitId);
+        let tokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
+        if (newTokenArea.children.length > 0) { // Only add if it actually has tokens
+            if (tokenArea) {
+                tokenArea.replaceWith(newTokenArea);
+            } else {
+                wrapper.appendChild(newTokenArea);
+            }
+            tokenArea = newTokenArea; // Update reference
+        } else {
+            if (tokenArea) tokenArea.remove();
+            tokenArea = null;
+        }
+
+        // Remove builder-mode click listener
+        if (slot.onclick) slot.onclick = null;
     } else {
-        // In builder mode, the whole slot is always clickable to change the card.
-        slot.addEventListener('click', () => openModal(unitId, category));
+        // Not in game mode, ensure game-mode specific elements are removed
+        const existingHeader = wrapper.querySelector(`.${CSS_CLASSES.ACTION_BUTTON_WRAPPER}`);
+        if (existingHeader) existingHeader.remove();
+        
+        const tokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
+        if (tokenArea) tokenArea.remove();
+
+        // In builder mode, the whole slot is clickable
+        if (!slot.onclick) {
+             slot.addEventListener('click', () => openModal(unitId, category));
+        }
     }
     
     return wrapper;
 };
 
-const createUnitElement = async (unitId, unitData) => {
-    const unitEntry = document.createElement('div');
-    unitEntry.className = CSS_CLASSES.UNIT_ENTRY;
-    unitEntry.dataset.unitId = unitId;
-    Object.assign(unitEntry.style, {
-        position: 'relative',
-        display: 'flex', // Use flexbox to align the image and the unit cards
-        alignItems: 'center', // Vertically center the items
-        gap: '15px', // Space between the composite image and the unit cards
-        overflowX: 'auto', // unitEntry itself is now scrollable horizontally
-        flexWrap: 'nowrap', // Prevent flex items from wrapping to a new line
-        minWidth: '0', // Allow flex item to shrink below its content size
-    });
+const createUnitElement = async (unitId, unitData, existingUnitEntry = null) => {
 
-    // Create the new wrapper for content within unitEntry
-    const unitEntryContentWrapper = document.createElement('div');
-    Object.assign(unitEntryContentWrapper.style, {
-        display: 'flex',
-        alignItems: 'center', // Vertically align the items
-        justifyContent: 'center', // Center content horizontally
-        gap: '15px', // Space between the composite image and the unit cards
-        minWidth: '100%', // Ensure it takes at least 100% of the parent's width for centering
-        width: 'fit-content', // Allows it to grow beyond 100% if content overflows
-        flexShrink: '0', // Prevent it from shrinking
-    });
+    let unitEntry;
+    let unitEntryContentWrapper;
+    let unitRow;
+    let compositeImageCanvas = null; // Declare here to be accessible in both branches
 
-    const unitRow = document.createElement('div');
-    unitRow.className = CSS_CLASSES.UNIT_ROW;
-    Object.assign(unitRow.style, {
-        position: 'relative',
-        display: 'flex', // Ensure unitRow is also a flex container
-        // overflowX: 'auto' // Removed overflow from unitRow, as parent handles it
-        // padding: '10px 0' // Removed to allow CSS to control padding
-        flexShrink: '0', // Prevent it from shrinking
-    });
-    // Removed: if (unitId >= state.nextUnitId) state.setNextUnitId(unitId + 1);
+    if (!existingUnitEntry) {
+        // --- Creation Path ---
+        unitEntry = document.createElement('div');
+        unitEntry.className = CSS_CLASSES.UNIT_ENTRY;
+        unitEntry.dataset.unitId = unitId;
+        Object.assign(unitEntry.style, {
+            position: 'relative',
+            display: 'flex', // Use flexbox to align the image and the unit cards
+            alignItems: 'center', // Vertically center the items
+            gap: '15px', // Space between the composite image and the unit cards
+            overflowX: 'auto', // unitEntry itself is now scrollable horizontally
+            flexWrap: 'nowrap', // Prevent flex items from wrapping to a new line
+            minWidth: '0', // Allow flex item to shrink below its content size
+        });
 
-    // Render cards into unitRow first
-    categoryOrder.forEach(category => {
-        unitRow.appendChild(createUnitCardSlot(category, unitData, unitId));
-    });
+        unitEntryContentWrapper = document.createElement('div');
+        unitEntryContentWrapper.className = CSS_CLASSES.UNIT_ENTRY_CONTENT_WRAPPER; // Add this class
+        Object.assign(unitEntryContentWrapper.style, {
+            display: 'flex',
+            alignItems: 'center', // Vertically align the items
+            justifyContent: 'center', // Center content horizontally
+            gap: '15px', // Space between the composite image and the unit cards
+            minWidth: '100%', // Ensure it takes at least 100% of the parent's width for centering
+            width: 'fit-content', // Allows it to grow beyond 100% if content overflows
+            flexShrink: '0', // Prevent it from shrinking
+        });
+
+        unitRow = document.createElement('div');
+        unitRow.className = CSS_CLASSES.UNIT_ROW;
+        Object.assign(unitRow.style, {
+            position: 'relative',
+            display: 'flex', // Ensure unitRow is also a flex container
+            // overflowX: 'auto' // Removed overflow from unitRow, as parent handles it
+            // padding: '10px 0' // Removed to allow CSS to control padding
+            flexShrink: '0', // Prevent it from shrinking
+        });
+
+        unitEntryContentWrapper.appendChild(unitRow); // Append unitRow to the new wrapper
+        unitEntry.appendChild(unitEntryContentWrapper); // Append the new wrapper to unitEntry
+
+    } else {
+        // --- Update Path ---
+        unitEntry = existingUnitEntry;
+        // Find existing elements within the unitEntry
+        unitEntryContentWrapper = unitEntry.querySelector(`.${CSS_CLASSES.UNIT_ENTRY_CONTENT_WRAPPER}`); // Query by class
+        unitRow = unitEntryContentWrapper.querySelector(`.${CSS_CLASSES.UNIT_ROW}`);
+        compositeImageCanvas = unitEntryContentWrapper.querySelector('.composite-unit-image');
+        // Clear unitRow's innerHTML only if it's currently populated
+        if (unitRow && unitRow.childElementCount > 0) {
+            unitRow.innerHTML = ''; 
+        }
+    }
+
+    // --- Common Logic (or logic that needs to be conditionally applied/updated) ---
+    // Render cards into unitRow
+    // Using for...of loop for async operations to ensure order and proper await
+    for (const category of categoryOrder) {
+        const existingCardSlot = unitRow.querySelector(`.card-slot[data-category="${category}"]`) || unitRow.querySelector(`.${category}-slot`);
+        const newSlotWrapper = createUnitCardSlot(category, unitData, unitId, existingCardSlot);
+        if (!existingCardSlot) { // If a new slot was created, append it to unitRow
+            unitRow.appendChild(newSlotWrapper);
+        }
+    }
 
     // Use the new helper function for robust height calculation
     const unitRowHeight = getUnitRowRenderedHeight(unitRow);
-    // Create and append the composite image
+    // Create and append/update the composite image
     if (state.settings.showUnitCompositeImage && unitData && unitRowHeight > 0) { // Check for valid height and setting
-        const compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
-        compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
-        unitEntryContentWrapper.prepend(compositeImageCanvas); // Prepend to put it before unitRow within the new wrapper
+        if (!compositeImageCanvas) { // Create if it doesn't exist
+            compositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight); // Pass dynamic height
+            compositeImageCanvas.className = 'composite-unit-image'; // Add the new class
+            unitEntryContentWrapper.prepend(compositeImageCanvas); // Prepend to put it before unitRow within the new wrapper
+        }
+        // If it exists, update it (e.g., redraw if unitData changed) - for now, re-create.
+        // For truly granular updates, createUnitPartsCompositeImage should also support update-in-place.
+        // For this refactoring, re-prepending if it already exists will still be a DOM change.
+        // A simpler approach for now: if setting is true, always create/update.
+        else {
+            const newCompositeImageCanvas = await createUnitPartsCompositeImage(unitData, unitRowHeight);
+            newCompositeImageCanvas.className = 'composite-unit-image';
+            compositeImageCanvas.replaceWith(newCompositeImageCanvas);
+            compositeImageCanvas = newCompositeImageCanvas;
+        }
+    } else {
+        if (compositeImageCanvas) { // Remove if setting is off
+            compositeImageCanvas.remove();
+            compositeImageCanvas = null;
+        }
     }
 
-    unitEntryContentWrapper.appendChild(unitRow); // Append unitRow to the new wrapper
+    // --- Delete Button and Points Display (Builder Mode) ---
+    let deleteButton = unitRow.querySelector(`.${CSS_CLASSES.DELETE_UNIT_BUTTON}`);
+    let pointsDisplay = unitRow.querySelector('.unit-points-overlay');
 
     if (!state.isGameMode) {
-        const deleteButton = document.createElement('button');
-        deleteButton.className = CSS_CLASSES.DELETE_UNIT_BUTTON;
-        deleteButton.textContent = '-';
-        deleteButton.addEventListener('click', () => {
-            state.deleteUnit(unitId); // Use state mutation function
-        });
-        unitRow.appendChild(deleteButton);
-
+        if (!deleteButton) {
+            deleteButton = document.createElement('button');
+            deleteButton.className = CSS_CLASSES.DELETE_UNIT_BUTTON;
+            deleteButton.textContent = '-';
+            deleteButton.addEventListener('click', () => {
+                state.deleteUnit(unitId); // Use state mutation function
+            });
+            unitRow.appendChild(deleteButton);
+        }
+        // Update points
         const unitPoints = Object.values(unitData).reduce((sum, card) => sum + (card ? card.points : 0), 0);
-        const pointsDisplay = document.createElement('div');
-        pointsDisplay.className = 'unit-points-overlay';
+        if (!pointsDisplay) {
+            pointsDisplay = document.createElement('div');
+            pointsDisplay.className = 'unit-points-overlay';
+            unitRow.appendChild(pointsDisplay);
+        }
         pointsDisplay.textContent = `${unitPoints}`;
-        unitRow.appendChild(pointsDisplay);
+    } else {
+        if (deleteButton) deleteButton.remove();
+        if (pointsDisplay) pointsDisplay.remove();
     }
+    
+    // --- Token Areas and Unit Out Overlay ---
+    // These parts are currently recreated by createUnitCardSlot.
+    // Need to ensure they are properly updated in game mode.
 
     const tokenAreas = Array.from(unitRow.querySelectorAll(`.${CSS_CLASSES.TOKEN_AREA}`));
     if (tokenAreas.some(area => area.hasChildNodes())) {
@@ -786,33 +897,43 @@ const createUnitElement = async (unitId, unitData) => {
         tokenAreas.forEach(area => area.style.minHeight = resourceAreaHeight);
     }
 
+    let unitOutOverlay = unitRow.querySelector('.unit-out-overlay');
     if (isUnitOut(unitData)) {
-        const overlay = document.createElement('div');
-        overlay.className = 'unit-out-overlay';
-        Object.assign(overlay.style, {
-            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.15)', zIndex: 20, pointerEvents: 'none'
-        });
-        unitRow.appendChild(overlay);
+        if (!unitOutOverlay) {
+            unitOutOverlay = document.createElement('div');
+            unitOutOverlay.className = 'unit-out-overlay';
+            Object.assign(unitOutOverlay.style, {
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.15)', zIndex: 20, pointerEvents: 'none'
+            });
+            unitRow.appendChild(unitOutOverlay);
+        }
+    } else {
+        if (unitOutOverlay) unitOutOverlay.remove();
     }
+    
 
-    unitEntry.appendChild(unitEntryContentWrapper); // Append the new wrapper to unitEntry
+    return unitEntry;
+
 
     return unitEntry;
 };
 
 const _updateUnitDisplay = async (unitId, unitData) => {
 
+
     const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
     if (existingUnitEntry) {
-        // Create a new element with the updated content
-        const newUnitEntry = await createUnitElement(unitId, unitData);
-        existingUnitEntry.replaceWith(newUnitEntry);
+        // Update the existing element with the updated content
+        await createUnitElement(unitId, unitData, existingUnitEntry);
 
     } else {
         console.error(`UI: _updateUnitDisplay - Could not find unit entry for unitId: ${unitId}. Re-rendering full roster.`);
+
         await _renderRoster(); // Fallback to full render if specific update fails
+
     }
+
 };
 
 const createDroneImageElements = (droneData) => {
@@ -848,21 +969,30 @@ const createDroneImageElements = (droneData) => {
 };
 
 const createDroneElement = (droneData) => {
-    const cardElement = createCardElement(droneData, {
-        unitId: droneData.rosterId,
-        onDeleteCallback: () => {
-            state.deleteDrone(droneData.rosterId);
-        }
-    });
-
     const droneEntry = document.createElement('div');
     droneEntry.className = 'drone-entry';
     droneEntry.dataset.rosterId = droneData.rosterId;
 
-    const droneImageContainer = createDroneImageElements(droneData);
+    if (state.settings.showUnitCompositeImage) {
+        const droneImageContainer = createDroneImageElements(droneData);
+        droneEntry.appendChild(droneImageContainer);
+    }
 
-    droneEntry.appendChild(droneImageContainer);
+    const cardElement = createCardElement(droneData, null, {
+        unitId: droneData.rosterId,
+        onDeleteCallback: () => {
+            state.deleteDrone(droneData.rosterId);
+        },
+        onClick: (state.isGameMode && !droneData.hidden) ? () => state.advanceCardStatusInState('Drone', droneData.rosterId) : null,
+        isInteractive: true,
+    });
     droneEntry.appendChild(cardElement);
+
+    // freight_back 속성이 있는 경우 백팩 카드 슬롯 추가
+    if (droneData.special && droneData.special.includes('freight_back')) {
+        const backCardSlot = createFreightBackCardSlot(droneData);
+        droneEntry.appendChild(backCardSlot);
+    }
 
     return droneEntry;
 };
@@ -874,48 +1004,41 @@ const _addDroneElement = (droneData) => {
 };
 
 const _updateDroneDisplay = (droneData) => {
-
     const existingDroneEntry = document.querySelector(`.drone-entry[data-roster-id='${droneData.rosterId}']`);
     if (existingDroneEntry) {
+        // 드론 엔트리 전체를 새로 생성하여 교체 (백팩 슬롯 포함 갱신)
         const newDroneEntry = createDroneElement(droneData);
         existingDroneEntry.replaceWith(newDroneEntry);
-
     } else {
         console.warn(`UI: _updateDroneDisplay - Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
-        // Fallback to re-rendering all drones if a specific one can't be found
         dom.dronesContainer.innerHTML = '';
         state.getActiveRoster().drones.forEach(d => _addDroneElement(d));
     }
 };
 
-const createTacticalCardElement = (cardData) => {
-    const cardElement = createCardElement(cardData, {
-        unitId: cardData.rosterId,
-        onDeleteCallback: () => {
-            state.deleteTacticalCard(cardData.rosterId);
-        }
-    });
-    return cardElement;
-};
 
-const _addTacticalCardElement = (cardData) => {
-    const cardElement = createTacticalCardElement(cardData);
-    dom.tacticalCardsContainer.appendChild(cardElement);
 
-};
+
 
 const _updateTacticalCardDisplay = (cardData) => {
-
     const existingTacticalCardElement = document.querySelector(`.roster-card-container[data-roster-id='${cardData.rosterId}']`);
     if (existingTacticalCardElement) {
-        const newTacticalCardElement = createTacticalCardElement(cardData);
-        existingTacticalCardElement.replaceWith(newTacticalCardElement);
-
+        createCardElement(cardData, existingTacticalCardElement, {
+            unitId: cardData.rosterId,
+            mode: state.isGameMode ? 'game' : 'builder',
+            isInteractive: true, // 게임 모드와 빌더 모드 모두에서 상호작용 가능해야 함
+            onDeleteCallback: () => {
+                state.deleteTacticalCard(cardData.rosterId);
+            }
+        });
     } else {
         console.warn(`UI: _updateTacticalCardDisplay - Could not find tactical card entry for rosterId: ${cardData.rosterId} for update. Re-rendering all tactical cards.`);
+
         dom.tacticalCardsContainer.innerHTML = '';
         state.getActiveRoster().tacticalCards.forEach(tc => _addTacticalCardElement(tc));
+
     }
+
 };
 
 // --- Event Handler ---
@@ -942,6 +1065,7 @@ const handleStateChange = async (event) => {
 
         if (event.type === 'gameModeChanged') {
             const enabled = event.detail.isGameMode;
+
             dom.rosterControls.style.display = enabled ? 'none' : 'flex';
             dom.rosterSummary.style.display = enabled ? 'none' : 'block';
             dom.gameModeHeader.style.display = enabled ? 'block' : 'none';
@@ -955,28 +1079,43 @@ const handleStateChange = async (event) => {
     if (event.type === 'unitCardUpdated' || 
         event.type === 'unitCardStatusChanged' ||
         event.type === 'cardRevealedStatusToggled' ||
-        event.type === 'cardStatusAdvanced') {
+        event.type === 'cardStatusAdvanced' ||
+        event.type === 'cardAddedToUnitOrDroneBack') {
 
-        const { unitId, cardCategory, rosterId } = event.detail; // Extract detail for specific update
+        const { unitId, cardCategory, rosterId, isBackCard } = event.detail;
+        const activeRoster = state.isGameMode ? state.gameRoster : state.getActiveRoster();
+        let updated = false;
+
+        // 1. 우선 유닛(기체) 내의 카드인지 확인 (단, 백팩이 아닐 때)
+        if (!isBackCard && unitId !== undefined && unitId !== null && activeRoster.units[unitId]) {
+            await _updateUnitDisplay(unitId, activeRoster.units[unitId]);
+            updated = true;
+        } 
         
-        if (unitId !== undefined && unitId !== null) { // It's a card within a unit
-            const unitData = state.getActiveRoster().units[unitId];
-            if (unitData) {
-                await _updateUnitDisplay(unitId, unitData);
-            }
-        } else if (cardCategory === 'Drone' && rosterId) { // It's a drone (main or sub)
-            const droneData = state.getActiveRoster().drones.find(d => d.rosterId === rosterId);
+        // 2. 드론이거나 드론의 백팩 카드인 경우 확인
+        const searchId = rosterId || unitId;
+        if (!updated && searchId) {
+            const droneData = activeRoster.drones.find(d => d.rosterId === searchId) ||
+                              (activeRoster.subCards && activeRoster.subCards.find(sc => sc.rosterId === searchId && sc.category === 'Drone'));
             if (droneData) {
                 _updateDroneDisplay(droneData);
+                updated = true;
             }
-        } else if (cardCategory === 'Tactical' && rosterId) { // It's a tactical card
-            const tacticalCardData = state.getActiveRoster().tacticalCards.find(tc => tc.rosterId === rosterId);
+        }
+
+        // 3. 드론도 아니라면 전술 카드인지 확인 (서브 전술 카드 포함)
+        if (!updated && rosterId) {
+            const tacticalCardData = activeRoster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
+                                     (activeRoster.subCards && activeRoster.subCards.find(sc => sc.rosterId === rosterId && sc.category === 'Tactical'));
             if (tacticalCardData) {
                 _updateTacticalCardDisplay(tacticalCardData);
+                updated = true;
             }
-        } else {
-            console.warn(`UI: handleStateChange - Specific card update for ${event.type} could not find target. Falling back to full render.`);
-            await _renderRoster(); // Fallback to full render if specific update fails
+        }
+
+        if (!updated) {
+            console.warn(`UI: handleStateChange - Could not find target to update for ${event.type}. Fallback to full render.`);
+            await _renderRoster();
         }
     }
 

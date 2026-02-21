@@ -2,7 +2,7 @@ import * as state from './state.js';
 // import { updateTotalPoints } from './ui.js'; // Removed direct import of updateTotalPoints
 import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
-import { createCardElement } from './cardRenderer.js';
+import { renderCardElement } from './cardRenderer.js';
 
 // --- HTML Generation Helpers ---
 
@@ -59,7 +59,7 @@ const generateCardHtml = (cardData, settings) => {
         padding: '5px'
     });
 
-    const cardElement = createCardElement(cardData, { mode: 'export', exportSettings: settings });
+    const cardElement = renderCardElement(cardData, null, { mode: 'export', exportSettings: settings });
     
     // The card renderer produces a complex element; we need to ensure its contents are sized correctly.
     const displayCard = cardElement.querySelector('.display-card');
@@ -206,7 +206,7 @@ const generateTacticalCardHtml = (card, shouldHide, settings) => {
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         width: '270px'
     });
-    cardContainer.appendChild(createCardElement(card, { mode: 'export', exportSettings: settings }));
+    cardContainer.appendChild(renderCardElement(card, null, { mode: 'export', exportSettings: settings }));
     return cardContainer;
 };
 

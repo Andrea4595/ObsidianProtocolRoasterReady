@@ -732,10 +732,15 @@ div.hidden-card-overlay > img.hidden-title-image {
 .action-button-wrapper {
     width: 100%;
     margin-bottom: 10px;
+    height: 33px; /* Fixed height for both buttons and placeholders */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-button-placeholder {
-    height: 43px; /* Matches height of button (33px) + wrapper margin (10px) */
+    height: 100%;
+    width: 100%;
 }
 
 .action-button {

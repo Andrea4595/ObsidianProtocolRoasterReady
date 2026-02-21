@@ -287,23 +287,28 @@ export function deleteTacticalCard(rosterId) {
 
 // Toggles the isRevealedInGameMode status of a card
 export function toggleCardRevealedStatus(cardCategory, rosterId, unitId = null) {
+    console.log(`[State] toggleCardRevealedStatus: cat=${cardCategory}, rid=${rosterId}, uid=${unitId}`);
     const roster = getActiveRoster();
     if (!roster) return;
 
     let targetCard = null;
     if (unitId !== null && roster.units[unitId] && roster.units[unitId][cardCategory]) {
         targetCard = roster.units[unitId][cardCategory];
-    } else if (cardCategory === 'Drone') {
-        targetCard = roster.drones.find(d => d.rosterId === rosterId);
-    } else if (cardCategory === 'Tactical') {
-        targetCard = roster.tacticalCards.find(tc => tc.rosterId === rosterId);
-    } else if (roster.subCards) { // Check sub-cards for 'Tactical' category if it's a sub-card
-        targetCard = roster.subCards.find(sc => sc.rosterId === rosterId);
+    } 
+    
+    if (!targetCard && rosterId) {
+        // 유닛 카드가 아니라면 드론, 전술 카드, 서브 카드 리스트에서 통합 검색
+        targetCard = roster.drones.find(d => d.rosterId === rosterId) ||
+                     roster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
+                     (roster.subCards && roster.subCards.find(sc => sc.rosterId === rosterId));
     }
 
     if (targetCard) {
         targetCard.isRevealedInGameMode = !targetCard.isRevealedInGameMode;
+        console.log(`[State] Revealed toggled: ${targetCard.name}, isRevealed=${targetCard.isRevealedInGameMode}`);
         _dispatchStateChangeEvent('cardRevealedStatusToggled', { cardCategory, rosterId, unitId });
+    } else {
+        console.error(`[State] Card not found: rid=${rosterId}`);
     }
 }
 
@@ -318,12 +323,13 @@ export function advanceCardStatusInState(cardCategory, rosterId, unitId = null) 
     if (unitId !== null && roster.units[unitId] && roster.units[unitId][cardCategory]) {
         targetCard = roster.units[unitId][cardCategory];
         targetUnit = roster.units[unitId]; // Pass the whole unit for context
-    } else if (cardCategory === 'Drone') {
-        targetCard = roster.drones.find(d => d.rosterId === rosterId);
-    } else if (cardCategory === 'Tactical') {
-        targetCard = roster.tacticalCards.find(tc => tc.rosterId === rosterId);
-    } else if (roster.subCards) { // Check sub-cards
-        targetCard = roster.subCards.find(sc => sc.rosterId === rosterId);
+    } 
+    
+    if (!targetCard && rosterId) {
+        // Search in drones, tactical, and sub-cards
+        targetCard = roster.drones.find(d => d.rosterId === rosterId) ||
+                     roster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
+                     (roster.subCards && roster.subCards.find(sc => sc.rosterId === rosterId));
     }
 
     if (targetCard) {

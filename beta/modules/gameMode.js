@@ -56,6 +56,12 @@ export async function performActionAndPreserveScroll(action, eventTarget = null)
     };
 
     await action(); // Executes the UI update (which calls state mutation functions that dispatch events)
+
+    // Force a repaint/reflow here to make sure visual updates are applied immediately
+    // before scroll restoration, potentially reducing perceived delay.
+    if (eventTarget && eventTarget.offsetHeight !== undefined) {
+        void eventTarget.offsetHeight; // Force reflow, but don't use the value
+    }
     // state.saveAllRosters(); // Removed: state mutation functions now handle saving via event dispatch
 
     // Use setTimeout to ensure the browser has completed layout calculations
@@ -187,5 +193,6 @@ export function setGameMode(enabled) {
         state.saveAllRosters(); // Explicitly save builder state when exiting game mode
         state.setGameRosterState({}); // Clear gameRoster (no longer active)
     }
+    state.setGameMode(enabled); // Update state.isGameMode and dispatch 'gameModeChanged' event
     // renderRoster(); // Removed: UI will react to 'gameModeChanged' event from state.js
 }
