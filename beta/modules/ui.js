@@ -125,12 +125,12 @@ const _renderRoster = async () => {
 
     // Add new drones
     for (const drone of dronesToAdd) {
-        _addDroneElement(drone);
+        await _addDroneElement(drone);
     }
 
     // Update existing drones
     for (const drone of dronesToUpdate) {
-        _updateDroneDisplay(drone);
+        await _updateDroneDisplay(drone);
     }
 
 
@@ -478,13 +478,40 @@ const loadCharacterPartImage = (part, partName) => {
     });
 };
 
-// Helper function to draw loaded images onto the canvas
-const drawLoadedImagesToCanvas = (ctx, loadedImages, canvasWidth, canvasHeight) => {
+// Helper function to apply status-based tinting to an image on a canvas
+const drawTintedImage = (ctx, img, x, y, width, height, status) => {
+    if (status === 1 || status === 2) {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+        const tempCtx = tempCanvas.getContext('2d');
+
+        // 1. 원본 이미지 그리기
+        tempCtx.drawImage(img, 0, 0, width, height);
+
+        // 2. Multiply 블렌딩 모드로 색상 입히기 (이미지 디테일 유지)
+        tempCtx.globalCompositeOperation = 'multiply';
+        tempCtx.fillStyle = (status === 2) ? '#444444' : '#FFAAAA';
+        tempCtx.fillRect(0, 0, width, height);
+
+        // 3. 투명도 마스킹
+        tempCtx.globalCompositeOperation = 'destination-in';
+        tempCtx.drawImage(img, 0, 0, width, height);
+
+        // 4. 메인 캔버스에 그리기
+        ctx.drawImage(tempCanvas, x, y);
+    } else {
+        ctx.drawImage(img, x, y, width, height);
+    }
+};
+
+// Helper function to draw loaded images onto the canvas with status-based tinting
+const drawLoadedImagesToCanvas = (ctx, loadedImages, canvasWidth, canvasHeight, unitData) => {
     loadedImages.forEach(item => {
         if (item && item.img) {
-            // Draw image. Position and size might need adjustment based on actual image dimensions
-            // For now, draw to fill the canvas.
-            ctx.drawImage(item.img, 0, 0, canvasWidth, canvasHeight);
+            const partCard = unitData[item.partName];
+            const status = partCard ? partCard.cardStatus : 0;
+            drawTintedImage(ctx, item.img, 0, 0, canvasWidth, canvasHeight, status);
         }
     });
 };
@@ -540,7 +567,7 @@ const createUnitPartsCompositeImage = async (unitData, targetSize) => {
 
 
 
-        drawLoadedImagesToCanvas(ctx, loadedPartImages, canvas.width, canvas.height);
+        drawLoadedImagesToCanvas(ctx, loadedPartImages, canvas.width, canvas.height, unitData);
 
 
 
@@ -889,39 +916,55 @@ const _updateUnitDisplay = async (unitId, unitData) => {
 
 };
 
-const createDroneImageElements = (droneData) => {
-    const droneImg = document.createElement('img');
-    const droneImageId = (droneData.id === 0) ? droneData.name : droneData.id;
-    droneImg.src = `CharacterParts/${droneImageId}.png`;
-    droneImg.alt = droneData.name;
-    droneImg.className = 'drone-image';
-
-    const droneSize = droneData.size || 3;
-    let sizeMultiplier = 1;
-    if (droneSize === 2) {
-        sizeMultiplier = 2 / 3;
-    } else if (droneSize === 1) {
-        sizeMultiplier = 1 / 3;
-    }
-    droneImg.style.setProperty('--drone-image-size-multiplier', sizeMultiplier.toString());
-    droneImg.style.width = 'auto';
-
-    const droneImageContainer = document.createElement('div');
-    droneImageContainer.className = 'drone-image-container';
-    droneImageContainer.appendChild(droneImg);
-
-    if (droneData.special && droneData.special.includes('freight_back') && droneData.backCard && (droneData.backCard.id !== undefined)) {
-        const backpackImg = document.createElement('img');
-        const backpackImageId = (droneData.backCard.id === 0) ? droneData.backCard.name : droneData.backCard.id;
-        backpackImg.src = `CharacterParts/${backpackImageId}_d.png`;
-        backpackImg.alt = 'Backpack';
-        backpackImg.className = 'backpack-image';
-        droneImageContainer.appendChild(backpackImg);
-    }
-    return droneImageContainer;
+// Helper to load an image from a path
+const loadSingleImage = (src) => {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+    });
 };
 
-const createDroneElement = (droneData) => {
+const createDroneImageElements = async (droneData, targetHeight) => {
+    const droneImageId = (droneData.id === 0) ? droneData.name : droneData.id;
+    const droneSize = droneData.size || 3;
+    const sizeMultiplier = droneSize === 2 ? 2/3 : (droneSize === 1 ? 1/3 : 1);
+    
+    // 드론 이미지 로드
+    const droneImg = await loadSingleImage(`CharacterParts/${droneImageId}.png`);
+    if (!droneImg) return document.createElement('div');
+
+    // 캔버스 크기 결정 (이미지 비율 유지)
+    const aspectRatio = droneImg.width / droneImg.height;
+    const canvasHeight = targetHeight * sizeMultiplier;
+    const canvasWidth = canvasHeight * aspectRatio;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    const ctx = canvas.getContext('2d');
+
+    // 1. 드론 본체 그리기 (상태에 따른 틴트 적용)
+    drawTintedImage(ctx, droneImg, 0, 0, canvasWidth, canvasHeight, droneData.cardStatus);
+
+    // 2. 백팩 이미지(있는 경우) 그리기
+    if (droneData.special && droneData.special.includes('freight_back') && droneData.backCard && (droneData.backCard.id !== undefined)) {
+        const backpackImageId = (droneData.backCard.id === 0) ? droneData.backCard.name : droneData.backCard.id;
+        const backpackImg = await loadSingleImage(`CharacterParts/${backpackImageId}_d.png`);
+        if (backpackImg) {
+            const backStatus = droneData.backCard.cardStatus || 0;
+            drawTintedImage(ctx, backpackImg, 0, 0, canvasWidth, canvasHeight, backStatus);
+        }
+    }
+
+    const container = document.createElement('div');
+    container.className = 'drone-image-container';
+    container.appendChild(canvas);
+    return container;
+};
+
+const createDroneElement = async (droneData) => {
     const droneEntry = document.createElement('div');
     droneEntry.className = 'drone-entry';
     droneEntry.dataset.rosterId = droneData.rosterId;
@@ -940,7 +983,7 @@ const createDroneElement = (droneData) => {
             imgWrapper.appendChild(header);
         }
         
-        const droneImageContainer = createDroneImageElements(droneData);
+        const droneImageContainer = await createDroneImageElements(droneData, 270);
         imgWrapper.appendChild(droneImageContainer);
 
         if (state.isGameMode) {
@@ -1025,17 +1068,17 @@ const createFreightBackCardSlot = (cardData) => {
     return wrapper;
 };
 
-const _addDroneElement = (droneData) => {
-    const cardElement = createDroneElement(droneData);
+const _addDroneElement = async (droneData) => {
+    const cardElement = await createDroneElement(droneData);
     dom.dronesContainer.appendChild(cardElement);
 
 };
 
-const _updateDroneDisplay = (droneData) => {
+const _updateDroneDisplay = async (droneData) => {
     const existingDroneEntry = document.querySelector(`.drone-entry[data-roster-id='${droneData.rosterId}']`);
     if (existingDroneEntry) {
         // 드론 엔트리 전체를 새로 생성하여 교체 (백팩 슬롯 포함 갱신)
-        const newDroneEntry = createDroneElement(droneData);
+        const newDroneEntry = await createDroneElement(droneData);
         existingDroneEntry.replaceWith(newDroneEntry);
     } else {
         console.warn(`UI: _updateDroneDisplay - Could not find drone entry for rosterId: ${droneData.rosterId} for update. Re-rendering all drones.`);
