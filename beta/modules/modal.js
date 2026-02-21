@@ -296,15 +296,17 @@ export const closeCardDetailModal = () => {
 export const openImageExportSettingsModal = () => {
     // Apply saved settings to the form
     document.getElementById('setting-show-title').checked = state.imageExportSettings.showTitle;
-    document.getElementById('setting-show-discarded').checked = state.imageExportSettings.showDiscarded;
-    document.getElementById('setting-show-points').checked = state.imageExportSettings.showPoints;
+    dom.settingShowUnitCompositeExport.checked = state.imageExportSettings.showUnitComposite;
     document.getElementById('setting-show-total-points').checked = state.imageExportSettings.showTotalPoints;
+    document.getElementById('setting-show-details').checked = state.imageExportSettings.showDetails;
     document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
     document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
+    document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
     document.getElementById('setting-reveal-hidden').checked = state.imageExportSettings.revealHidden;
+    document.getElementById('setting-show-tactical').checked = state.imageExportSettings.showTactical;
 
     // Trigger change event to correctly set sub-option states
-    document.getElementById('setting-show-points').dispatchEvent(new Event('change'));
+    document.getElementById('setting-show-details').dispatchEvent(new Event('change'));
 
 
     const rosterState = state.getActiveRoster();

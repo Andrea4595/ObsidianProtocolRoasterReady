@@ -69,8 +69,8 @@ export function setupEventListeners() {
         state.setSettings(newSettings); // This will dispatch 'settingsChanged' event
     });
 
-    document.getElementById('setting-show-points').addEventListener('change', (event) => {
-        const subSettings = document.getElementById('points-sub-settings');
+    document.getElementById('setting-show-details').addEventListener('change', (event) => {
+        const subSettings = document.getElementById('details-sub-settings');
         const isChecked = event.target.checked;
         subSettings.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.disabled = !isChecked;
@@ -83,12 +83,12 @@ export function setupEventListeners() {
         });
     });
 
-    document.getElementById('points-sub-settings').addEventListener('change', () => {
-        const subSettings = document.getElementById('points-sub-settings');
+    document.getElementById('details-sub-settings').addEventListener('change', () => {
+        const subSettings = document.getElementById('details-sub-settings');
         const subCheckboxes = subSettings.querySelectorAll('input[type="checkbox"]');
         const allUnchecked = Array.from(subCheckboxes).every(checkbox => !checkbox.checked);
         if (allUnchecked) {
-            const mainToggle = document.getElementById('setting-show-points');
+            const mainToggle = document.getElementById('setting-show-details');
             mainToggle.checked = false;
             mainToggle.dispatchEvent(new Event('change'));
         }
@@ -97,13 +97,14 @@ export function setupEventListeners() {
     const saveImageExportSettings = () => {
         const settings = {
             showTitle: document.getElementById('setting-show-title').checked,
-            showDiscarded: document.getElementById('setting-show-discarded').checked,
-            showPoints: document.getElementById('setting-show-points').checked,
             showTotalPoints: document.getElementById('setting-show-total-points').checked,
+            showUnitComposite: dom.settingShowUnitCompositeExport.checked,
+            showDetails: document.getElementById('setting-show-details').checked,
             showCardPoints: document.getElementById('setting-show-card-points').checked,
             showUnitPoints: document.getElementById('setting-show-unit-points').checked,
             showSubCards: document.getElementById('setting-show-sub-cards').checked,
             revealHidden: document.getElementById('setting-reveal-hidden').checked,
+            showTactical: document.getElementById('setting-show-tactical').checked,
         };
         localStorage.setItem('imageExportSettings', JSON.stringify(settings));
         state.setImageExportSettings(settings); // Update state as well

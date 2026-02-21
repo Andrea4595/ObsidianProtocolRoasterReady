@@ -11,13 +11,14 @@ export let isGameMode = false;
 export let gameRoster = {};
 export let imageExportSettings = {
     showTitle: true,
-    showDiscarded: true,
-    showPoints: true,
     showTotalPoints: true,
+    showUnitComposite: true,
+    showDetails: true,
     showCardPoints: true,
     showUnitPoints: true,
     showSubCards: true,
     revealHidden: true,
+    showTactical: true,
 };
 
 export let settings = {

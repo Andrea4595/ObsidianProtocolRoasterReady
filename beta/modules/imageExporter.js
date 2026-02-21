@@ -3,6 +3,7 @@ import * as state from './state.js';
 import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
 import { renderCardElement } from './cardRenderer.js';
+import { createUnitPartsCompositeImage, createDroneImageElements } from './ui.js';
 
 // --- HTML Generation Helpers ---
 
@@ -41,8 +42,8 @@ const calculateTotalPointsForExport = () => {
  */
 const generateCardHtml = (cardData, settings) => {
     const isDroneLike = cardData.category === 'Drone' || cardData.category === 'Projectile';
-    const slotWidth = isDroneLike ? '390px' : '200px';
-    const slotHeight = '287px'; // Consistent height for all cards in export
+    const slotWidth = isDroneLike ? '450px' : '230px'; // 200 -> 230, 390 -> 450
+    const slotHeight = '330px'; // 287 -> 330
 
     const cardSlot = createElementWithStyles('div', {
         width: slotWidth,
@@ -80,7 +81,7 @@ const generateCardHtml = (cardData, settings) => {
 };
 
 
-const generateUnitHtml = (unit, shouldHide, settings) => {
+const generateUnitHtml = async (unit, shouldHide, settings) => {
     const unitContainer = createElementWithStyles('div', {
         display: 'flex',
         gap: '10px',
@@ -89,22 +90,16 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
         padding: '15px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         alignItems: 'flex-start',
-        position: 'relative'
+        position: 'relative',
+        width: 'fit-content',
+        margin: '0 auto' // Center the card row
     });
 
     if (settings.showUnitPoints) {
         const unitPoints = Object.values(unit).reduce((sum, card) => sum + (card ? card.points : 0), 0);
         const unitPointsDisplay = createElementWithStyles('div', {
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            color: 'white',
-            padding: '2px 8px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            zIndex: '10'
+            position: 'absolute', top: '10px', left: '10px', backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white', padding: '2px 8px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold', zIndex: '10'
         });
         unitPointsDisplay.textContent = `${unitPoints}`;
         unitContainer.appendChild(unitPointsDisplay);
@@ -112,36 +107,21 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
 
     for (const category of categoryOrder) {
         const card = unit[category];
-        
-        // Use the new helper for both empty and filled slots
         const cardSlot = generateCardHtml(card || { category }, settings);
-        
-        // If the slot was empty, clear the generated content and add the label
         if (!card) {
             cardSlot.innerHTML = '';
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
             categoryLabel.textContent = category;
             cardSlot.appendChild(categoryLabel);
-            // Re-apply some styles for empty slot
-            Object.assign(cardSlot.style, {
-                justifyContent: 'center',
-                padding: '0'
-            });
+            Object.assign(cardSlot.style, { justifyContent: 'center', padding: '0' });
         }
         
-        // Append discarded/changed cards if the setting is enabled
         if (card && settings.showDiscarded) {
             const addSeparator = () => {
                 cardSlot.appendChild(createElementWithStyles('div', {
-                    height: '5px',
-                    width: '80%',
-                    backgroundColor: '#ccc',
-                    margin: '5px auto',
-                    borderRadius: '2px',
-                    flexShrink: '0'
+                    height: '5px', width: '80%', backgroundColor: '#ccc', margin: '5px auto', borderRadius: '2px', flexShrink: '0'
                 }));
             };
-
             if (card.drop) {
                 addSeparator();
                 const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
@@ -159,17 +139,15 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
                     }
                 });
             }
-             // If we added discarded cards, the container needs to be allowed to grow
-            if (card.drop || card.changes) {
-                cardSlot.style.height = 'auto';
-            }
+            if (card.drop || card.changes) cardSlot.style.height = 'auto';
         }
         unitContainer.appendChild(cardSlot);
     }
+    
     return unitContainer;
 };
 
-const generateDroneEntryHtml = (drone, shouldHide, settings) => {
+const generateDroneEntryHtml = async (drone, shouldHide, settings) => {
     const droneContainer = createElementWithStyles('div', {
         display: 'flex',
         alignItems: 'flex-start',
@@ -265,6 +243,19 @@ function loadHtml2Canvas() {
     });
 }
 
+// Helper to wait for all images within an element to load
+const waitForAllImages = (container) => {
+    const imgs = Array.from(container.querySelectorAll('img'));
+    const promises = imgs.map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve; // Continue even if an image fails
+        });
+    });
+    return Promise.all(promises);
+};
+
 export const handleExportImage = async (settings, format = 'image/png') => {
     const exportIcon = exportImageBtn.querySelector('img');
     if (!exportIcon) return;
@@ -284,12 +275,15 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         const exportContainer = createElementWithStyles('div', {
             position: 'absolute',
-            left: '-9999px',
-            width: '1200px',
+            top: '0',
+            left: '-9999px', // 다시 멀리 보냄
+            width: '1500px',
             backgroundColor: '#f0f2f5',
             padding: '20px',
-            fontFamily: 'sans-serif'
+            fontFamily: 'sans-serif',
+            opacity: '1' // 투명도 제거
         });
+        exportContainer.id = 'export-container-root'; // ID 부여
 
         document.body.appendChild(exportContainer);
 
@@ -305,23 +299,69 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             exportContainer.appendChild(h2);
         }
 
-        if (Object.keys(rosterState.units).length > 0) {
+        // --- 조합 이미지 섹션 (총합 포인트 아래) ---
+        if (settings.showUnitComposite) {
+            const compositeSection = createElementWithStyles('div', {
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '20px',
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+                marginTop: '20px',
+                marginBottom: '30px',
+                padding: '20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: '15px'
+            });
+
+            // 유닛 이미지 추가
+            for (const unitId in rosterState.units) {
+                const unit = rosterState.units[unitId];
+                const canvas = await createUnitPartsCompositeImage(unit, 300);
+                if (canvas) {
+                    canvas.style.height = '300px';
+                    canvas.style.width = 'auto';
+                    canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                    compositeSection.appendChild(canvas);
+                }
+            }
+
+            // 드론 이미지 추가
+            for (const drone of rosterState.drones) {
+                // createDroneImageElements는 내부적으로 size에 따른 scaling을 수행합니다.
+                // targetHeight를 유닛과 동일한 300으로 주면 size 3은 300, 2는 200, 1은 100이 됩니다.
+                const droneImgContainer = await createDroneImageElements(drone, 300);
+                if (droneImgContainer) {
+                    const canvas = droneImgContainer.querySelector('canvas');
+                    if (canvas) {
+                        canvas.style.height = 'auto'; // 내부에서 설정된 높이 유지
+                        canvas.style.width = 'auto';
+                        canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        compositeSection.appendChild(canvas);
+                    }
+                }
+            }
+
+            if (compositeSection.hasChildNodes()) {
+                exportContainer.appendChild(compositeSection);
+            }
+        }
+
+        if (settings.showDetails && Object.keys(rosterState.units).length > 0) {
             const unitsTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             unitsTitle.textContent = '유닛';
             exportContainer.appendChild(unitsTitle);
 
             const unitsContainer = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', gap: '20px' });
             for (const unitId in rosterState.units) {
-                unitsContainer.appendChild(generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
+                unitsContainer.appendChild(await generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
             }
             exportContainer.appendChild(unitsContainer);
         }
 
         // 드론 및 서브카드 데이터 준비
         const allSubCardsSet = state.getAllSubCards(rosterState, { includeDrones: true });
-
         const mainDroneFileNames = new Set(rosterState.drones.map(d => d.fileName));
-        
         const subDrones = [];
         const otherSubCards = new Set();
 
@@ -337,19 +377,19 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         const allDronesToRender = [...rosterState.drones, ...subDrones];
 
-        if (allDronesToRender.length > 0) {
+        if (settings.showDetails && allDronesToRender.length > 0) {
             const dronesTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             dronesTitle.textContent = '드론';
             exportContainer.appendChild(dronesTitle);
 
             const dronesContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
-            allDronesToRender.forEach(drone => {
-                dronesContainer.appendChild(generateDroneEntryHtml(drone, shouldHide, settings));
-            });
+            for (const drone of allDronesToRender) {
+                dronesContainer.appendChild(await generateDroneEntryHtml(drone, shouldHide, settings));
+            }
             exportContainer.appendChild(dronesContainer);
         }
 
-        if (rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
+        if (settings.showTactical && rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
             const tacticalTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             tacticalTitle.textContent = '전술 카드';
             exportContainer.appendChild(tacticalTitle);
@@ -368,9 +408,28 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             }
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // 1. 모든 이미지가 실제로 로드될 때까지 대기
+        await waitForAllImages(exportContainer);
+        
+        // 2. 브라우저가 레이아웃을 계산할 수 있도록 지연시간 부여
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        const canvas = await html2canvas(exportContainer, { scale: 2, backgroundColor: '#f0f2f5' });
+        // 3. html2canvas 실행
+        const canvas = await html2canvas(exportContainer, { 
+            scale: 1.5, 
+            backgroundColor: '#f0f2f5',
+            useCORS: true,
+            logging: false,
+            width: 1500,
+            onclone: (clonedDoc) => {
+                // 클론된 문서에서 컨테이너 위치를 0으로 잡아 캡처 영역을 확보함
+                const clonedContainer = clonedDoc.getElementById('export-container-root');
+                if (clonedContainer) {
+                    clonedContainer.style.left = '0';
+                    clonedContainer.style.position = 'relative';
+                }
+            }
+        });
 
         const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();

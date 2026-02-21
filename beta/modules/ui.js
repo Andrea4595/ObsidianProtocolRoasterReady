@@ -516,7 +516,7 @@ const drawLoadedImagesToCanvas = (ctx, loadedImages, canvasWidth, canvasHeight, 
     });
 };
 
-const createUnitPartsCompositeImage = async (unitData, targetSize) => {
+export const createUnitPartsCompositeImage = async (unitData, targetSize) => {
 
 
     const canvas = document.createElement('canvas');
@@ -927,7 +927,7 @@ const loadSingleImage = (src) => {
     });
 };
 
-const createDroneImageElements = async (droneData, targetHeight) => {
+export const createDroneImageElements = async (droneData, targetHeight) => {
     const droneImageId = (droneData.id === 0) ? droneData.name : droneData.id;
     const droneSize = droneData.size || 3;
     const sizeMultiplier = droneSize === 2 ? 2/3 : (droneSize === 1 ? 1/3 : 1);

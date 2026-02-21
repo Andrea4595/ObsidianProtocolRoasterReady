@@ -54,6 +54,7 @@ export const imageExportSettingsClose = document.getElementById('image-export-se
 export const imageExportSettingsForm = document.getElementById('image-export-settings-form');
 export const generateImageBtn = document.getElementById('generate-image-btn');
 export const cancelExportBtn = document.getElementById('cancel-export-btn');
+export const settingShowUnitCompositeExport = document.getElementById('setting-show-unit-composite');
 export const settingRevealHiddenRow = document.getElementById('setting-reveal-hidden-row');
 
 // Settings Modal Elements

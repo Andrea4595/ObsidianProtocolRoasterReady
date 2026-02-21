@@ -115,18 +115,18 @@
                     <input type="checkbox" id="setting-show-title" checked>
                 </div>
                 <div class="setting-row">
-                    <label for="setting-show-discarded">버리기/변경 카드 표시</label>
-                    <input type="checkbox" id="setting-show-discarded" checked>
+                    <label for="setting-show-total-points">총합 포인트 표시</label>
+                    <input type="checkbox" id="setting-show-total-points" checked>
                 </div>
                 <div class="setting-row">
-                    <label for="setting-show-points">포인트 표시</label>
-                    <input type="checkbox" id="setting-show-points" checked>
+                    <label for="setting-show-unit-composite">유닛 조합 이미지 표시</label>
+                    <input type="checkbox" id="setting-show-unit-composite" checked>
                 </div>
-                <div id="points-sub-settings">
-                    <div class="setting-row sub-setting">
-                        <label for="setting-show-total-points">총합 포인트 표시</label>
-                        <input type="checkbox" id="setting-show-total-points" checked>
-                    </div>
+                <div class="setting-row">
+                    <label for="setting-show-details">유닛 및 드론 카드 표시</label>
+                    <input type="checkbox" id="setting-show-details" checked>
+                </div>
+                <div id="details-sub-settings">
                     <div class="setting-row sub-setting">
                         <label for="setting-show-card-points">카드 포인트 표시</label>
                         <input type="checkbox" id="setting-show-card-points" checked>
@@ -135,14 +135,18 @@
                         <label for="setting-show-unit-points">유닛 총합 포인트 표시</label>
                         <input type="checkbox" id="setting-show-unit-points" checked>
                     </div>
+                    <div class="setting-row sub-setting">
+                        <label for="setting-show-sub-cards">서브 카드 표시</label>
+                        <input type="checkbox" id="setting-show-sub-cards" checked>
+                    </div>
+                    <div class="setting-row sub-setting" id="setting-reveal-hidden-row" style="display: none;">
+                        <label for="setting-reveal-hidden">숨김 카드 공개</label>
+                        <input type="checkbox" id="setting-reveal-hidden" checked>
+                    </div>
                 </div>
                 <div class="setting-row">
-                    <label for="setting-show-sub-cards">서브 카드 표시</label>
-                    <input type="checkbox" id="setting-show-sub-cards" checked>
-                </div>
-                <div class="setting-row" id="setting-reveal-hidden-row" style="display: none;">
-                    <label for="setting-reveal-hidden">숨김 카드 공개</label>
-                    <input type="checkbox" id="setting-reveal-hidden" checked>
+                    <label for="setting-show-tactical">전술 카드 표시</label>
+                    <input type="checkbox" id="setting-show-tactical" checked>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" id="generate-image-btn">이미지 생성</button>
