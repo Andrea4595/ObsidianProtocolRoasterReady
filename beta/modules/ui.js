@@ -447,47 +447,6 @@ export const createCardElement = (cardData, existingCardElement = null, options 
     return renderCardElement(cardData, existingCardElement, renderOptions);
 };
 
-const createFreightBackCardSlot = (cardData) => {
-    const wrapper = document.createElement('div');
-    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
-    const slot = document.createElement('div');
-    slot.className = CSS_CLASSES.CARD_SLOT;
-
-    const backCardData = cardData.backCard;
-    if (backCardData) {
-        // 백팩 카드를 게임 모드 혹은 빌더 모드에 맞춰 렌더링
-        const cardElement = createCardElement(backCardData, null, { 
-            mode: state.isGameMode ? 'game' : 'builder',
-            isInteractive: true,
-            showPoints: !state.isGameMode,
-            showInfoButton: true,
-            unitId: cardData.rosterId // 드론의 rosterId를 상속받아 업데이트 가능하게 함
-        });
-        slot.appendChild(cardElement);
-    } else {
-        const label = document.createElement('span');
-        label.className = CSS_CLASSES.SLOT_LABEL;
-        label.textContent = 'Backpack';
-        slot.appendChild(label);
-    }
-    wrapper.appendChild(slot);
-
-    // 게임 모드에서 조작 UI 추가
-    if (state.isGameMode && backCardData) {
-        const actionButtons = createActionButtons(backCardData, null, cardData.rosterId);
-        if (actionButtons.children.length > 0) wrapper.insertBefore(actionButtons, slot);
-        
-        const tokenArea = createTokenArea(backCardData, null, cardData.rosterId);
-        if (tokenArea.children.length > 0) wrapper.appendChild(tokenArea);
-    } else if (!state.isGameMode) {
-        // 빌더 모드에서 클릭 시 백팩 모달 오픈
-        slot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
-    }
-    return wrapper;
-};
-
-// ... (rest of the file remains, createUnitCardSlot, createUnitElement, etc.)
-
 // Helper function to get the image path for a character part
 const getCharacterPartImagePath = (part) => {
     if (!part) return null;
@@ -729,19 +688,13 @@ const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null)
             wrapper.insertBefore(headerElement, slot);
         }
 
-        // Token Area
+        // Token Area - 정렬을 위해 게임 모드에서는 항상 추가합니다.
         const newTokenArea = createTokenArea(cardData, unitData, unitId);
         let tokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
-        if (newTokenArea.children.length > 0) { // Only add if it actually has tokens
-            if (tokenArea) {
-                tokenArea.replaceWith(newTokenArea);
-            } else {
-                wrapper.appendChild(newTokenArea);
-            }
-            tokenArea = newTokenArea; // Update reference
+        if (tokenArea) {
+            tokenArea.replaceWith(newTokenArea);
         } else {
-            if (tokenArea) tokenArea.remove();
-            tokenArea = null;
+            wrapper.appendChild(newTokenArea);
         }
 
         // Remove builder-mode click listener
@@ -974,8 +927,30 @@ const createDroneElement = (droneData) => {
     droneEntry.dataset.rosterId = droneData.rosterId;
 
     if (state.settings.showUnitCompositeImage) {
+        // 드론 이미지 상단에도 공백을 추가하여 카드와 높이를 맞춥니다.
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = CSS_CLASSES.CARD_WRAPPER;
+        
+        if (state.isGameMode) {
+            const header = document.createElement('div');
+            header.className = CSS_CLASSES.ACTION_BUTTON_WRAPPER;
+            const p = document.createElement('div');
+            p.className = CSS_CLASSES.ACTION_BUTTON_PLACEHOLDER;
+            header.appendChild(p);
+            imgWrapper.appendChild(header);
+        }
+        
         const droneImageContainer = createDroneImageElements(droneData);
-        droneEntry.appendChild(droneImageContainer);
+        imgWrapper.appendChild(droneImageContainer);
+
+        if (state.isGameMode) {
+            // 이미지 하단에도 빈 토큰 영역을 추가하여 수직 정렬을 맞춥니다.
+            const footer = document.createElement('div');
+            footer.className = CSS_CLASSES.TOKEN_AREA;
+            imgWrapper.appendChild(footer);
+        }
+
+        droneEntry.appendChild(imgWrapper);
     }
 
     const cardElement = createCardElement(droneData, null, {
@@ -986,6 +961,18 @@ const createDroneElement = (droneData) => {
         onClick: (state.isGameMode && !droneData.hidden) ? () => state.advanceCardStatusInState('Drone', droneData.rosterId) : null,
         isInteractive: true,
     });
+
+    if (state.isGameMode) {
+        const wrapper = cardElement.querySelector(`.${CSS_CLASSES.CARD_WRAPPER}`);
+        const slot = wrapper.querySelector(`.${CSS_CLASSES.DISPLAY_CARD}`);
+        const actionButtons = createActionButtons(droneData, null, droneData.rosterId);
+        wrapper.insertBefore(actionButtons, slot);
+
+        // 드론 카드 하단에 토큰 영역 추가
+        const tokenArea = createTokenArea(droneData, null, droneData.rosterId);
+        wrapper.appendChild(tokenArea);
+    }
+
     droneEntry.appendChild(cardElement);
 
     // freight_back 속성이 있는 경우 백팩 카드 슬롯 추가
@@ -995,6 +982,47 @@ const createDroneElement = (droneData) => {
     }
 
     return droneEntry;
+};
+
+const createFreightBackCardSlot = (cardData) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+    const slot = document.createElement('div');
+    slot.className = CSS_CLASSES.CARD_SLOT;
+
+    const backCardData = cardData.backCard;
+    if (backCardData) {
+        // 백팩 카드를 게임 모드 혹은 빌더 모드에 맞춰 렌더링
+        const cardElement = createCardElement(backCardData, null, { 
+            mode: state.isGameMode ? 'game' : 'builder',
+            isInteractive: true,
+            showPoints: !state.isGameMode,
+            showInfoButton: true,
+            unitId: cardData.rosterId // 드론의 rosterId를 상속받아 업데이트 가능하게 함
+        });
+        slot.appendChild(cardElement);
+    } else {
+        const label = document.createElement('span');
+        label.className = CSS_CLASSES.SLOT_LABEL;
+        label.textContent = 'Backpack';
+        slot.appendChild(label);
+    }
+    wrapper.appendChild(slot);
+
+    // 게임 모드에서 조작 UI 추가
+    if (state.isGameMode) {
+        // 백팩 카드가 있든 없든 헤더 영역(액션 버튼 혹은 공백)을 추가하여 높이를 맞춥니다.
+        const actionButtons = createActionButtons(backCardData, null, cardData.rosterId);
+        wrapper.insertBefore(actionButtons, slot);
+        
+        // 하단 토큰 영역 항상 추가 (정렬용)
+        const tokenArea = createTokenArea(backCardData, null, cardData.rosterId);
+        wrapper.appendChild(tokenArea);
+    } else if (!state.isGameMode) {
+        // 빌더 모드에서 클릭 시 백팩 모달 오픈
+        slot.addEventListener('click', () => openModal(cardData.rosterId, 'Back', true));
+    }
+    return wrapper;
 };
 
 const _addDroneElement = (droneData) => {
