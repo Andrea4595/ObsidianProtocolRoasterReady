@@ -100,6 +100,7 @@ export function setupEventListeners() {
             showTotalPoints: document.getElementById('setting-show-total-points').checked,
             showUnitComposite: dom.settingShowUnitCompositeExport.checked,
             showDetails: document.getElementById('setting-show-details').checked,
+            showDiscarded: document.getElementById('setting-show-discarded').checked,
             showCardPoints: document.getElementById('setting-show-card-points').checked,
             showUnitPoints: document.getElementById('setting-show-unit-points').checked,
             showSubCards: document.getElementById('setting-show-sub-cards').checked,

@@ -14,6 +14,7 @@ export let imageExportSettings = {
     showTotalPoints: true,
     showUnitComposite: true,
     showDetails: true,
+    showDiscarded: true,
     showCardPoints: true,
     showUnitPoints: true,
     showSubCards: true,

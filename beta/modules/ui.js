@@ -901,20 +901,13 @@ const createUnitElement = async (unitId, unitData, existingUnitEntry = null) => 
 };
 
 const _updateUnitDisplay = async (unitId, unitData) => {
-
-
     const existingUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
     if (existingUnitEntry) {
         // Update the existing element with the updated content
         await createUnitElement(unitId, unitData, existingUnitEntry);
-
     } else {
-        console.error(`UI: _updateUnitDisplay - Could not find unit entry for unitId: ${unitId}. Re-rendering full roster.`);
-
         await _renderRoster(); // Fallback to full render if specific update fails
-
     }
-
 };
 
 // Helper to load an image from a path
@@ -1116,29 +1109,32 @@ const _updateTacticalCardDisplay = (cardData) => {
 
 // --- Event Handler ---
 const handleStateChange = async (event) => {
-
-
-
     // Always update roster select, as roster names or active roster might have changed
     _updateRosterSelect();
     _updateTotalPoints(); // Always update total points as any change might affect it
 
-    // Handle major layout changes or full re-renders
+    // 1. 전체 렌더링이 필요한 주요 이벤트들을 먼저 처리합니다.
     if (event.type === 'appInitialized' || 
         event.type === 'rosterSwitched' || 
         event.type === 'rosterAdded' || 
         event.type === 'rosterRenamed' || 
         event.type === 'rosterDeleted' ||
         event.type === 'rosterLoadedFromCode' ||
-        event.type === 'rosterCleared' || // Added this line
+        event.type === 'rosterCleared' ||
         event.type === 'gameModeChanged' ||
-        event.type === 'settingsChanged') {
+        event.type === 'settingsChanged' ||
+        event.type === 'unitAdded' || 
+        event.type === 'unitDeleted' || 
+        event.type === 'droneAdded' || 
+        event.type === 'droneDeleted' || 
+        event.type === 'tacticalCardAdded' || 
+        event.type === 'tacticalCardDeleted' ||
+        event.type === 'rosterFactionChanged') {
 
         await _renderRoster();
 
         if (event.type === 'gameModeChanged') {
             const enabled = event.detail.isGameMode;
-
             dom.rosterControls.style.display = enabled ? 'none' : 'flex';
             dom.rosterSummary.style.display = enabled ? 'none' : 'block';
             dom.gameModeHeader.style.display = enabled ? 'block' : 'none';
@@ -1146,9 +1142,11 @@ const handleStateChange = async (event) => {
             dom.appTitle.textContent = enabled ? state.activeRosterName : '로스터';
             dom.appTitle.style.display = enabled ? 'block' : 'none';
         }
+        adjustOverlayWidths();
+        return; // 전체 렌더링을 했으므로 종료
     }
     
-    // Handle specific updates that don't require full roster re-render
+    // 2. 특정 카드 업데이트 등 부분 렌더링 처리
     if (event.type === 'unitCardUpdated' || 
         event.type === 'unitCardStatusChanged' ||
         event.type === 'cardRevealedStatusToggled' ||
@@ -1159,13 +1157,13 @@ const handleStateChange = async (event) => {
         const activeRoster = state.isGameMode ? state.gameRoster : state.getActiveRoster();
         let updated = false;
 
-        // 1. 우선 유닛(기체) 내의 카드인지 확인 (단, 백팩이 아닐 때)
+        // 우선 유닛(기체) 내의 카드인지 확인
         if (!isBackCard && unitId !== undefined && unitId !== null && activeRoster.units[unitId]) {
             await _updateUnitDisplay(unitId, activeRoster.units[unitId]);
             updated = true;
         } 
         
-        // 2. 드론이거나 드론의 백팩 카드인 경우 확인
+        // 드론이거나 드론의 백팩 카드인 경우 확인
         const searchId = rosterId || unitId;
         if (!updated && searchId) {
             const droneData = activeRoster.drones.find(d => d.rosterId === searchId) ||
@@ -1176,7 +1174,7 @@ const handleStateChange = async (event) => {
             }
         }
 
-        // 3. 드론도 아니라면 전술 카드인지 확인 (서브 전술 카드 포함)
+        // 전술 카드인지 확인
         if (!updated && rosterId) {
             const tacticalCardData = activeRoster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
                                      (activeRoster.subCards && activeRoster.subCards.find(sc => sc.rosterId === rosterId && sc.category === 'Tactical'));
@@ -1187,40 +1185,11 @@ const handleStateChange = async (event) => {
         }
 
         if (!updated) {
-            console.warn(`UI: handleStateChange - Could not find target to update for ${event.type}. Fallback to full render.`);
             await _renderRoster();
         }
     }
 
-    // Specific additions/deletions might need full render for now, but could be optimized later
-    if (event.type === 'unitAdded' || 
-        event.type === 'unitDeleted' || 
-        event.type === 'droneAdded' || 
-        event.type === 'droneDeleted' || 
-        event.type === 'tacticalCardAdded' || 
-        event.type === 'tacticalCardDeleted' ||
-        event.type === 'cardAddedToUnitOrDroneBack' || // Can be optimized, but full render is safe for now
-        event.type === 'rosterFactionChanged') {
-
-        await _renderRoster();
-    }
-
-    // Update image export settings (no immediate UI update on main screen)
-    if (event.type === 'imageExportSettingsChanged') {
-        // Handled by modal.js when opening the export settings modal, or if any UI element
-        // specifically reflects these settings on the main page. For now, no action.
-
-    }
-
-    // Update sort option (usually triggers repopulating modal, not main roster render)
-    if (event.type === 'sortOptionChanged') {
-        // This event is typically handled by modal.js for sorting modal images.
-        // If sorting affected the main roster display directly, _renderRoster() would be needed.
-
-    }
-
-    adjustOverlayWidths(); // Always adjust after any potential layout change
-
+    adjustOverlayWidths();
 };
 
 // --- Event Listeners ---

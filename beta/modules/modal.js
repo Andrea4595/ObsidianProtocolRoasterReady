@@ -299,6 +299,7 @@ export const openImageExportSettingsModal = () => {
     dom.settingShowUnitCompositeExport.checked = state.imageExportSettings.showUnitComposite;
     document.getElementById('setting-show-total-points').checked = state.imageExportSettings.showTotalPoints;
     document.getElementById('setting-show-details').checked = state.imageExportSettings.showDetails;
+    document.getElementById('setting-show-discarded').checked = state.imageExportSettings.showDiscarded;
     document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
     document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
     document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
