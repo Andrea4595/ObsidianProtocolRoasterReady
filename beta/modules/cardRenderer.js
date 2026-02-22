@@ -252,10 +252,13 @@ export const renderCardElement = (cardData, existingElement = null, options = {}
         // Update info button
         infoButtonElement = card.querySelector('.info-button');
         if (showInfoButton) {
-            if (!infoButtonElement) {
-                const newInfoButton = createInfoButton(cardData);
-                if (newInfoButton) card.appendChild(newInfoButton);
+            // Always remove and recreate the info button to ensure the event listener 
+            // has the most up-to-date cardData (fixes stale closure issues)
+            if (infoButtonElement) {
+                infoButtonElement.remove();
             }
+            const newInfoButton = createInfoButton(cardData);
+            if (newInfoButton) card.appendChild(newInfoButton);
         } else if (infoButtonElement) {
             infoButtonElement.remove();
         }
