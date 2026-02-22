@@ -243,15 +243,23 @@ function loadHtml2Canvas() {
     });
 }
 
-// Helper to wait for all images within an element to load
-const waitForAllImages = (container) => {
+// Helper to wait for all images within an element to load and decode
+const waitForAllImages = async (container) => {
     const imgs = Array.from(container.querySelectorAll('img'));
-    const promises = imgs.map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => {
-            img.onload = resolve;
-            img.onerror = resolve; // Continue even if an image fails
-        });
+    const promises = imgs.map(async img => {
+        try {
+            if (img.complete) {
+                if (img.decode) await img.decode();
+                return;
+            }
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = resolve; // Continue even if an image fails
+            });
+            if (img.decode) await img.decode();
+        } catch (e) {
+            console.warn('Image decode failed, continuing anyway:', img.src);
+        }
     });
     return Promise.all(promises);
 };
@@ -276,14 +284,17 @@ export const handleExportImage = async (settings, format = 'image/png') => {
         const exportContainer = createElementWithStyles('div', {
             position: 'absolute',
             top: '0',
-            left: '-9999px', // 다시 멀리 보냄
+            left: '-9999px',
             width: '1500px',
             backgroundColor: '#f0f2f5',
             padding: '20px',
             fontFamily: 'sans-serif',
-            opacity: '1' // 투명도 제거
+            opacity: '1',
+            webkitFontSmoothing: 'antialiased',
+            mozOsxFontSmoothing: 'grayscale',
+            textRendering: 'optimizeLegibility'
         });
-        exportContainer.id = 'export-container-root'; // ID 부여
+        exportContainer.id = 'export-container-root';
 
         document.body.appendChild(exportContainer);
 
@@ -295,11 +306,11 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         if (settings.showTotalPoints) {
             const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
-            h2.textContent = `총합 포인트: ${calculateTotalPointsForExport()}`; // Use new helper
+            h2.textContent = `총합 포인트: ${calculateTotalPointsForExport()}`;
             exportContainer.appendChild(h2);
         }
 
-        // --- 조합 이미지 섹션 (총합 포인트 아래) ---
+        // --- 조합 이미지 섹션 ---
         if (settings.showUnitComposite) {
             const compositeSection = createElementWithStyles('div', {
                 display: 'flex',
@@ -319,25 +330,27 @@ export const handleExportImage = async (settings, format = 'image/png') => {
                 const unit = rosterState.units[unitId];
                 const canvas = await createUnitPartsCompositeImage(unit, 300);
                 if (canvas) {
-                    canvas.style.height = '300px';
-                    canvas.style.width = 'auto';
-                    canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
-                    compositeSection.appendChild(canvas);
+                    const img = document.createElement('img');
+                    img.src = canvas.toDataURL('image/png');
+                    img.style.height = '300px';
+                    img.style.width = 'auto';
+                    img.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                    compositeSection.appendChild(img);
                 }
             }
 
             // 드론 이미지 추가
             for (const drone of rosterState.drones) {
-                // createDroneImageElements는 내부적으로 size에 따른 scaling을 수행합니다.
-                // targetHeight를 유닛과 동일한 300으로 주면 size 3은 300, 2는 200, 1은 100이 됩니다.
                 const droneImgContainer = await createDroneImageElements(drone, 300);
                 if (droneImgContainer) {
                     const canvas = droneImgContainer.querySelector('canvas');
                     if (canvas) {
-                        canvas.style.height = 'auto'; // 내부에서 설정된 높이 유지
-                        canvas.style.width = 'auto';
-                        canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
-                        compositeSection.appendChild(canvas);
+                        const img = document.createElement('img');
+                        img.src = canvas.toDataURL('image/png');
+                        img.style.height = 'auto';
+                        img.style.width = 'auto';
+                        img.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        compositeSection.appendChild(img);
                     }
                 }
             }
@@ -408,13 +421,15 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             }
         }
 
-        // 1. 모든 이미지가 실제로 로드될 때까지 대기
+        // 1. 모든 이미지가 실제로 로드되고 디코딩될 때까지 대기
         await waitForAllImages(exportContainer);
         
-        // 2. 브라우저가 레이아웃을 계산할 수 있도록 지연시간 부여
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // 2. 브라우저가 레이아웃을 계산할 수 있도록 지연시간 부여 (디코딩 이후이므로 짧게 조정 가능)
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         // 3. html2canvas 실행
+        // scale을 다시 1.5로 복구하여 폰트 가독성을 확보합니다.
+        // 유닛 조합 캔버스가 모두 이미지로 바뀌었으므로 1.5배에서도 안전합니다.
         const canvas = await html2canvas(exportContainer, { 
             scale: 1.5, 
             backgroundColor: '#f0f2f5',
@@ -422,26 +437,35 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             logging: false,
             width: 1500,
             onclone: (clonedDoc) => {
-                // 클론된 문서에서 컨테이너 위치를 0으로 잡아 캡처 영역을 확보함
                 const clonedContainer = clonedDoc.getElementById('export-container-root');
                 if (clonedContainer) {
-                    clonedContainer.style.left = '0';
                     clonedContainer.style.position = 'relative';
+                    clonedContainer.style.left = '0';
+                    clonedContainer.style.top = '0';
+                    clonedContainer.style.margin = '0';
                 }
             }
         });
 
         const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();
-        newTab.document.write(`
-            <html style="height: 100%; margin: 0; padding: 0;">
-                <head><title>${state.activeRosterName}</title></head>
-                <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
-                    <img src="${dataUrl}" style="max-width: 100%; max-height: 100%;" />
-                </body>
-            </html>
-        `);
-        newTab.document.close();
+        if (newTab) {
+            newTab.document.write(`
+                <html style="height: 100%; margin: 0; padding: 0;">
+                    <head><title>${state.activeRosterName}</title></head>
+                    <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
+                        <img src="${dataUrl}" style="max-width: 100%; max-height: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.5);" />
+                    </body>
+                </html>
+            `);
+            newTab.document.close();
+        } else {
+            // 팝업이 차단된 경우 다운로드로 대체
+            const link = document.createElement('a');
+            link.download = `${state.activeRosterName}.png`;
+            link.href = dataUrl;
+            link.click();
+        }
 
         document.body.removeChild(exportContainer);
 
