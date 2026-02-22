@@ -645,61 +645,50 @@ const getUnitRowRenderedHeight = (unitRowElement) => {
 };
 
 const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null) => {
-
     const cardData = unitData ? unitData[category] : null;
-
-
-
-    
-
-
     let wrapper;
     let slot;
 
     if (!existingCardSlot) {
         wrapper = document.createElement('div');
         wrapper.className = CSS_CLASSES.CARD_WRAPPER;
+        wrapper.dataset.categoryWrapper = category; // Add identification for parent updates
         slot = document.createElement('div');
         slot.className = CSS_CLASSES.CARD_SLOT;
+        slot.dataset.category = category; // Explicitly set category on the slot
     } else {
-        wrapper = existingCardSlot.parentElement; // Assuming parent is the wrapper
+        wrapper = existingCardSlot.closest(`.${CSS_CLASSES.CARD_WRAPPER}`);
         slot = existingCardSlot;
-        slot.innerHTML = ''; // Clear existing content for re-render
     }
 
     if (cardData) {
         const isPilot = category === 'Pilot';
-        // In createUnitCardSlot, we need to pass the existing .roster-card-container element to createCardElement
-        // for in-place updates, or null if it doesn't exist.
-        // The `slot` itself is the .card-slot or similar, which will contain the .roster-card-container.
-        const existingRosterCardContainer = slot.querySelector('.roster-card-container'); // This is the element renderCardElement expects for updates.
+        const existingRosterCardContainer = slot.querySelector('.roster-card-container');
         const cardElement = createCardElement(cardData, existingRosterCardContainer, { 
             mode: state.isGameMode ? 'game' : 'builder',
             isInteractive: !isPilot,
             showPoints: !state.isGameMode,
             showInfoButton: true,
             unit: unitData,
-            unitId: unitId // <<< IMPORTANT: Pass unitId to the rendererOptions
+            unitId: unitId
         });
-        // createCardElement already handles appending/replacing within the slot's existing content.
-        // We only append if createCardElement created a *new* roster-card-container (i.e., existingRosterCardContainer was null).
         if (cardElement && !existingRosterCardContainer) { 
             slot.appendChild(cardElement);
         }
-                } else {
-                    // No card data, so ensure slot is empty or has a label
-                    slot.innerHTML = ''; // Clear slot content
-                    const label = document.createElement('span');
-                    label.className = CSS_CLASSES.SLOT_LABEL;
-                    label.textContent = category;
-                    slot.appendChild(label);
-                }
-            if (!existingCardSlot) { // Only append if it's a new slot wrapper
-                wrapper.appendChild(slot);
-            }
-    // Handle all game-mode additions outside the renderer call
+    } else {
+        slot.innerHTML = '';
+        const label = document.createElement('span');
+        label.className = CSS_CLASSES.SLOT_LABEL;
+        label.textContent = category;
+        slot.appendChild(label);
+    }
+
+    if (!existingCardSlot) {
+        wrapper.appendChild(slot);
+    }
+
+    // Handle game-mode additions
     if (state.isGameMode) {
-        // 게임 모드에서 카드 상단 영역(상태 표시 혹은 액션 버튼)을 하나로 통합하여 높이를 맞춥니다.
         let headerElement;
         if (category === 'Pilot') {
             headerElement = createPartStatusIndicator(unitData);
@@ -707,7 +696,6 @@ const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null)
             headerElement = createActionButtons(cardData, unitData, unitId);
         }
 
-        // 기존에 이미 붙어있는 상태 표시기나 액션 버튼이 있다면 제거/교체합니다.
         const existingHeader = wrapper.querySelector(`.${CSS_CLASSES.ACTION_BUTTON_WRAPPER}`);
         if (existingHeader) {
             existingHeader.replaceWith(headerElement);
@@ -715,28 +703,24 @@ const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null)
             wrapper.insertBefore(headerElement, slot);
         }
 
-        // Token Area - 정렬을 위해 게임 모드에서는 항상 추가합니다.
         const newTokenArea = createTokenArea(cardData, unitData, unitId);
-        let tokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
-        if (tokenArea) {
-            tokenArea.replaceWith(newTokenArea);
+        const existingTokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
+        if (existingTokenArea) {
+            existingTokenArea.replaceWith(newTokenArea);
         } else {
             wrapper.appendChild(newTokenArea);
         }
 
-        // Remove builder-mode click listener
         if (slot.onclick) slot.onclick = null;
     } else {
-        // Not in game mode, ensure game-mode specific elements are removed
         const existingHeader = wrapper.querySelector(`.${CSS_CLASSES.ACTION_BUTTON_WRAPPER}`);
         if (existingHeader) existingHeader.remove();
         
-        const tokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
-        if (tokenArea) tokenArea.remove();
+        const existingTokenArea = wrapper.querySelector(`.${CSS_CLASSES.TOKEN_AREA}`);
+        if (existingTokenArea) existingTokenArea.remove();
 
-        // In builder mode, the whole slot is clickable
         if (!slot.onclick) {
-             slot.addEventListener('click', () => openModal(unitId, category));
+             slot.onclick = () => openModal(unitId, category);
         }
     }
     
@@ -794,22 +778,24 @@ const createUnitElement = async (unitId, unitData, existingUnitEntry = null) => 
         // --- Update Path ---
         unitEntry = existingUnitEntry;
         // Find existing elements within the unitEntry
-        unitEntryContentWrapper = unitEntry.querySelector(`.${CSS_CLASSES.UNIT_ENTRY_CONTENT_WRAPPER}`); // Query by class
+        unitEntryContentWrapper = unitEntry.querySelector(`.${CSS_CLASSES.UNIT_ENTRY_CONTENT_WRAPPER}`);
         unitRow = unitEntryContentWrapper.querySelector(`.${CSS_CLASSES.UNIT_ROW}`);
         compositeImageCanvas = unitEntryContentWrapper.querySelector('.composite-unit-image');
-        // Clear unitRow's innerHTML only if it's currently populated
-        if (unitRow && unitRow.childElementCount > 0) {
-            unitRow.innerHTML = ''; 
-        }
+        // Do NOT clear unitRow.innerHTML here. We will update specific slots instead.
     }
 
-    // --- Common Logic (or logic that needs to be conditionally applied/updated) ---
-    // Render cards into unitRow
-    // Using for...of loop for async operations to ensure order and proper await
+    // --- Common Logic ---
+    // Render/Update cards into unitRow
     for (const category of categoryOrder) {
-        const existingCardSlot = unitRow.querySelector(`.card-slot[data-category="${category}"]`) || unitRow.querySelector(`.${category}-slot`);
+        // Find existing card-wrapper for this category
+        const existingSlotWrapper = unitRow.querySelector(`div[data-category-wrapper="${category}"]`);
+        // We need to pass the actual card-slot (the child of wrapper) to createUnitCardSlot for updates
+        const existingCardSlot = existingSlotWrapper ? existingSlotWrapper.querySelector(`.${CSS_CLASSES.CARD_SLOT}`) : null;
+        
         const newSlotWrapper = createUnitCardSlot(category, unitData, unitId, existingCardSlot);
-        if (!existingCardSlot) { // If a new slot was created, append it to unitRow
+        
+        if (!existingSlotWrapper) {
+            newSlotWrapper.dataset.categoryWrapper = category; // Mark it for future updates
             unitRow.appendChild(newSlotWrapper);
         }
     }
@@ -1119,7 +1105,7 @@ const handleStateChange = async (event) => {
         dom.factionSelect.value = activeRoster.faction || 'RDL';
     }
 
-    // 1. 전체 렌더링이 필요한 주요 이벤트들을 먼저 처리합니다.
+    // 1. 전체 렌더링이 필요한 주요 이벤트 처리
     if (event.type === 'appInitialized' || 
         event.type === 'rosterSwitched' || 
         event.type === 'rosterAdded' || 
@@ -1129,12 +1115,6 @@ const handleStateChange = async (event) => {
         event.type === 'rosterCleared' ||
         event.type === 'gameModeChanged' ||
         event.type === 'settingsChanged' ||
-        event.type === 'unitAdded' || 
-        event.type === 'unitDeleted' || 
-        event.type === 'droneAdded' || 
-        event.type === 'droneDeleted' || 
-        event.type === 'tacticalCardAdded' || 
-        event.type === 'tacticalCardDeleted' ||
         event.type === 'rosterFactionChanged') {
 
         await _renderRoster();
@@ -1149,16 +1129,65 @@ const handleStateChange = async (event) => {
             dom.appTitle.style.display = enabled ? 'block' : 'none';
         }
         adjustOverlayWidths();
-        return; // 전체 렌더링을 했으므로 종료
+        return;
     }
     
-    // 2. 특정 카드 업데이트 등 부분 렌더링 처리
+    // 2. 개별 요소 추가/삭제 처리 (최적화)
+    if (event.type === 'unitAdded') {
+        const unitId = event.detail.unitId;
+        const newUnitElement = await createUnitElement(unitId, activeRoster.units[unitId]);
+        dom.unitsContainer.appendChild(newUnitElement);
+        adjustOverlayWidths();
+        return;
+    }
+
+    if (event.type === 'unitDeleted') {
+        const unitId = event.detail.unitId;
+        const elementToRemove = dom.unitsContainer.querySelector(`.unit-entry[data-unit-id='${unitId}']`);
+        if (elementToRemove) elementToRemove.remove();
+        return;
+    }
+
+    if (event.type === 'droneAdded') {
+        const rosterId = event.detail.droneRosterId;
+        const droneData = activeRoster.drones.find(d => d.rosterId === rosterId);
+        if (droneData) await _addDroneElement(droneData);
+        return;
+    }
+
+    if (event.type === 'droneDeleted') {
+        const rosterId = event.detail.droneRosterId;
+        const elementToRemove = dom.dronesContainer.querySelector(`.drone-entry[data-roster-id='${rosterId}']`);
+        if (elementToRemove) elementToRemove.remove();
+        return;
+    }
+
+    if (event.type === 'tacticalCardAdded') {
+        const rosterId = event.detail.tacticalCardRosterId;
+        const cardData = activeRoster.tacticalCards.find(tc => tc.rosterId === rosterId);
+        if (cardData) {
+            const cardElement = createCardElement(cardData, null, {
+                unitId: cardData.rosterId,
+                onDeleteCallback: () => state.deleteTacticalCard(cardData.rosterId)
+            });
+            dom.tacticalCardsContainer.appendChild(cardElement);
+        }
+        return;
+    }
+
+    if (event.type === 'tacticalCardDeleted') {
+        const rosterId = event.detail.tacticalCardRosterId;
+        const elementToRemove = dom.tacticalCardsContainer.querySelector(`.roster-card-container[data-roster-id='${rosterId}']`);
+        if (elementToRemove) elementToRemove.remove();
+        return;
+    }
+
+    // 3. 특정 카드 업데이트 등 부분 렌더링 처리
     if (event.type === 'unitCardUpdated' || 
         event.type === 'unitCardStatusChanged' ||
         event.type === 'cardRevealedStatusToggled' ||
         event.type === 'cardStatusAdvanced' ||
         event.type === 'cardAddedToUnitOrDroneBack') {
-
         const { unitId, cardCategory, rosterId, isBackCard } = event.detail;
         const activeRoster = state.isGameMode ? state.gameRoster : state.getActiveRoster();
         let updated = false;
