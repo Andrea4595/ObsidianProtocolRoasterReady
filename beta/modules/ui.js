@@ -663,6 +663,12 @@ const createUnitCardSlot = (category, unitData, unitId, existingCardSlot = null)
 
     if (cardData) {
         const isPilot = category === 'Pilot';
+        
+        // --- NEW: Remove any existing label if a card is present ---
+        const existingLabel = slot.querySelector(`.${CSS_CLASSES.SLOT_LABEL}`);
+        if (existingLabel) existingLabel.remove();
+        // -----------------------------------------------------------
+
         const existingRosterCardContainer = slot.querySelector('.roster-card-container');
         const cardElement = createCardElement(cardData, existingRosterCardContainer, { 
             mode: state.isGameMode ? 'game' : 'builder',
