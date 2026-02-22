@@ -248,17 +248,25 @@ const waitForAllImages = async (container) => {
     const imgs = Array.from(container.querySelectorAll('img'));
     const promises = imgs.map(async img => {
         try {
+            let loadSuccess = false;
             if (img.complete) {
-                if (img.decode) await img.decode();
-                return;
+                loadSuccess = img.naturalWidth > 0;
+            } else {
+                loadSuccess = await new Promise((resolve) => {
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                });
             }
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = resolve; // Continue even if an image fails
-            });
-            if (img.decode) await img.decode();
+            
+            // 로드에 성공한 경우에만 디코딩 시도
+            if (loadSuccess && img.decode) {
+                await img.decode();
+            } else if (!loadSuccess) {
+                console.warn('Image failed to load (404 or corrupt):', img.src);
+            }
         } catch (e) {
-            console.warn('Image decode failed, continuing anyway:', img.src);
+            // 디코딩 실패는 화면 밖 요소인 경우 브라우저가 거절할 수 있으므로, 
+            // 결과물에 이상이 없다면 로그를 남기지 않아 콘솔을 깨끗하게 유지합니다.
         }
     });
     return Promise.all(promises);
