@@ -1,5 +1,4 @@
 import { Roster } from './Roster.js';
-import { factionSelect } from './dom.js';
 import { advanceCardStatus as gameModeAdvanceCardStatus } from './gameMode.js'; // Import advanceCardStatus from gameMode.js
 
 // --- State Variables ---
@@ -111,7 +110,6 @@ export const createNewRoster = (name) => new Roster({ name });
 export const switchActiveRoster = (rosterName) => {
     if (!allRosters[rosterName] || isGameMode) return;
     activeRosterName = rosterName;
-    factionSelect.value = getActiveRoster().faction || 'RDL'; // UI update still direct here for now
     _dispatchStateChangeEvent('rosterSwitched', { newActiveRosterName: rosterName }); // Dispatch specific event
 };
 
@@ -176,7 +174,6 @@ export function deleteRoster(rosterName) {
     if (activeRosterName === rosterName) {
         const newActiveName = Object.keys(allRosters)[0];
         setActiveRosterName(newActiveName); // This will dispatch 'activeRosterChanged'
-        factionSelect.value = getActiveRoster().faction || 'RDL'; // UI update still direct here for now
     }
     _dispatchStateChangeEvent('rosterDeleted', { deletedRosterName: rosterName });
     return true;
@@ -661,9 +658,6 @@ export const initializeApp = async () => {
         allRosters[activeRosterName] = createNewRoster(activeRosterName);
     }
 
-
-
-    factionSelect.value = getActiveRoster().faction || 'RDL';
     // updateRosterSelect(); // Removed
     // renderRoster(); // Removed
     _dispatchStateChangeEvent('appInitialized'); // Dispatch on initial app load

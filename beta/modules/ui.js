@@ -1113,6 +1113,12 @@ const handleStateChange = async (event) => {
     _updateRosterSelect();
     _updateTotalPoints(); // Always update total points as any change might affect it
 
+    // Update faction select to match the current roster state
+    const activeRoster = state.getActiveRoster();
+    if (activeRoster && dom.factionSelect) {
+        dom.factionSelect.value = activeRoster.faction || 'RDL';
+    }
+
     // 1. 전체 렌더링이 필요한 주요 이벤트들을 먼저 처리합니다.
     if (event.type === 'appInitialized' || 
         event.type === 'rosterSwitched' || 
