@@ -894,32 +894,36 @@ div.hidden-card-overlay > img.hidden-title-image {
 
 .info-button {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 16px;
-    height: 16px;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
     z-index: 15;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
+    background-color: transparent; /* Remove background color */
+    border-radius: 0; /* Change from circle to square */
     box-sizing: border-box;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform 0.2s;
+    padding: 0; /* Remove padding for edge alignment */
 }
 
 .drone-card .info-button,
 .tactical-display-card .info-button {
-    right: 10%;
+    right: 35px; /* Shift left to avoid overlapping with the delete button */
 }
 
 .info-button:hover {
     transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.9);
+    /* No background-color on hover to stay transparent */
 }
 
-/* Specific rule for info button inside modal-card-item to prevent sizing issues */
+/* Specific rule for info button inside modal-card-item */
 .modal-card-item .info-button {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
+    top: 0;
+    right: 0;
+    border-radius: 0;
 }
 
 .drone-status-token {

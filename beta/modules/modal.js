@@ -72,6 +72,7 @@ const createCardItem = (cardData, clickHandler) => {
     const cardElement = renderCardElement(cardData, null, { 
         mode: 'modal', 
         showPoints: true, 
+        showInfoButton: true, // Enable the info button in the modal
         onClick: () => clickHandler(cardData) 
     });
     
