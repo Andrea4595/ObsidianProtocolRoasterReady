@@ -20,7 +20,7 @@ body {
     background-color: #f0f2f5;
     color: #333;
     margin: 0;
-    padding: 20px 20px 120px 20px; /* Add padding to bottom for the add button */
+    padding: 20px 50px 120px 50px; /* Adjust padding to 0 50px */
 }
 
 h1 {
@@ -32,17 +32,26 @@ h1 {
 #units-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center rows and cards */
+    /* align-items: center; Removed to allow children to take full width */
     gap: 10px; /* Space between unit entries */
 }
 
 .unit-entry {
-    width: 100%;
+    /* width: 100%; Removed to allow shrink-wrapping */
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+    flex-direction: row; /* Ensure items are in a row */
+    align-items: center; /* Vertically align image and card row */
+    gap: 15px; /* Spacing between the composite image and the unit-row */
     margin-bottom: 20px; /* Space between full unit entries */
+    /* background-color, padding, etc., are removed from here */
+}
+
+/* Style for the composite image canvas */
+.composite-unit-image {
+    flex-shrink: 0;
+    /* width and height are now set directly on the canvas element via JavaScript */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .unit-row {
@@ -50,13 +59,13 @@ h1 {
     justify-content: flex-start;
     align-items: flex-start; /* Align wrappers to the top */
     gap: 20px;
-    padding: 20px;
+    padding: 20px 30px 15px 30px !important; /* Force padding with !important */
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 15px;
+    /* Removed overflow-x: auto */
+    /* flex-grow: 1; Removed to allow shrink-wrapping */
 }
 
 .card-wrapper {
@@ -484,6 +493,38 @@ div.hidden-card-overlay > img.hidden-title-image {
 ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
 
+.drone-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px; /* Spacing between the drone image and the card */
+}
+
+.drone-image {
+    height: calc(var(--card-slot-height) * var(--drone-image-size-multiplier, 1)); /* Default to 1 if variable not set */
+    width: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.drone-image-container {
+    position: relative;
+    /* The dimensions will be set by the drone-image inside it */
+    display: flex; /* To center/position items if needed */
+    justify-content: center;
+    align-items: center;
+}
+
+.backpack-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure the whole backpack image is visible */
+    z-index: 1; /* Ensure it's above the drone image */
+}
+
+
 /* --- Responsive Styles --- */
 
 @media (max-width: 1400px) {
@@ -507,10 +548,6 @@ div.hidden-card-overlay > img.hidden-title-image {
         --tactical-card-height: 360px;
         --hidden-title-height: 72px;
         --hidden-title-top: 8px;
-    }
-    .unit-row {
-        width: auto;
-        max-width: 90%;
     }
 }
 
@@ -691,10 +728,15 @@ div.hidden-card-overlay > img.hidden-title-image {
 .action-button-wrapper {
     width: 100%;
     margin-bottom: 10px;
+    height: 33px; /* Fixed height for both buttons and placeholders */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-button-placeholder {
-    height: 43px; /* Matches height of button (33px) + wrapper margin (10px) */
+    height: 100%;
+    width: 100%;
 }
 
 .action-button {
@@ -755,6 +797,7 @@ div.hidden-card-overlay > img.hidden-title-image {
     align-items: center;
     justify-content: center;
     gap: 5px;
+    min-height: 58px;
 }
 
 .charge-token-img {
@@ -847,32 +890,36 @@ div.hidden-card-overlay > img.hidden-title-image {
 
 .info-button {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 16px;
-    height: 16px;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
     z-index: 15;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
+    background-color: transparent; /* Remove background color */
+    border-radius: 0; /* Change from circle to square */
     box-sizing: border-box;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform 0.2s;
+    padding: 0; /* Remove padding for edge alignment */
 }
 
 .drone-card .info-button,
 .tactical-display-card .info-button {
-    right: 10%;
+    right: 35px; /* Shift left to avoid overlapping with the delete button */
 }
 
 .info-button:hover {
     transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.9);
+    /* No background-color on hover to stay transparent */
 }
 
-/* Specific rule for info button inside modal-card-item to prevent sizing issues */
+/* Specific rule for info button inside modal-card-item */
 .modal-card-item .info-button {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
+    top: 0;
+    right: 0;
+    border-radius: 0;
 }
 
 .drone-status-token {
@@ -1016,7 +1063,7 @@ div.hidden-card-overlay > img.hidden-title-image {
     color: white;
 }
 
-#points-sub-settings {
+#details-sub-settings {
     padding-left: 20px;
     border-left: 3px solid #e0e0e0;
     margin-left: 10px;
@@ -1030,6 +1077,18 @@ div.hidden-card-overlay > img.hidden-title-image {
     height: auto;
     max-height: none;
     max-width: 500px;
+}
+
+/* General Settings Modal */
+#settings-modal .modal-content {
+    height: auto;
+    max-height: none;
+    max-width: 500px; /* Same max-width as image export settings modal */
+}
+
+#general-settings-form small {
+    color: lightgray;
+    font-size: 0.8em;
 }
 
 .modal-sort-options {

@@ -1,6 +1,6 @@
 import * as state from './state.js';
 import * as dom from './dom.js';
-import { renderRoster } from './ui.js';
+// import { renderRoster } from './ui.js'; // Removed direct UI import
 import { categoryOrder } from './constants.js';
 
 // --- Compression Helpers ---
@@ -83,7 +83,7 @@ export async function importRosterCode() {
 
     state.addNewRoster(finalRosterName);
     const roster = state.getActiveRoster();
-    roster.clear();
+    state.clearActiveRoster();
 
     try {
         const [factionCode, unitsCode, dronesCode, tacticalCardsCode] = mainCode.split('~');
@@ -143,9 +143,8 @@ export async function importRosterCode() {
             });
         }
 
-        state.calculateNextIds();
-        renderRoster();
-        state.saveAllRosters();
+        // state.calculateNextIds(); // Removed, handled by Roster class
+        state.dispatchRosterLoadedFromCodeEvent(); // Dispatch event instead of direct render
         closeRosterCodeModal();
         alert(`'${finalRosterName}' 로스터를 성공적으로 불러왔습니다.`);
 

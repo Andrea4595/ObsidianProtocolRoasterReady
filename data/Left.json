@@ -146,7 +146,7 @@
     },
     {
         "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
-		"id": 512,
+		"id": 515,
         "name": "AH21_CC50",
         "points": 63,
         "category": "Left",
@@ -359,7 +359,7 @@
         "drop": "Part_GOF_Left_MHKX_Drop.png",
 		"id": 0,
         "id_watermelon02": "ZHLA-304",
-        "name": "MHKX",
+        "name": "MHKX_L",
         "points": 56,
         "category": "Left",
         "faction": "GOF",

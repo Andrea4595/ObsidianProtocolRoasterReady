@@ -1,8 +1,9 @@
 import * as state from './state.js';
-import { updateTotalPoints } from './ui.js';
+// import { updateTotalPoints } from './ui.js'; // Removed direct import of updateTotalPoints
 import { categoryOrder } from './constants.js';
 import { exportImageBtn } from './dom.js';
-import { createCardElement } from './cardRenderer.js';
+import { renderCardElement } from './cardRenderer.js';
+import { createUnitPartsCompositeImage, createDroneImageElements } from './ui.js';
 
 // --- HTML Generation Helpers ---
 
@@ -12,14 +13,37 @@ const createElementWithStyles = (tag, styles) => {
     return element;
 };
 
+// Helper to calculate total points for the export image
+const calculateTotalPointsForExport = () => {
+    const rosterState = state.getActiveRoster();
+    if (!rosterState) return 0;
+    let total = 0;
+    Object.values(rosterState.units).forEach(unit => {
+        Object.values(unit).forEach(card => {
+            if (card) total += card.points || 0;
+        });
+    });
+    rosterState.drones.forEach(drone => {
+        if (drone) {
+            total += drone.points || 0;
+            if (drone.backCard) total += drone.backCard.points || 0;
+        }
+    });
+    rosterState.tacticalCards.forEach(card => {
+        if (card) total += card.points || 0;
+    });
+    return total;
+};
+
+
 /**
  * Creates a single, consistently styled card element for the exporter.
  * It determines the correct dimensions based on the card type.
  */
 const generateCardHtml = (cardData, settings) => {
     const isDroneLike = cardData.category === 'Drone' || cardData.category === 'Projectile';
-    const slotWidth = isDroneLike ? '390px' : '200px';
-    const slotHeight = '287px'; // Consistent height for all cards in export
+    const slotWidth = isDroneLike ? '450px' : '230px'; // 200 -> 230, 390 -> 450
+    const slotHeight = '330px'; // 287 -> 330
 
     const cardSlot = createElementWithStyles('div', {
         width: slotWidth,
@@ -36,7 +60,7 @@ const generateCardHtml = (cardData, settings) => {
         padding: '5px'
     });
 
-    const cardElement = createCardElement(cardData, { mode: 'export', exportSettings: settings });
+    const cardElement = renderCardElement(cardData, null, { mode: 'export', exportSettings: settings });
     
     // The card renderer produces a complex element; we need to ensure its contents are sized correctly.
     const displayCard = cardElement.querySelector('.display-card');
@@ -57,7 +81,7 @@ const generateCardHtml = (cardData, settings) => {
 };
 
 
-const generateUnitHtml = (unit, shouldHide, settings) => {
+const generateUnitHtml = async (unit, shouldHide, settings) => {
     const unitContainer = createElementWithStyles('div', {
         display: 'flex',
         gap: '10px',
@@ -66,22 +90,16 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
         padding: '15px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         alignItems: 'flex-start',
-        position: 'relative'
+        position: 'relative',
+        width: 'fit-content',
+        margin: '0 auto' // Center the card row
     });
 
     if (settings.showUnitPoints) {
         const unitPoints = Object.values(unit).reduce((sum, card) => sum + (card ? card.points : 0), 0);
         const unitPointsDisplay = createElementWithStyles('div', {
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            color: 'white',
-            padding: '2px 8px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            zIndex: '10'
+            position: 'absolute', top: '10px', left: '10px', backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            color: 'white', padding: '2px 8px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold', zIndex: '10'
         });
         unitPointsDisplay.textContent = `${unitPoints}`;
         unitContainer.appendChild(unitPointsDisplay);
@@ -89,36 +107,21 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
 
     for (const category of categoryOrder) {
         const card = unit[category];
-        
-        // Use the new helper for both empty and filled slots
         const cardSlot = generateCardHtml(card || { category }, settings);
-        
-        // If the slot was empty, clear the generated content and add the label
         if (!card) {
             cardSlot.innerHTML = '';
             const categoryLabel = createElementWithStyles('span', { fontWeight: 'bold', color: '#65676b' });
             categoryLabel.textContent = category;
             cardSlot.appendChild(categoryLabel);
-            // Re-apply some styles for empty slot
-            Object.assign(cardSlot.style, {
-                justifyContent: 'center',
-                padding: '0'
-            });
+            Object.assign(cardSlot.style, { justifyContent: 'center', padding: '0' });
         }
         
-        // Append discarded/changed cards if the setting is enabled
         if (card && settings.showDiscarded) {
             const addSeparator = () => {
                 cardSlot.appendChild(createElementWithStyles('div', {
-                    height: '5px',
-                    width: '80%',
-                    backgroundColor: '#ccc',
-                    margin: '5px auto',
-                    borderRadius: '2px',
-                    flexShrink: '0'
+                    height: '5px', width: '80%', backgroundColor: '#ccc', margin: '5px auto', borderRadius: '2px', flexShrink: '0'
                 }));
             };
-
             if (card.drop) {
                 addSeparator();
                 const dropImg = createElementWithStyles('img', { width: 'calc(100% - 10px)', height: 'auto', display: 'block', borderRadius: '10px' });
@@ -136,17 +139,15 @@ const generateUnitHtml = (unit, shouldHide, settings) => {
                     }
                 });
             }
-             // If we added discarded cards, the container needs to be allowed to grow
-            if (card.drop || card.changes) {
-                cardSlot.style.height = 'auto';
-            }
+            if (card.drop || card.changes) cardSlot.style.height = 'auto';
         }
         unitContainer.appendChild(cardSlot);
     }
+    
     return unitContainer;
 };
 
-const generateDroneEntryHtml = (drone, shouldHide, settings) => {
+const generateDroneEntryHtml = async (drone, shouldHide, settings) => {
     const droneContainer = createElementWithStyles('div', {
         display: 'flex',
         alignItems: 'flex-start',
@@ -183,7 +184,7 @@ const generateTacticalCardHtml = (card, shouldHide, settings) => {
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         width: '270px'
     });
-    cardContainer.appendChild(createCardElement(card, { mode: 'export', exportSettings: settings }));
+    cardContainer.appendChild(renderCardElement(card, null, { mode: 'export', exportSettings: settings }));
     return cardContainer;
 };
 
@@ -242,6 +243,35 @@ function loadHtml2Canvas() {
     });
 }
 
+// Helper to wait for all images within an element to load and decode
+const waitForAllImages = async (container) => {
+    const imgs = Array.from(container.querySelectorAll('img'));
+    const promises = imgs.map(async img => {
+        try {
+            let loadSuccess = false;
+            if (img.complete) {
+                loadSuccess = img.naturalWidth > 0;
+            } else {
+                loadSuccess = await new Promise((resolve) => {
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                });
+            }
+            
+            // 로드에 성공한 경우에만 디코딩 시도
+            if (loadSuccess && img.decode) {
+                await img.decode();
+            } else if (!loadSuccess) {
+                console.warn('Image failed to load (404 or corrupt):', img.src);
+            }
+        } catch (e) {
+            // 디코딩 실패는 화면 밖 요소인 경우 브라우저가 거절할 수 있으므로, 
+            // 결과물에 이상이 없다면 로그를 남기지 않아 콘솔을 깨끗하게 유지합니다.
+        }
+    });
+    return Promise.all(promises);
+};
+
 export const handleExportImage = async (settings, format = 'image/png') => {
     const exportIcon = exportImageBtn.querySelector('img');
     if (!exportIcon) return;
@@ -261,12 +291,18 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         const exportContainer = createElementWithStyles('div', {
             position: 'absolute',
+            top: '0',
             left: '-9999px',
-            width: '1200px',
+            width: '1500px',
             backgroundColor: '#f0f2f5',
             padding: '20px',
-            fontFamily: 'sans-serif'
+            fontFamily: 'sans-serif',
+            opacity: '1',
+            webkitFontSmoothing: 'antialiased',
+            mozOsxFontSmoothing: 'grayscale',
+            textRendering: 'optimizeLegibility'
         });
+        exportContainer.id = 'export-container-root';
 
         document.body.appendChild(exportContainer);
 
@@ -278,27 +314,75 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         if (settings.showTotalPoints) {
             const h2 = createElementWithStyles('h2', { textAlign: 'center', color: '#1877f2', fontWeight: 'bold' });
-            h2.textContent = `총합 포인트: ${updateTotalPoints()}`;
+            h2.textContent = `총합 포인트: ${calculateTotalPointsForExport()}`;
             exportContainer.appendChild(h2);
         }
 
-        if (Object.keys(rosterState.units).length > 0) {
+        // --- 조합 이미지 섹션 ---
+        if (settings.showUnitComposite) {
+            const compositeSection = createElementWithStyles('div', {
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '20px',
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+                marginTop: '20px',
+                marginBottom: '30px',
+                padding: '20px',
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                borderRadius: '15px'
+            });
+
+            // 유닛 이미지 추가
+            for (const unitId in rosterState.units) {
+                const unit = rosterState.units[unitId];
+                const canvas = await createUnitPartsCompositeImage(unit, 300);
+                if (canvas) {
+                    const img = document.createElement('img');
+                    img.src = canvas.toDataURL('image/png');
+                    img.style.height = '300px';
+                    img.style.width = 'auto';
+                    img.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                    compositeSection.appendChild(img);
+                }
+            }
+
+            // 드론 이미지 추가
+            for (const drone of rosterState.drones) {
+                const droneImgContainer = await createDroneImageElements(drone, 300);
+                if (droneImgContainer) {
+                    const canvas = droneImgContainer.querySelector('canvas');
+                    if (canvas) {
+                        const img = document.createElement('img');
+                        img.src = canvas.toDataURL('image/png');
+                        img.style.height = 'auto';
+                        img.style.width = 'auto';
+                        img.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))';
+                        compositeSection.appendChild(img);
+                    }
+                }
+            }
+
+            if (compositeSection.hasChildNodes()) {
+                exportContainer.appendChild(compositeSection);
+            }
+        }
+
+        if (settings.showDetails && Object.keys(rosterState.units).length > 0) {
             const unitsTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             unitsTitle.textContent = '유닛';
             exportContainer.appendChild(unitsTitle);
 
             const unitsContainer = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', gap: '20px' });
             for (const unitId in rosterState.units) {
-                unitsContainer.appendChild(generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
+                unitsContainer.appendChild(await generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
             }
             exportContainer.appendChild(unitsContainer);
         }
 
         // 드론 및 서브카드 데이터 준비
         const allSubCardsSet = state.getAllSubCards(rosterState, { includeDrones: true });
-
         const mainDroneFileNames = new Set(rosterState.drones.map(d => d.fileName));
-        
         const subDrones = [];
         const otherSubCards = new Set();
 
@@ -314,19 +398,19 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
         const allDronesToRender = [...rosterState.drones, ...subDrones];
 
-        if (allDronesToRender.length > 0) {
+        if (settings.showDetails && allDronesToRender.length > 0) {
             const dronesTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             dronesTitle.textContent = '드론';
             exportContainer.appendChild(dronesTitle);
 
             const dronesContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
-            allDronesToRender.forEach(drone => {
-                dronesContainer.appendChild(generateDroneEntryHtml(drone, shouldHide, settings));
-            });
+            for (const drone of allDronesToRender) {
+                dronesContainer.appendChild(await generateDroneEntryHtml(drone, shouldHide, settings));
+            }
             exportContainer.appendChild(dronesContainer);
         }
 
-        if (rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
+        if (settings.showTactical && rosterState.tacticalCards && rosterState.tacticalCards.length > 0) {
             const tacticalTitle = createElementWithStyles('h3', { marginTop: '30px', borderBottom: '1px solid #ccc', paddingBottom: '5px' });
             tacticalTitle.textContent = '전술 카드';
             exportContainer.appendChild(tacticalTitle);
@@ -345,21 +429,51 @@ export const handleExportImage = async (settings, format = 'image/png') => {
             }
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // 1. 모든 이미지가 실제로 로드되고 디코딩될 때까지 대기
+        await waitForAllImages(exportContainer);
+        
+        // 2. 브라우저가 레이아웃을 계산할 수 있도록 지연시간 부여 (디코딩 이후이므로 짧게 조정 가능)
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-        const canvas = await html2canvas(exportContainer, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#f0f2f5' });
+        // 3. html2canvas 실행
+        // scale을 다시 1.5로 복구하여 폰트 가독성을 확보합니다.
+        // 유닛 조합 캔버스가 모두 이미지로 바뀌었으므로 1.5배에서도 안전합니다.
+        const canvas = await html2canvas(exportContainer, { 
+            scale: 1.5, 
+            backgroundColor: '#f0f2f5',
+            useCORS: true,
+            logging: false,
+            width: 1500,
+            onclone: (clonedDoc) => {
+                const clonedContainer = clonedDoc.getElementById('export-container-root');
+                if (clonedContainer) {
+                    clonedContainer.style.position = 'relative';
+                    clonedContainer.style.left = '0';
+                    clonedContainer.style.top = '0';
+                    clonedContainer.style.margin = '0';
+                }
+            }
+        });
 
         const dataUrl = canvas.toDataURL(format);
         const newTab = window.open();
-        newTab.document.write(`
-            <html style="height: 100%; margin: 0; padding: 0;">
-                <head><title>${state.activeRosterName}</title></head>
-                <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
-                    <img src="${dataUrl}" style="max-width: 100%; max-height: 100%;" />
-                </body>
-            </html>
-        `);
-        newTab.document.close();
+        if (newTab) {
+            newTab.document.write(`
+                <html style="height: 100%; margin: 0; padding: 0;">
+                    <head><title>${state.activeRosterName}</title></head>
+                    <body style="height: 100%; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #555;">
+                        <img src="${dataUrl}" style="max-width: 100%; max-height: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.5);" />
+                    </body>
+                </html>
+            `);
+            newTab.document.close();
+        } else {
+            // 팝업이 차단된 경우 다운로드로 대체
+            const link = document.createElement('a');
+            link.download = `${state.activeRosterName}.png`;
+            link.href = dataUrl;
+            link.click();
+        }
 
         document.body.removeChild(exportContainer);
 

@@ -1,10 +1,10 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
-import { renderRoster } from './ui.js';
+// import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js'; // Removed direct UI imports
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES } from './constants.js';
-import { createCardElement as createCardElementFromRenderer } from './cardRenderer.js';
+import { renderCardElement } from './cardRenderer.js';
 
 let currentUnitId = null;
 let currentCategory = null;
@@ -24,35 +24,43 @@ export const closeModal = () => {
 };
 
 const addCardToUnit = (cardData) => {
-    performActionAndPreserveScroll(() => {
-        const roster = state.getActiveRoster();
-        if (isBackCard) {
-            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
-            if (drone) drone.backCard = cardData;
-        } else {
-            roster.units[currentUnitId][currentCategory] = cardData;
-        }
-    });
+    performActionAndPreserveScroll(
+        async () => { // action
+            state.addCardToUnitOrDroneBack(currentUnitId, currentCategory, cardData, isBackCard);
+            // UI updates are now handled by ui.js reacting to state change events.
+            // Specifically, 'cardAddedToUnitOrDroneBack' will trigger appropriate UI updates.
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
 
-    state.saveAllRosters();
     closeModal();
 };
 
 const addDroneToRoster = (cardData) => {
-    const newDrone = { ...cardData, rosterId: `d_${state.nextDroneId}` };
-    state.setNextDroneId(state.nextDroneId + 1);
-    state.getActiveRoster().drones.push(newDrone);
-    renderRoster();
-    state.saveAllRosters();
+    performActionAndPreserveScroll(
+        () => {
+            state.addDroneToRoster(cardData); // Use state mutation function. ui.js will react to 'droneAdded'
+            // UI updates are now handled by ui.js reacting to state change events.
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
     closeModal();
 };
 
 const addTacticalCardToRoster = (cardData) => {
-    const newTacticalCard = { ...cardData, rosterId: `t_${state.nextTacticalCardId}` };
-    state.setNextTacticalCardId(state.nextTacticalCardId + 1);
-    state.getActiveRoster().tacticalCards.push(newTacticalCard);
-    renderRoster();
-    state.saveAllRosters();
+    performActionAndPreserveScroll(
+        () => {
+            state.addTacticalCardToRoster(cardData); // Use state mutation function. ui.js will react to 'tacticalCardAdded'
+            // UI updates are now handled by ui.js reacting to state change events.
+        },
+        null, // affectedCardData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null, // affectedUnitData - not used by performActionAndPreserveScroll's UI update logic, handled here
+        null  // eventTarget - not relevant here
+    );
     closeModal();
 };
 
@@ -61,9 +69,10 @@ const createCardItem = (cardData, clickHandler) => {
     cardItem.className = CSS_CLASSES.MODAL_CARD_ITEM;
     
     // Use the centralized renderer
-    const cardElement = createCardElementFromRenderer(cardData, { 
+    const cardElement = renderCardElement(cardData, null, { 
         mode: 'modal', 
         showPoints: true, 
+        showInfoButton: true, // Enable the info button in the modal
         onClick: () => clickHandler(cardData) 
     });
     
@@ -85,8 +94,10 @@ const createDeselectOption = () => {
 const populateModal = (cards, clickHandler, isDeselectable = false) => {
     dom.modalImageContainer.innerHTML = ''; // Clear existing cards
 
+    const fragment = document.createDocumentFragment();
+
     if (isDeselectable) {
-        dom.modalImageContainer.appendChild(createDeselectOption());
+        fragment.appendChild(createDeselectOption());
     }
 
     let sortedCards = [...cards];
@@ -99,8 +110,10 @@ const populateModal = (cards, clickHandler, isDeselectable = false) => {
 
     sortedCards.forEach(cardData => {
         if (cardData.visible === false) return;
-        dom.modalImageContainer.appendChild(createCardItem(cardData, clickHandler));
+        fragment.appendChild(createCardItem(cardData, clickHandler));
     });
+
+    dom.modalImageContainer.appendChild(fragment); // Append all at once
 };
 
 const setupSortButtons = (cards, clickHandler, isDeselectable) => {
@@ -237,10 +250,107 @@ function createKeywordElements(keywords) {
     return keywordsContainer;
 }
 
+function createRelatedCardsContainer(cardData) {
+    const container = document.createElement('div');
+    container.className = 'related-cards-section';
+    Object.assign(container.style, {
+        marginTop: '30px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+        alignItems: 'center'
+    });
+
+    const createSection = (title, fileNames, category) => {
+        if (!fileNames || fileNames.length === 0) return null;
+        
+        const section = document.createElement('div');
+        section.style.width = '100%';
+        section.innerHTML = `<h3 style="margin-bottom: 20px; border-bottom: 2px solid #1877f2; padding-bottom: 10px; color: #1c1e21;">${title}</h3>`;
+        
+        const grid = document.createElement('div');
+        Object.assign(grid.style, {
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '20px',
+            justifyContent: 'center'
+        });
+
+        fileNames.forEach(fileName => {
+            // Try to get full card data from the registry
+            let cardDataTemplate = state.allCards.byFileName.get(fileName);
+            
+            // If not found (common for 'drop' variants), create a temporary object based on current card
+            if (!cardDataTemplate) {
+                cardDataTemplate = { ...cardData, fileName: fileName };
+            }
+
+            // Render as a full display card
+            const cardElement = renderCardElement(cardDataTemplate, null, {
+                mode: 'modal',
+                showPoints: true,
+                showInfoButton: false, // Don't show recursive info button
+                isInteractive: false
+            });
+            
+            grid.appendChild(cardElement);
+        });
+
+        section.appendChild(grid);
+        return section;
+    };
+
+    // 1. Drop Card
+    if (cardData.drop) {
+        const dropSection = createSection('버리기 시 교체 카드', [cardData.drop], cardData.category);
+        if (dropSection) container.appendChild(dropSection);
+    }
+
+    // 2. Changes (Variations)
+    if (cardData.changes && cardData.changes.length > 0) {
+        const changesSection = createSection('변경 가능 목록', cardData.changes, cardData.category);
+        if (changesSection) container.appendChild(changesSection);
+    }
+
+    // 3. Sub Cards
+    if (cardData.resolvedSubCards && cardData.resolvedSubCards.length > 0) {
+        const subSection = document.createElement('div');
+        subSection.style.width = '100%';
+        subSection.innerHTML = `<h3 style="margin-bottom: 20px; border-bottom: 2px solid #1877f2; padding-bottom: 10px; color: #1c1e21;">서브 카드</h3>`;
+        
+        const grid = document.createElement('div');
+        Object.assign(grid.style, {
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '20px',
+            justifyContent: 'center'
+        });
+
+        cardData.resolvedSubCards.forEach(subCard => {
+            // Render as a full display card
+            const cardElement = renderCardElement(subCard, null, {
+                mode: 'modal',
+                showPoints: true,
+                showInfoButton: false,
+                isInteractive: false
+            });
+            
+            grid.appendChild(cardElement);
+        });
+
+        subSection.appendChild(grid);
+        container.appendChild(subSection);
+    }
+
+    return container.hasChildNodes() ? container : null;
+}
+
 export const openCardDetailModal = (cardData) => {
     const modal = document.getElementById('card-detail-modal');
     const cardDetailContent = document.getElementById('card-detail-content');
-    if (!cardDetailContent || !modal) return;
+    const modalContent = document.getElementById('card-detail-modal-content'); // Get the scrolling container
+    if (!cardDetailContent || !modal || !modalContent) return;
 
     // Logic to add a class to the modal for styling based on card type
     modal.classList.remove('detail-view-wide');
@@ -250,16 +360,14 @@ export const openCardDetailModal = (cardData) => {
 
     cardDetailContent.innerHTML = ''; // Clear previous content
 
-    const cardElement = createCardElementFromRenderer(cardData, { mode: 'modal' });
+    const cardElement = renderCardElement(cardData, null, { mode: 'modal' });
     const img = cardElement.querySelector('img');
 
     if (state.isGameMode && cardData.isDropped && cardData.drop) {
         img.src = `Cards/${cardData.category}/${cardData.drop}`;
     }
 
-    // Revert to original, simpler styling logic. The modal's width is now handled by CSS.
     img.style.width = '100%';
-    
     cardDetailContent.appendChild(cardElement);
 
     const keywords = (state.isGameMode && cardData.isDropped && cardData.dropKeywords) ? cardData.dropKeywords : cardData.keywords;
@@ -268,8 +376,19 @@ export const openCardDetailModal = (cardData) => {
         cardDetailContent.appendChild(keywordsContainer);
     }
 
+    // Add related cards (drop, changes, sub-cards)
+    const relatedCardsContainer = createRelatedCardsContainer(cardData);
+    if (relatedCardsContainer) {
+        cardDetailContent.appendChild(relatedCardsContainer);
+    }
+
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // Reset scroll position to top after displaying the modal
+    requestAnimationFrame(() => {
+        modalContent.scrollTop = 0;
+    });
 };
 
 export const closeCardDetailModal = () => {
@@ -284,16 +403,18 @@ export const closeCardDetailModal = () => {
 export const openImageExportSettingsModal = () => {
     // Apply saved settings to the form
     document.getElementById('setting-show-title').checked = state.imageExportSettings.showTitle;
-    document.getElementById('setting-show-discarded').checked = state.imageExportSettings.showDiscarded;
-    document.getElementById('setting-show-points').checked = state.imageExportSettings.showPoints;
+    dom.settingShowUnitCompositeExport.checked = state.imageExportSettings.showUnitComposite;
     document.getElementById('setting-show-total-points').checked = state.imageExportSettings.showTotalPoints;
+    document.getElementById('setting-show-details').checked = state.imageExportSettings.showDetails;
+    document.getElementById('setting-show-discarded').checked = state.imageExportSettings.showDiscarded;
     document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
     document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
     document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
     document.getElementById('setting-reveal-hidden').checked = state.imageExportSettings.revealHidden;
+    document.getElementById('setting-show-tactical').checked = state.imageExportSettings.showTactical;
 
     // Trigger change event to correctly set sub-option states
-    document.getElementById('setting-show-points').dispatchEvent(new Event('change'));
+    document.getElementById('setting-show-details').dispatchEvent(new Event('change'));
 
 
     const rosterState = state.getActiveRoster();
@@ -319,5 +440,19 @@ export const openImageExportSettingsModal = () => {
 
 export const closeImageExportSettingsModal = () => {
     dom.imageExportSettingsModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+export const openSettingsModal = () => {
+    // Apply saved settings to the form
+    dom.settingShowUnitCompositeImageRoster.checked = state.settings.showUnitCompositeImageRoster;
+    dom.settingShowUnitCompositeImageGame.checked = state.settings.showUnitCompositeImageGame;
+
+    dom.settingsModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+export const closeSettingsModal = () => {
+    dom.settingsModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 };

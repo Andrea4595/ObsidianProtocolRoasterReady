@@ -18,6 +18,7 @@ export const rosterSelect = document.getElementById('roster-select');
 export const renameRosterBtn = document.getElementById('rename-roster-btn');
 export const deleteRosterBtn = document.getElementById('delete-roster-btn');
 export const exportImageBtn = document.getElementById('export-image-btn');
+export const settingsBtn = document.getElementById('settings-btn');
 export const gameModeBtn = document.getElementById('game-mode-btn');
 export const exitGameModeBtn = document.getElementById('exit-game-mode-btn');
 export const addUnitButton = document.getElementById('add-unit-button');
@@ -53,4 +54,12 @@ export const imageExportSettingsClose = document.getElementById('image-export-se
 export const imageExportSettingsForm = document.getElementById('image-export-settings-form');
 export const generateImageBtn = document.getElementById('generate-image-btn');
 export const cancelExportBtn = document.getElementById('cancel-export-btn');
+export const settingShowUnitCompositeExport = document.getElementById('setting-show-unit-composite');
 export const settingRevealHiddenRow = document.getElementById('setting-reveal-hidden-row');
+
+// Settings Modal Elements
+export const settingsModal = document.getElementById('settings-modal');
+export const settingsClose = document.getElementById('settings-close');
+export const generalSettingsForm = document.getElementById('general-settings-form');
+export const settingShowUnitCompositeImageRoster = document.getElementById('setting-show-unit-composite-image-roster');
+export const settingShowUnitCompositeImageGame = document.getElementById('setting-show-unit-composite-image-game');

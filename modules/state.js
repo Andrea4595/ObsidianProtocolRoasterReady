@@ -1,87 +1,96 @@
 import { Roster } from './Roster.js';
-import { renderRoster, updateRosterSelect } from './ui.js';
-import { factionSelect } from './dom.js';
+import { advanceCardStatus as gameModeAdvanceCardStatus } from './gameMode.js'; // Import advanceCardStatus from gameMode.js
 
 // --- State Variables ---
 export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: new Map() };
 export let allKeywords = new Map();
 export let allRosters = {}; // This will store Roster instances
 export let activeRosterName = '';
-export let nextUnitId = 0;
-export let nextDroneId = 0;
-export let nextTacticalCardId = 0;
 export let isGameMode = false;
 export let gameRoster = {};
 export let imageExportSettings = {
     showTitle: true,
-    showDiscarded: true,
-    showPoints: true,
     showTotalPoints: true,
+    showUnitComposite: true,
+    showDetails: true,
+    showDiscarded: true,
     showCardPoints: true,
     showUnitPoints: true,
     showSubCards: true,
     revealHidden: true,
+    showTactical: true,
+};
+
+export let settings = {
+    showUnitCompositeImageRoster: false,
+    showUnitCompositeImageGame: false,
 };
 
 export let currentSort = 'datasheet';
 
-export function setCurrentSort(sort) {
-    currentSort = sort;
+// --- Private Helper for State Changes ---
+function _dispatchStateChangeEvent(eventType, detail = {}) {
+    _saveAllRostersInternal(); // Always save after a state change (internal call)
+    document.dispatchEvent(new CustomEvent(eventType, { detail }));
 }
 
-export const saveCurrentSort = () => {
+// --- Getters and Setters ---
+
+export function setImageExportSettings(settings) {
+    imageExportSettings = settings;
+    _dispatchStateChangeEvent('imageExportSettingsChanged', { settings });
+}
+
+export function setSettings(newSettings) {
+    settings = { ...settings, ...newSettings };
+    localStorage.setItem('settings', JSON.stringify(settings)); // Save to localStorage
+    _dispatchStateChangeEvent('settingsChanged', { newSettings: settings });
+}
+export function getActiveRoster() {
+    if (isGameMode && gameRoster && Object.keys(gameRoster).length > 0) {
+        return gameRoster;
+    }
+    return allRosters[activeRosterName];
+}
+
+export function setGameRosterState(roster) {
+    gameRoster = roster;
+    _dispatchStateChangeEvent('gameRosterStateChanged');
+}
+
+export function setActiveRosterName(name) {
+    activeRosterName = name;
+    _dispatchStateChangeEvent('activeRosterChanged', { newActiveRosterName: name });
+}
+
+export function setGameMode(mode) {
+    isGameMode = mode;
+    _dispatchStateChangeEvent('gameModeChanged', { isGameMode: mode });
+}
+
+export function setCurrentSort(sort) {
+    currentSort = sort;
+    _dispatchStateChangeEvent('sortOptionChanged', { newSort: currentSort });
+}
+
+export const saveCurrentSort = () => { // Still saves directly for now, no event needed unless UI reacts
     localStorage.setItem('currentSort', currentSort);
 };
 
-export const loadCurrentSort = () => {
+export const loadCurrentSort = () => { // Still loads directly
     const savedSort = localStorage.getItem('currentSort');
     if (savedSort) {
         currentSort = savedSort;
     }
 };
 
+
 // --- Save Versioning ---
 const CURRENT_SAVE_VERSION = 2;
 
-// --- Getters and Setters ---
-
-export function setImageExportSettings(settings) {
-    imageExportSettings = settings;
-}
-export function getActiveRoster() {
-    return allRosters[activeRosterName];
-}
-
-export function setGameRosterState(roster) {
-    gameRoster = roster;
-}
-
-export function setActiveRosterName(name) {
-    activeRosterName = name;
-}
-
-export function setNextUnitId(id) {
-    nextUnitId = id;
-}
-
-export function setNextDroneId(id) {
-    nextDroneId = id;
-}
-
-export function setNextTacticalCardId(id) {
-    nextTacticalCardId = id;
-}
-
-export function setGameMode(mode) {
-    isGameMode = mode;
-}
-
-// --- Roster Management ---
-
-export const createNewRoster = (name) => new Roster({ name });
-
-export const saveAllRosters = () => {
-    if (isGameMode) return;
+// --- Internal Save Function ---
+const _saveAllRostersInternal = () => {
+    if (isGameMode) return; // Do not save builder state if in game mode
     const savableRosters = {};
     for (const rosterName in allRosters) {
         savableRosters[rosterName] = allRosters[rosterName].serialize();
@@ -90,55 +99,18 @@ export const saveAllRosters = () => {
     localStorage.setItem('activeRosterName', activeRosterName);
 };
 
-export const calculateNextIds = () => {
-    const roster = getActiveRoster();
-    if (!roster) {
-        nextUnitId = 0;
-        nextDroneId = 0;
-        nextTacticalCardId = 0;
-        return;
-    }
+// Expose save function for explicit calls if needed (e.g., initial app load)
+export const saveAllRosters = _saveAllRostersInternal;
 
-    let maxUnitId = -1;
-    if (roster.units && Object.keys(roster.units).length > 0) {
-        const unitIds = Object.keys(roster.units).map(id => parseInt(id)).filter(id => !isNaN(id));
-        if(unitIds.length > 0) {
-             maxUnitId = Math.max(...unitIds);
-        }
-    }
-    nextUnitId = maxUnitId + 1;
 
-    let maxDroneId = -1;
-    if (roster.drones && roster.drones.length > 0) {
-        const droneIds = roster.drones
-            .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
-            .filter(id => !isNaN(id));
-        if (droneIds.length > 0) {
-            maxDroneId = Math.max(...droneIds);
-        }
-    }
-    nextDroneId = maxDroneId + 1;
+// --- Roster Management ---
 
-    let maxTacticalCardId = -1;
-    if (roster.tacticalCards && roster.tacticalCards.length > 0) {
-        const tacticalCardIds = roster.tacticalCards
-            .map(d => d.rosterId ? parseInt(d.rosterId.split('_')[1]) : -1)
-            .filter(id => !isNaN(id));
-        if (tacticalCardIds.length > 0) {
-            maxTacticalCardId = Math.max(...tacticalCardIds);
-        }
-    }
-    nextTacticalCardId = maxTacticalCardId + 1;
-};
+export const createNewRoster = (name) => new Roster({ name });
 
 export const switchActiveRoster = (rosterName) => {
     if (!allRosters[rosterName] || isGameMode) return;
     activeRosterName = rosterName;
-    factionSelect.value = getActiveRoster().faction || 'RDL';
-    calculateNextIds();
-    renderRoster();
-    updateRosterSelect();
-    saveAllRosters();
+    _dispatchStateChangeEvent('rosterSwitched', { newActiveRosterName: rosterName }); // Dispatch specific event
 };
 
 export function addNewRoster(name) {
@@ -146,35 +118,236 @@ export function addNewRoster(name) {
         return false; // 이름이 없거나 중복
     }
     allRosters[name] = createNewRoster(name);
-    switchActiveRoster(name);
+    _dispatchStateChangeEvent('rosterAdded', { newRosterName: name }); // Dispatch specific event
+    switchActiveRoster(name); // This will also dispatch
     return true;
 }
 
-export function renameActiveRoster(newName) {
+// --- NEW STATE MUTATION FUNCTIONS ---
+
+// Adds a new empty unit to the active roster
+export function addUnitToActiveRoster(unitId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        roster.units[unitId] = {};
+        // Note: _nextUnitId is incremented in events.js when adding (so it's ready for the next one)
+        _dispatchStateChangeEvent('unitAdded', { unitId: unitId });
+    }
+}
+
+// Renames an existing roster
+export function renameRoster(oldName, newName) {
     if (!newName || allRosters[newName]) {
-        return false; // 새 이름이 없거나 중복
+        return false; // New name is empty or already exists
     }
-    const oldName = activeRosterName;
-    allRosters[newName] = allRosters[oldName];
-    allRosters[newName].name = newName;
-    delete allRosters[oldName];
-    
-    setActiveRosterName(newName);
-    updateRosterSelect();
-    saveAllRosters();
+    const roster = allRosters[oldName];
+    if (roster) {
+        allRosters[newName] = roster;
+        allRosters[newName].name = newName;
+        delete allRosters[oldName];
+        if (activeRosterName === oldName) {
+            setActiveRosterName(newName); // This will dispatch 'activeRosterChanged'
+        }
+        _dispatchStateChangeEvent('rosterRenamed', { oldName, newName });
+        return true;
+    }
+    return false;
+}
+
+// Clears all cards and units from the active roster
+export function clearActiveRoster() {
+    const roster = getActiveRoster();
+    if (roster) {
+        roster.units = {};
+        roster.drones = [];
+        roster.tacticalCards = [];
+        _dispatchStateChangeEvent('rosterCleared');
+    }
+}
+
+// Deletes a roster
+export function deleteRoster(rosterName) {
+    if (Object.keys(allRosters).length <= 1) {
+        return false; // Cannot delete the last roster
+    }
+    delete allRosters[rosterName];
+    if (activeRosterName === rosterName) {
+        const newActiveName = Object.keys(allRosters)[0];
+        setActiveRosterName(newActiveName); // This will dispatch 'activeRosterChanged'
+    }
+    _dispatchStateChangeEvent('rosterDeleted', { deletedRosterName: rosterName });
     return true;
 }
 
-export function deleteActiveRoster() {
-    if (Object.keys(allRosters).length <= 1) {
-        return false; // 마지막 로스터는 삭제 불가
+// Sets the faction for the active roster
+export function setFactionForActiveRoster(newFaction) {
+    const roster = getActiveRoster();
+    if (roster) {
+        roster.faction = newFaction;
+        _dispatchStateChangeEvent('rosterFactionChanged', { newFaction });
     }
-    const oldName = activeRosterName;
-    delete allRosters[oldName];
-    const newActiveName = Object.keys(allRosters)[0];
-    switchActiveRoster(newActiveName);
-    return true;
 }
+
+// Updates a card within a unit (replaces the card object)
+export function updateUnitCard(unitId, cardCategory, newCard) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId]) {
+        roster.units[unitId][cardCategory] = newCard;
+        _dispatchStateChangeEvent('unitCardUpdated', { unitId, cardCategory });
+    }
+}
+
+// Toggles the isDropped status of a card within a unit
+export function toggleCardIsDropped(unitId, cardCategory) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId] && roster.units[unitId][cardCategory]) {
+        const card = roster.units[unitId][cardCategory];
+        card.isDropped = !card.isDropped;
+        _dispatchStateChangeEvent('unitCardStatusChanged', { unitId, cardCategory, status: 'isDropped' });
+    }
+}
+
+// Adds a card to a unit slot or assigns a back card to a drone
+export function addCardToUnitOrDroneBack(currentUnitId, currentCategory, cardData, isBackCard) {
+    const roster = getActiveRoster();
+    if (roster) {
+        if (isBackCard) {
+            const drone = roster.drones.find(d => d.rosterId === currentUnitId);
+            if (drone) {
+                drone.backCard = cardData;
+            }
+        } else {
+            if (roster.units[currentUnitId]) {
+                roster.units[currentUnitId][currentCategory] = cardData;
+            }
+        }
+        _dispatchStateChangeEvent('cardAddedToUnitOrDroneBack', { unitId: currentUnitId, category: currentCategory, isBackCard });
+    }
+}
+
+// Adds a new drone to the active roster
+export function addDroneToRoster(cardData) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const newDrone = { ...cardData, rosterId: `d_${roster._nextDroneId}` };
+        roster._nextDroneId++;
+        roster.drones.push(newDrone);
+        _dispatchStateChangeEvent('droneAdded', { droneRosterId: newDrone.rosterId });
+        return newDrone; // Return the new drone for UI update
+    }
+    return null;
+}
+
+// Adds a new tactical card to the active roster
+export function addTacticalCardToRoster(cardData) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const newTacticalCard = { ...cardData, rosterId: `t_${roster._nextTacticalCardId}` };
+        roster._nextTacticalCardId++;
+        roster.tacticalCards.push(newTacticalCard);
+        _dispatchStateChangeEvent('tacticalCardAdded', { tacticalCardRosterId: newTacticalCard.rosterId });
+        return newTacticalCard;
+    }
+    return null;
+}
+
+// Deletes a specific unit from the active roster
+export function deleteUnit(unitId) {
+    const roster = getActiveRoster();
+    if (roster && roster.units[unitId]) {
+        delete roster.units[unitId];
+        _dispatchStateChangeEvent('unitDeleted', { unitId });
+    }
+}
+
+// Deletes a specific drone from the active roster
+export function deleteDrone(rosterId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const initialLength = roster.drones.length;
+        roster.drones = roster.drones.filter(drone => drone.rosterId !== rosterId);
+        if (roster.drones.length < initialLength) {
+            _dispatchStateChangeEvent('droneDeleted', { droneRosterId: rosterId });
+            return true;
+        }
+    }
+    return false;
+}
+
+// Deletes a specific tactical card from the active roster
+export function deleteTacticalCard(rosterId) {
+    const roster = getActiveRoster();
+    if (roster) {
+        const initialLength = roster.tacticalCards.length;
+        roster.tacticalCards = roster.tacticalCards.filter(card => card.rosterId !== rosterId);
+        if (roster.tacticalCards.length < initialLength) {
+            _dispatchStateChangeEvent('tacticalCardDeleted', { tacticalCardRosterId: rosterId });
+            return true;
+        }
+    }
+    return false;
+}
+
+// Toggles the isRevealedInGameMode status of a card
+export function toggleCardRevealedStatus(cardCategory, rosterId, unitId = null) {
+    console.log(`[State] toggleCardRevealedStatus: cat=${cardCategory}, rid=${rosterId}, uid=${unitId}`);
+    const roster = getActiveRoster();
+    if (!roster) return;
+
+    let targetCard = null;
+    if (unitId !== null && roster.units[unitId] && roster.units[unitId][cardCategory]) {
+        targetCard = roster.units[unitId][cardCategory];
+    } 
+    
+    if (!targetCard && rosterId) {
+        // 유닛 카드가 아니라면 드론, 전술 카드, 서브 카드 리스트에서 통합 검색
+        targetCard = roster.drones.find(d => d.rosterId === rosterId) ||
+                     roster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
+                     (roster.subCards && roster.subCards.find(sc => sc.rosterId === rosterId));
+    }
+
+    if (targetCard) {
+        targetCard.isRevealedInGameMode = !targetCard.isRevealedInGameMode;
+        console.log(`[State] Revealed toggled: ${targetCard.name}, isRevealed=${targetCard.isRevealedInGameMode}`);
+        _dispatchStateChangeEvent('cardRevealedStatusToggled', { cardCategory, rosterId, unitId });
+    } else {
+        console.error(`[State] Card not found: rid=${rosterId}`);
+    }
+}
+
+// Advances the status of a card using gameMode logic
+export function advanceCardStatusInState(cardCategory, rosterId, unitId = null) {
+    const roster = getActiveRoster();
+    if (!roster) return;
+
+    let targetCard = null;
+    let targetUnit = null; // Needed for unit-specific rules in advanceCardStatus
+
+    if (unitId !== null && roster.units[unitId] && roster.units[unitId][cardCategory]) {
+        targetCard = roster.units[unitId][cardCategory];
+        targetUnit = roster.units[unitId]; // Pass the whole unit for context
+    } 
+    
+    if (!targetCard && rosterId) {
+        // Search in drones, tactical, and sub-cards
+        targetCard = roster.drones.find(d => d.rosterId === rosterId) ||
+                     roster.tacticalCards.find(tc => tc.rosterId === rosterId) ||
+                     (roster.subCards && roster.subCards.find(sc => sc.rosterId === rosterId));
+    }
+
+    if (targetCard) {
+        // Call gameMode's advanceCardStatus to update the card object
+        gameModeAdvanceCardStatus(targetCard, targetUnit);
+        _dispatchStateChangeEvent('cardStatusAdvanced', { cardCategory, rosterId, unitId });
+    }
+}
+
+export function dispatchRosterLoadedFromCodeEvent() {
+    _dispatchStateChangeEvent('rosterLoadedFromCode');
+}
+
+
+// --- END NEW STATE MUTATION FUNCTIONS ---
 
 export const getAllSubCards = (rosterState, { includeDrones = false } = {}) => {
     const allCardsInRoster = [];
@@ -416,7 +589,7 @@ async function loadKeywordData() {
     try {
         const response = await fetch(`data/keywords.json?v=${new Date().getTime()}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} for file keywords.json`);
+            throw new Error(`HTTP error! status: ${res.status} for file keywords.json`);
         }
         const keywordData = await response.json();
         allKeywords = new Map(keywordData.map(kw => [kw.keyword, kw]));
@@ -436,6 +609,24 @@ export const initializeApp = async () => {
         imageExportSettings = { ...imageExportSettings, ...savedSettings };
     }
 
+    const savedGeneralSettingsRaw = localStorage.getItem('settings');
+    if (savedGeneralSettingsRaw) {
+        const savedGeneralSettings = JSON.parse(savedGeneralSettingsRaw);
+        
+        // Migration for split composite image settings
+        if (savedGeneralSettings.showUnitCompositeImage !== undefined) {
+            savedGeneralSettings.showUnitCompositeImageRoster = savedGeneralSettings.showUnitCompositeImageRoster !== undefined 
+                ? savedGeneralSettings.showUnitCompositeImageRoster 
+                : savedGeneralSettings.showUnitCompositeImage;
+            savedGeneralSettings.showUnitCompositeImageGame = savedGeneralSettings.showUnitCompositeImageGame !== undefined 
+                ? savedGeneralSettings.showUnitCompositeImageGame 
+                : savedGeneralSettings.showUnitCompositeImage;
+            delete savedGeneralSettings.showUnitCompositeImage;
+        }
+
+        settings = { ...settings, ...savedGeneralSettings };
+    }
+
     const savedRostersRaw = localStorage.getItem('rosters');
     let savedRosters = savedRostersRaw ? JSON.parse(savedRostersRaw) : null;
     const savedActiveName = localStorage.getItem('activeRosterName');
@@ -448,7 +639,7 @@ export const initializeApp = async () => {
             // Migration check: If 'version' is missing, it's a v0 save.
             if (!rosterData.version) {
                 console.warn(`Migrating v0 roster format for: ${rosterName}`);
-                rosterData = migrateFromVersion0ToVersion1(roosterData);
+                rosterData = migrateFromVersion0ToVersion1(rosterData);
             }
 
             // If version is 1, migrate to v2.
@@ -467,9 +658,7 @@ export const initializeApp = async () => {
         allRosters[activeRosterName] = createNewRoster(activeRosterName);
     }
 
-    factionSelect.value = getActiveRoster().faction || 'RDL';
-    calculateNextIds();
-    updateRosterSelect();
-    renderRoster();
-    saveAllRosters(); // Save in new format after migration
+    // updateRosterSelect(); // Removed
+    // renderRoster(); // Removed
+    _dispatchStateChangeEvent('appInitialized'); // Dispatch on initial app load
 };

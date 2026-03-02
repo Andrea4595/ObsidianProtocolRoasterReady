@@ -1,6 +1,7 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { renderRoster } from './ui.js';
+import { Roster } from './Roster.js';
+// import { renderRoster } from './ui.js'; // Removed direct import of renderRoster
 import { applyUnitRules, applyDroneRules, unitHasAbility } from './rules.js';
 
 const cardStatusTransitions = {
@@ -43,48 +44,60 @@ export function advanceCardStatus(card, unit) {
     }
 }
 
-export function performActionAndPreserveScroll(action, eventTarget) {
-    const allUnitRows = document.querySelectorAll('.unit-row');
-    const unitScrolls = Array.from(allUnitRows).map(row => ({
-        id: row.parentElement.dataset.unitId,
-        scrollLeft: row.scrollLeft
+export async function performActionAndPreserveScroll(action, eventTarget = null) {
+    // Capture scroll from .unit-entry elements, not .unit-row, as .unit-entry has overflow-x: auto
+    const allUnitEntries = document.querySelectorAll('.unit-entry');
+    const unitScrolls = Array.from(allUnitEntries).map(entry => ({
+        id: entry.dataset.unitId,
+        scrollLeft: entry.scrollLeft
     }));
     const windowScroll = {
         y: window.scrollY,
         x: window.scrollX
     };
 
-    action();
+    await action(); // Executes the UI update (which calls state mutation functions that dispatch events)
 
-    renderRoster();
+    // Force a repaint/reflow here to make sure visual updates are applied immediately
+    // before scroll restoration, potentially reducing perceived delay.
+    if (eventTarget && eventTarget.offsetHeight !== undefined) {
+        void eventTarget.offsetHeight; // Force reflow, but don't use the value
+    }
+    // state.saveAllRosters(); // Removed: state mutation functions now handle saving via event dispatch
 
-    requestAnimationFrame(() => {
+    // Use setTimeout to ensure the browser has completed layout calculations
+    // for the new elements before we try to restore scroll positions.
+    setTimeout(() => {
         unitScrolls.forEach(scrollInfo => {
             if (scrollInfo.id) {
-                const newUnitRow = document.querySelector(`.unit-entry[data-unit-id='${scrollInfo.id}'] .unit-row`);
-                if (newUnitRow) {
-                    newUnitRow.scrollLeft = scrollInfo.scrollLeft;
+                // Restore scroll to the .unit-entry element
+                const newUnitEntry = document.querySelector(`.unit-entry[data-unit-id='${scrollInfo.id}']`);
+                if (newUnitEntry) {
+                    newUnitEntry.scrollLeft = scrollInfo.scrollLeft;
                 }
             }
         });
         window.scrollTo(windowScroll.x, windowScroll.y);
-    });
+    }, 0);
 }
 
-const initializeSubCards = (gameRoster) => {
+const initializeSubCards = (rosterToInitialize) => { // Renamed parameter for clarity
     // Roster에 있는 모든 카드를 한 배열에 모읍니다.
     const allCardsInRoster = [];
-    Object.values(gameRoster.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
-    allCardsInRoster.push(...gameRoster.drones);
-    gameRoster.drones.forEach(drone => {
+    Object.values(rosterToInitialize.units).forEach(unit => allCardsInRoster.push(...Object.values(unit)));
+    allCardsInRoster.push(...rosterToInitialize.drones);
+    rosterToInitialize.drones.forEach(drone => {
         if (drone && drone.backCard) {
             allCardsInRoster.push(drone.backCard);
         }
     });
 
+    // Ensure subCards array exists on the roster if it doesn't
+    rosterToInitialize.subCards = rosterToInitialize.subCards || [];
+
     const processedFileNames = new Set([
-        ...gameRoster.drones.map(d => d.fileName),
-        ...gameRoster.tacticalCards.map(t => t.fileName)
+        ...rosterToInitialize.drones.map(d => d.fileName),
+        ...rosterToInitialize.tacticalCards.map(t => t.fileName)
     ]);
 
     allCardsInRoster.forEach(card => {
@@ -96,11 +109,11 @@ const initializeSubCards = (gameRoster) => {
 
                     if (subCardInstance.category === 'Drone') {
                         subCardInstance.rosterId = `sub-drone-${subCardInstance.fileName}`;
-                        gameRoster.drones.push(subCardInstance);
+                        rosterToInitialize.drones.push(subCardInstance);
                     } else {
                         // 다른 타입의 서브카드는 별도의 배열에 추가
                         subCardInstance.rosterId = `sub-card-${subCardInstance.fileName}`;
-                        gameRoster.subCards.push(subCardInstance);
+                        rosterToInitialize.subCards.push(subCardInstance);
                     }
                     processedFileNames.add(subCardInstance.fileName);
                 }
@@ -109,15 +122,17 @@ const initializeSubCards = (gameRoster) => {
     });
 };
 
-const initializeCardStates = (gameRoster) => {
+const initializeCardStates = (rosterToInitialize) => {
     const allCardsInGame = [];
-    Object.values(gameRoster.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
-    allCardsInGame.push(...gameRoster.drones);
-    allCardsInGame.push(...gameRoster.subCards); // 서브카드 추가
-    if (gameRoster.tacticalCards) {
-        allCardsInGame.push(...gameRoster.tacticalCards);
+    Object.values(rosterToInitialize.units).forEach(unit => allCardsInGame.push(...Object.values(unit)));
+    allCardsInGame.push(...rosterToInitialize.drones);
+    if (rosterToInitialize.subCards) { // 서브카드가 있을 경우에만 추가
+        allCardsInGame.push(...rosterToInitialize.subCards);
     }
-    gameRoster.drones.forEach(drone => {
+    if (rosterToInitialize.tacticalCards) {
+        allCardsInGame.push(...rosterToInitialize.tacticalCards);
+    }
+    rosterToInitialize.drones.forEach(drone => {
         if (drone.backCard) {
             allCardsInGame.push(drone.backCard);
         }
@@ -125,50 +140,59 @@ const initializeCardStates = (gameRoster) => {
 
     allCardsInGame.forEach(card => {
         if (!card) return;
-        card.cardStatus = 0;
-        if (card.ammunition > 0) card.currentAmmunition = card.ammunition;
-        if (card.intercept > 0) card.currentIntercept = card.intercept;
-        if (card.link > 0) card.currentLink = card.link;
-        if (card.charge) card.isCharged = false;
-        card.isBlackbox = false;
-        if (card.hidden) {
-            card.isConcealed = true;
+        // Only initialize if undefined, preserving existing values
+        card.cardStatus = card.cardStatus !== undefined ? card.cardStatus : 0;
+        card.currentAmmunition = card.currentAmmunition !== undefined ? card.currentAmmunition : (card.ammunition || 0);
+        card.currentIntercept = card.currentIntercept !== undefined ? card.currentIntercept : (card.intercept || 0);
+        card.currentLink = card.currentLink !== undefined ? card.currentLink : (card.link || 0);
+        card.isCharged = card.isCharged !== undefined ? card.isCharged : false;
+        card.isBlackbox = card.isBlackbox !== undefined ? card.isBlackbox : false;
+        card.isRevealedInGameMode = card.isRevealedInGameMode !== undefined ? card.isRevealedInGameMode : (!card.hidden); // hidden 카드만 false, 아니면 true
+
+        // Ensure rosterId is set if missing (should be handled by deserialize, but as a fallback)
+        if (!card.rosterId) {
+            card.rosterId = `${card.category}_${card.name}_${Math.random().toString(36).substr(2, 9)}`;
         }
     });
 };
 
-const createGameRosterState = (roster) => {
-    const gameRoster = JSON.parse(JSON.stringify(roster));
-    gameRoster.subCards = []; // 서브카드 배열 초기화
+// No longer creates a deep copy, instead prepares the active roster for game mode
+const prepareActiveRosterForGameMode = (roster) => {
+    // Ensure subCards array exists for the active roster
+    roster.subCards = roster.subCards || [];
 
-    initializeSubCards(gameRoster);
-
-    // Apply special rules before initializing for game mode
-    Object.values(gameRoster.units).forEach(unit => {
-        applyUnitRules(unit);
-        unit.isOut = false; // 유닛 파괴 상태 초기화
+    // Reset unit isOut status if it exists
+    Object.values(roster.units).forEach(unit => {
+        if (unit.isOut !== undefined) {
+            unit.isOut = false;
+        }
     });
-    gameRoster.drones.forEach(drone => applyDroneRules(drone));
 
-    initializeCardStates(gameRoster);
+    initializeSubCards(roster);
+    initializeCardStates(roster); // Apply defaults / ensure existence
+    
+    // Apply rules that might depend on fully initialized card states
+    Object.values(roster.units).forEach(unit => applyUnitRules(unit));
+    roster.drones.forEach(drone => applyDroneRules(drone));
 
-    return gameRoster;
+    return roster; // Return reference to the same roster
 };
 
 export function setGameMode(enabled) {
-    state.setGameMode(enabled);
-    dom.rosterControls.style.display = enabled ? 'none' : 'flex';
-    dom.rosterSummary.style.display = enabled ? 'none' : 'block';
-    dom.gameModeHeader.style.display = enabled ? 'block' : 'none';
-    dom.addButtonContainer.style.display = enabled ? 'none' : 'flex';
-    dom.appTitle.textContent = enabled ? state.activeRosterName : '로스터';
-    dom.appTitle.style.display = enabled ? 'block' : 'none';
-
     if (enabled) {
-        const gameRoster = createGameRosterState(state.getActiveRoster());
-        state.setGameRosterState(gameRoster);
+        const activeRoster = state.getActiveRoster();
+        // 깊은 복사본 생성
+        const rosterData = activeRoster.serialize();
+        const gameRosterInstance = Roster.deserialize(activeRoster.name, rosterData, state.allCards.byName);
+        
+        prepareActiveRosterForGameMode(gameRosterInstance);
+        state.setGameRosterState(gameRosterInstance);
     } else {
+        // 종료 시 플래그를 먼저 꺼서 getActiveRoster()가 원본을 보게 한 뒤 저장합니다.
+        state.setGameMode(false);
+        state.saveAllRosters();
         state.setGameRosterState({});
+        return;
     }
-    renderRoster();
+    state.setGameMode(enabled);
 }
