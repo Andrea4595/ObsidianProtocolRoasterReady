@@ -549,10 +549,6 @@ div.hidden-card-overlay > img.hidden-title-image {
         --hidden-title-height: 72px;
         --hidden-title-top: 8px;
     }
-    .unit-row {
-        width: auto;
-        max-width: 90%;
-    }
 }
 
 @media (max-width: 768px) {
