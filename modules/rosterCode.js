@@ -94,7 +94,7 @@ export async function importRosterCode() {
         if (unitsCode) {
             const unitGroups = unitsCode.split('|');
             unitGroups.forEach((unitString, i) => {
-                const unitId = i;
+                const unitId = roster._nextUnitId++;
                 roster.units[unitId] = {};
                 const modelIds = unitString.split('/');
                 modelIds.forEach((modelId, index) => {
@@ -118,6 +118,7 @@ export async function importRosterCode() {
                     const key = `Drone_${droneName}`;
                     if (state.allCards.byName.has(key)) {
                         const card = { ...state.allCards.byName.get(key) };
+                        card.rosterId = `d_${roster._nextDroneId++}`;
                         if (backCardName) {
                             const backCardKey = `Back_${backCardName}`;
                             if (state.allCards.byName.has(backCardKey)) {
@@ -137,6 +138,7 @@ export async function importRosterCode() {
                     const key = `Tactical_${modelId}`;
                     if (state.allCards.byName.has(key)) {
                         const card = { ...state.allCards.byName.get(key) };
+                        card.rosterId = `t_${roster._nextTacticalCardId++}`;
                         roster.tacticalCards.push(card);
                     }
                 }

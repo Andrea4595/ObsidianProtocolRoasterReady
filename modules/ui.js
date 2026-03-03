@@ -40,7 +40,26 @@ const _updateTotalPoints = () => {
     return total;
 };
 
+let isRendering = false;
+let renderPending = false;
+
 const _renderRoster = async () => {
+    if (isRendering) {
+        renderPending = true;
+        return;
+    }
+    isRendering = true;
+    try {
+        do {
+            renderPending = false;
+            await _renderRosterCore();
+        } while (renderPending);
+    } finally {
+        isRendering = false;
+    }
+};
+
+const _renderRosterCore = async () => {
 
 
 
