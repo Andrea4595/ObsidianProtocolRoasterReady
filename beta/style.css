@@ -1133,3 +1133,33 @@ div.hidden-card-overlay > img.hidden-title-image {
     background-color: #5a6268; /* Darker gray on hover */
     transform: scale(1.01); /* A subtle transform */
 }
+
+#export-tts-btn {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #28a745; /* Success green color */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    width: 100%; /* Make it full width */
+    margin-top: 10px; /* Add space above */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+#export-tts-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.01); /* A subtle transform */
+}
+
+#export-tts-btn:active {
+    transform: scale(0.99);
+}
+
+#export-tts-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
