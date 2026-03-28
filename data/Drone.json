@@ -275,7 +275,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Defense_Front.jpg",
-		"id": 0,
+		"id": 293,
         "name": "ACE001_Defense",
         "points": 0,
         "category": "Drone",
@@ -291,7 +291,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Mobile_Front.jpg",
-		"id": 0,
+		"id": 294,
         "name": "ACE001_Mobile",
         "points": 0,
         "category": "Drone",
@@ -307,7 +307,7 @@
     },
     {
         "fileName": "Drone_WD_ACE001_Offense_Front.jpg",
-		"id": 0,
+		"id": 295,
         "name": "ACE001_Offense",
         "points": 0,
         "category": "Drone",

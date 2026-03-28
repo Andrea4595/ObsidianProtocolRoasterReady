@@ -1,7 +1,9 @@
 import * as state from './state.js';
 import * as dom from './dom.js';
+import { createUnitPartsCompositeImage } from './ui.js';
 // import { renderRoster } from './ui.js'; // Removed direct UI import
 import { categoryOrder } from './constants.js';
+import { exportRosterToGist } from './ttsExporter.js';
 
 // --- Compression Helpers ---
 
@@ -245,6 +247,36 @@ export function downloadWatermelonJson() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
 
+// --- TTS Export ---
 
+export async function exportToTTS() {
+    const roster = state.getActiveRoster();
+    if (!roster) {
+        alert('내보낼 로스터가 없습니다.');
+        return;
+    }
+
+    const originalButtonText = dom.exportTtsBtn.textContent;
+    dom.exportTtsBtn.disabled = true;
+
+    try {
+        const gistRawUrl = await exportRosterToGist(roster, (status) => {
+            dom.exportTtsBtn.textContent = status;
+        });
+
+        const command = `!spawn-team-tts-url ${gistRawUrl}`;
+        dom.rosterCodeDisplay.value = command;
+        dom.rosterCodeDisplay.select();
+        document.execCommand('copy');
+        alert('TTS 명령어가 생성되어 클립보드에 복사되었습니다.');
+
+    } catch (error) {
+        console.error('TTS 익스포트 에러:', error);
+        alert('TTS 익스포트 중 오류가 발생했습니다: ' + error.message);
+    } finally {
+        dom.exportTtsBtn.textContent = originalButtonText;
+        dom.exportTtsBtn.disabled = false;
+    }
 }
