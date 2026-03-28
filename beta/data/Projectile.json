@@ -1,6 +1,8 @@
 [
     {
         "fileName": "Projectile_PL_AS3A_Front.png",
+		"id": 0,
+		"id_watermelon02": "PDAM-003",
         "name": "AS3A",
         "points": 0,
         "category": "Projectile",
@@ -8,6 +10,8 @@
     },
     {
         "fileName": "Projectile_PL_AS3B_Front.png",
+		"id": 0,
+		"id_watermelon02": "PDAM-004",
         "name": "AS3B",
         "points": 0,
         "category": "Projectile",
@@ -15,6 +19,8 @@
     },
     {
         "fileName": "Projectile_PL_FG33_Front.png",
+		"id": 0,
+		"id_watermelon02": "PDAM-005",
         "name": "FG33",
         "points": 0,
         "category": "Projectile",
@@ -22,6 +28,8 @@
     },
     {
         "fileName": "Projectile_PL_FGM25_Front.png",
+		"id": 0,
+		"id_watermelon02": "PDAM-001",
         "name": "FGM25",
         "points": 0,
         "category": "Projectile",
@@ -29,6 +37,8 @@
     },
     {
         "fileName": "Projectile_PL_RMA_Front.png",
+		"id": 530,
+		"id_watermelon02": "PDAM-006",
         "name": "RMA",
         "points": 0,
         "category": "Projectile",
@@ -36,6 +46,7 @@
     },
     {
         "fileName": "Projectile_RDL_B31_Front.png",
+		"id": 75,
         "name": "B31",
         "points": 0,
         "category": "Projectile",
@@ -43,6 +54,7 @@
     },
     {
         "fileName": "Projectile_RDL_B32_Front.png",
+		"id": 76,
         "name": "B32",
         "points": 0,
         "category": "Projectile",
@@ -52,6 +64,7 @@
     },
     {
         "fileName": "Projectile_RDL_B33_Front.png",
+		"id": 77,
         "name": "B33",
         "points": 0,
         "category": "Projectile",
@@ -60,6 +73,7 @@
     },
     {
         "fileName": "Projectile_RDL_GM35_Front.png",
+		"id": 74,
         "name": "GM35",
         "points": 0,
         "category": "Projectile",
@@ -68,6 +82,7 @@
     },
     {
         "fileName": "Projectile_RDL_GS2_Front.png",
+		"id": 268,
         "name": "GS2",
         "points": 0,
         "category": "Projectile",
@@ -75,6 +90,7 @@
     },
     {
         "fileName": "Projectile_RDL_MC3_Front.png",
+		"id": 71,
         "name": "MC3",
         "points": 0,
         "category": "Projectile",
@@ -82,6 +98,7 @@
     },
     {
         "fileName": "Projectile_RDL_MD1_Front.png",
+		"id": 522,
         "name": "MD1",
         "points": 0,
         "category": "Projectile",
@@ -89,6 +106,7 @@
     },
     {
         "fileName": "Projectile_RDL_MES_Front.png",
+		"id": 72,
         "name": "MES",
         "points": 0,
         "category": "Projectile",
@@ -96,6 +114,7 @@
     },
     {
         "fileName": "Projectile_RDL_MR10_Front.png",
+		"id": 521,
         "name": "MR10",
         "points": 0,
         "category": "Projectile",
@@ -103,6 +122,7 @@
     },
     {
         "fileName": "Projectile_RDL_MR9_Front.png",
+		"id": 73,
         "name": "MR9",
         "points": 0,
         "category": "Projectile",
@@ -110,6 +130,7 @@
     },
     {
         "fileName": "Projectile_RDL_RA81_Front.png",
+		"id": 267,
         "name": "RA81",
         "points": 0,
         "category": "Projectile",
@@ -117,6 +138,7 @@
     },
     {
         "fileName": "Projectile_UN_AMDS210_Front.png",
+		"id": 159,
         "name": "AMDS210",
         "points": 0,
         "category": "Projectile",
@@ -125,6 +147,7 @@
     },
     {
         "fileName": "Projectile_UN_DBP_Front.png",
+		"id": 158,
         "name": "DBP",
         "points": 0,
         "category": "Projectile",
@@ -133,6 +156,7 @@
     },
     {
         "fileName": "Projectile_UN_M7_Front.png",
+		"id": 154,
         "name": "M7",
         "points": 0,
         "category": "Projectile",
@@ -140,6 +164,7 @@
     },
     {
         "fileName": "Projectile_UN_M9_Front.png",
+		"id": 155,
         "name": "M9",
         "points": 0,
         "category": "Projectile",
@@ -147,6 +172,7 @@
     },
     {
         "fileName": "Projectile_UN_RKG70_Front.png",
+		"id": 157,
         "name": "RKG70",
         "points": 0,
         "category": "Projectile",
@@ -155,6 +181,7 @@
     },
     {
         "fileName": "Projectile_UN_SGM2_Front.png",
+		"id": 156,
         "name": "SGM2",
         "points": 0,
         "category": "Projectile",
@@ -162,6 +189,7 @@
     },
     {
         "fileName": "Projectile_UN_SGM2_Unfolded_Front.png",
+		"id": 167,
         "name": "SGM2_Unfolded",
         "points": 0,
         "category": "Projectile",
