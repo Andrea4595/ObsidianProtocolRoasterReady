@@ -132,6 +132,18 @@
 		"size": 2
     },
     {
+        "fileName": "Drone_UN_ADK15P_Front.png",
+		"id": 543,
+        "name": "ADK15P",
+        "points": 70,
+        "category": "Drone",
+        "faction": "UN",
+        "frame": true,
+        "charge": true,
+		"keywords": ["Charged", "Mutilation", "IonWeapon"],
+		"size": 2
+    },
+    {
         "fileName": "Drone_PL_MD4A_Front.png",
 		"id": 269,
 		"id_watermelon02": "PRDR-101",

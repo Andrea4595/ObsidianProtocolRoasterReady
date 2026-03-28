@@ -10,6 +10,16 @@
 		"dropKeywords": ["Concussion"]
     },
     {
+        "fileName": "Part_RDL_Left_CC7_Front.png",
+		"id": 535,
+        "name": "CC7",
+        "points": 39,
+        "category": "Left",
+        "faction": "RDL",
+        "freehand": true,
+		"keywords": ["PulseWeapon"]
+    },
+    {
         "fileName": "Part_RDL_Left_ML32_CC3_Front.png",
 		"id": 29,
         "name": "ML32_CC3",
@@ -353,6 +363,19 @@
         "faction": "UN",
         "freehand": true,
 		"keywords": ["Silence", "OnHit"]
+    },
+    {
+        "fileName": "Part_UN_Left_S9IGX106_Front.png",
+		"id": 540,
+        "name": "S9IGX106",
+        "points": 69,
+        "category": "Left",
+        "faction": "UN",
+        "frame": true,
+        "charge": true,
+        "freehand": true,
+		"mobility": 1,
+		"keywords": ["Concussion", "Charged", "Mutilation", "ScatterShot", "IonWeapon", "MeleeFiring"]
     },
     {
         "fileName": "Part_GOF_Left_MHKX_Front.png",

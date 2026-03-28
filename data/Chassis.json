@@ -29,6 +29,16 @@
 		"keywords": ["MovingInStraightLine"]
     },
     {
+        "fileName": "Part_RDL_Chassis_RL08C_Front.png",
+		"id": 534,
+        "name": "RL08C",
+        "points": 24,
+        "category": "Chassis",
+        "faction": "RDL",
+        "frame": true,
+		"mobility": 3
+    },
+    {
         "fileName": "Part_RDL_Chassis_RL06M_Front.png",
 		"id": 506,
         "name": "RL06M",
