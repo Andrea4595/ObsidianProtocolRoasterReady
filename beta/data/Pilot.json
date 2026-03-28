@@ -44,6 +44,17 @@
 		"keywords": ["Pilot_Hammerhead"]
     },
     {
+        "fileName": "Dial_RDL_04_Hammerhead_Different_1_Front.png",
+		"id": 0,
+		"id_watermelon02": "FPA-04-2",
+        "name": "Hammerhead_Different_1",
+        "points": 18,
+        "category": "Pilot",
+        "faction": "RDL",
+		"link": 4,
+		"keywords": ["Pilot_Hammerhead_Different_1"]
+    },
+    {
         "fileName": "Dial_RDL_05_Anser_Front.png",
 		"id": 305,
 		"id_watermelon02": "FPA-05",
@@ -233,6 +244,17 @@
         "faction": "UN",
 		"link": 4,
 		"keywords": ["Pilot_Onyx"]
+    },
+    {
+        "fileName": "Dial_UNPilot_23_Onyx_Different_1_Front.png",
+		"id": 0,
+		"id_watermelon02": "LPA-23-2",
+        "name": "Onyx_Different_1",
+        "points": 24,
+        "category": "Pilot",
+        "faction": "UN",
+		"link": 4,
+		"keywords": ["Pilot_Onyx_Different_1"]
     },
     {
         "fileName": "Dial_UNPilot_24_Sealock_Front.png",

@@ -300,6 +300,11 @@
 		"information" : "[공격 스탠스] 시 근접 액션에서 {눈}을 {약공격}으로 교체"
 	},
 	{
+		"keyword" : "Pilot_Hammerhead_Different_1",
+		"name" : "해충 구제",
+		"information" : "이 메카의 액션 기회를 얻을 때 [공격 스탠스] 시 최대 링크 1개 소모하여 액션 틱 1개를 획득한다."
+	},
+	{
 		"keyword" : "Pilot_Anser",
 		"name" : "지치지 않는",
 		"information" : "파일럿이 탑승한 메카가 구조 수치가 없는 섀시를 사용하고 있는 경우, 장갑이 파괴되어도 구조 수치2가 있는 것으로 취급함"
@@ -338,6 +343,11 @@
 		"keyword" : "Pilot_Onyx",
 		"name" : "완고한",
 		"information" : "파일럿의 메카는 대형 유닛을 상대로 분쇄 가능"
+	},
+	{
+		"keyword" : "Pilot_Onyx_Different_1",
+		"name" : "꾸밈음",
+		"information" : "이 유닛이 사격 행동 시 대상이 3그리드 이내에 있다면 노랑 주사위 1개 추가"
 	},
 	{
 		"keyword" : "Pilot_Sealock",

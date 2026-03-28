@@ -161,6 +161,15 @@
 		"keywords": ["IndirectFire", "Silence", "Throw"]
     },
     {
+        "fileName": "Part_RDL_Back_ECS3_Front.png",
+		"id": 532,
+        "name": "ECS3",
+        "points": 33,
+        "category": "Back",
+        "faction": "RDL",
+		"mobility": 1
+    },
+    {
         "fileName": "Part_RDL_Back_AMS192_Front.png",
 		"id": 264,
         "name": "AMS193",
@@ -296,6 +305,16 @@
         "charge": true,
 		"mobility": 2,
 		"keywords": ["KCArmor"]
+    },
+    {
+        "fileName": "Part_UN_Back_JP5_Front.png",
+		"id": 538,
+        "name": "JP5",
+        "points": 60,
+        "category": "Back",
+        "faction": "UN",
+		"mobility": 2,
+		"keywords": ["Load"]
     },
     {
         "fileName": "Part_GOF_Back_HALO_Front.png",

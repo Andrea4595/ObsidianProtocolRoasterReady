@@ -140,6 +140,16 @@
         "frame": true
     },
     {
+        "fileName": "Part_RDL_Torso_RTX06SR_Front.png",
+		"id": 533,
+        "name": "RTX06SR",
+        "points": 32,
+        "category": "Torso",
+        "faction": "RDL",
+		"electronic": 2,
+        "frame": true
+    },
+    {
         "fileName": "Part_UN_Torso_TM31C_Front.png",
 		"id": 91,
         "name": "TM31C",
@@ -240,6 +250,18 @@
 		"mobility": 1,
 		"electronic": 4,
 		"keywords": ["KCArmor"]
+    },
+    {
+        "fileName": "Part_UN_Torso_TM31Q_Front.png",
+		"id": 539,
+        "name": "TM31Q",
+        "points": 63,
+        "category": "Torso",
+        "faction": "UN",
+        "frame": true,
+		"mobility": 1,
+		"electronic": 4,
+		"keywords": ["CommandCreate(2)"]
     },
     {
         "fileName": "Part_GOF_Torso_P7A3SK_Front.png",
