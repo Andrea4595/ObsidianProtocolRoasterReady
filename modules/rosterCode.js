@@ -1,60 +1,14 @@
 import * as state from './state.js';
 import * as dom from './dom.js';
 import { createUnitPartsCompositeImage } from './ui.js';
-// import { renderRoster } from './ui.js'; // Removed direct UI import
 import { categoryOrder } from './constants.js';
 import { exportRosterToGist } from './ttsExporter.js';
+import { closeRosterCodeModal, showTTSModal } from './modal.js';
 
 // --- Compression Helpers ---
 
 
 
-
-// --- Modal Handling ---
-
-export async function showRosterCodeModal() {
-    const roster = state.getActiveRoster();
-    if (!roster) return;
-
-    dom.rosterCodeDisplay.value = '';
-    dom.rosterCodeModalTitle.textContent = '로스터 코드';
-    dom.rosterCodeInput.value = '';
-    dom.rosterCodeModal.style.display = 'flex';
-
-    const encodedRosterName = encodeURIComponent(roster.name);
-    const factionCode = roster.faction || 'RDL';
-
-    const unitsCode = Object.values(roster.units).map(unit => {
-        return categoryOrder.map(category => {
-            const card = unit[category];
-            return card ? card.name : '';
-        }).join('/');
-    }).join('|');
-
-    const droneNames = roster.drones
-        .filter(card => card && card.name)
-        .map(card => {
-            if (card.special?.includes('freight_back') && card.backCard) {
-                return `${card.name}:${card.backCard.name}`;
-            }
-            return card.name;
-        });
-    const dronesCode = droneNames.length > 0 ? `Drone:${droneNames.join(',')}` : '';
-
-    const tacticalNames = roster.tacticalCards
-        .filter(card => card && card.name)
-        .map(card => card.name);
-    const tacticalCardsCode = tacticalNames.length > 0 ? `Tactical:${tacticalNames.join(',')}` : '';
-
-    const dataCode = `${factionCode}~${unitsCode}~${dronesCode}~${tacticalCardsCode}`;
-    const fullCode = `${encodedRosterName}#${dataCode}`;
-
-    dom.rosterCodeDisplay.value = fullCode;
-}
-
-export function closeRosterCodeModal() {
-    dom.rosterCodeModal.style.display = 'none';
-}
 
 // --- Core Functions ---
 
@@ -159,12 +113,6 @@ export async function importRosterCode() {
     }
 }
 
-export function copyCodeToClipboard() {
-    dom.rosterCodeDisplay.select();
-    document.execCommand('copy');
-    alert('코드가 클립보드에 복사되었습니다.');
-}
-
 // --- Watermelon JSON Export ---
 
 /**
@@ -267,10 +215,8 @@ export async function exportToTTS() {
         });
 
         const command = `!spawn-team-tts-url ${gistRawUrl}`;
-        dom.rosterCodeDisplay.value = command;
-        dom.rosterCodeDisplay.select();
-        document.execCommand('copy');
-        alert('TTS 명령어가 생성되어 클립보드에 복사되었습니다.');
+        closeRosterCodeModal();
+        showTTSModal(command);
 
     } catch (error) {
         console.error('TTS 익스포트 에러:', error);

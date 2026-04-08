@@ -957,8 +957,7 @@ div.hidden-card-overlay > img.hidden-title-image {
     color: #65676b;
 }
 
-#roster-code-display,
-#roster-code-input {
+.modal-textarea {
     flex-grow: 1; /* Allow textareas to fill available vertical space */
     width: 100%;
     min-height: 150px; /* Ensure a minimum height */
@@ -972,8 +971,7 @@ div.hidden-card-overlay > img.hidden-title-image {
     box-sizing: border-box;
 }
 
-#copy-roster-code-btn,
-#import-roster-btn {
+.modal-btn {
     padding: 10px 15px;
     font-size: 16px;
     font-weight: bold;
@@ -982,24 +980,76 @@ div.hidden-card-overlay > img.hidden-title-image {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-#copy-roster-code-btn {
+.modal-btn:hover {
+    transform: scale(1.02);
+}
+
+.modal-btn-primary {
     background-color: #1877f2; /* Blue */
 }
 
-#copy-roster-code-btn:hover {
+.modal-btn-primary:hover {
     background-color: #166fe5;
-    transform: scale(1.02);
 }
 
-#import-roster-btn {
+.modal-btn-secondary {
+    background-color: #6c757d; /* Gray */
+}
+
+.modal-btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.modal-btn-success {
     background-color: #42b72a; /* Green */
 }
 
-#import-roster-btn:hover {
+.modal-btn-success:hover {
     background-color: #36a420;
-    transform: scale(1.02);
+}
+
+.modal-btn-tts {
+    background-color: #28a745; /* Success green color */
+    margin-top: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-btn-tts:hover {
+    background-color: #218838;
+}
+
+.modal-btn-tts:active {
+    transform: scale(0.99);
+}
+
+.modal-btn-tts:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#tts-modal .modal-content {
+    max-width: 500px;
+    height: auto;
+    max-height: 90vh;
+}
+
+#tts-modal-export-container {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background-color: #f7f8fa;
+    border-radius: 8px;
+}
+
+#tts-modal-export-container p {
+    margin-top: 0;
+    font-size: 14px;
+    color: #65676b;
 }
 
 /* Responsive adjustments for the roster code modal */
