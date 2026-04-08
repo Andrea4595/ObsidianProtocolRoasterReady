@@ -1,11 +1,27 @@
 import * as dom from './dom.js';
 import * as state from './state.js';
-import { openDroneModal, closeModal, openTacticalCardModal, openModal, closeCardDetailModal, openImageExportSettingsModal, closeImageExportSettingsModal, openSettingsModal, closeSettingsModal } from './modal.js';
+import { 
+    openDroneModal, 
+    closeModal, 
+    openTacticalCardModal, 
+    openModal, 
+    closeCardDetailModal, 
+    openImageExportSettingsModal, 
+    closeImageExportSettingsModal, 
+    openSettingsModal, 
+    closeSettingsModal,
+    showRosterCodeModal,
+    closeRosterCodeModal,
+    copyRosterCodeToClipboard,
+    showTTSModal,
+    closeTTSModal,
+    copyTtsCommandToClipboard
+} from './modal.js';
 import { setGameMode, performActionAndPreserveScroll } from './gameMode.js';
 import { handleExportImage } from './imageExporter.js';
 import { adjustOverlayWidths } from './ui.js'; // Imported separately
 import { ROSTER_SELECT_ACTIONS, CSS_CLASSES } from './constants.js';
-import { showRosterCodeModal, importRosterCode, closeRosterCodeModal, copyCodeToClipboard, downloadWatermelonJson, exportToTTS } from './rosterCode.js';
+import { importRosterCode, downloadWatermelonJson, exportToTTS } from './rosterCode.js';
 
 export function setupEventListeners() {
     dom.addUnitButton.addEventListener('click', () => {
@@ -19,48 +35,49 @@ export function setupEventListeners() {
 
     dom.addTacticalCardButton.addEventListener('click', openTacticalCardModal);
 
-    
+    // --- Modal Setup Helper ---
+    const setupModalEvents = (modalOverlay, closeElements, closeFn) => {
+        if (!modalOverlay) return;
+        closeElements.forEach(el => {
+            if (el) el.addEventListener('click', closeFn);
+        });
+        modalOverlay.addEventListener('click', (event) => {
+            if (event.target === modalOverlay) closeFn();
+        });
+    };
 
-    dom.modalClose.addEventListener('click', closeModal);
-    dom.modalOverlay.addEventListener('click', (event) => {
-        if (event.target === dom.modalOverlay) closeModal();
-    });
+    // Main Selection Modal
+    setupModalEvents(dom.modalOverlay, [dom.modalClose], closeModal);
 
     // Card Detail Modal
-    const cardDetailModal = document.getElementById('card-detail-modal');
-    const cardDetailClose = document.getElementById('card-detail-close');
-
-    if (cardDetailModal && cardDetailClose) {
-        cardDetailClose.addEventListener('click', closeCardDetailModal);
-        cardDetailModal.addEventListener('click', (event) => {
-            if (event.target === cardDetailModal) closeCardDetailModal();
-        });
-    }
+    setupModalEvents(
+        document.getElementById('card-detail-modal'),
+        [document.getElementById('card-detail-close')],
+        closeCardDetailModal
+    );
 
     // Roster Code Modal
     dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
-    dom.rosterCodeModalClose.addEventListener('click', closeRosterCodeModal);
-    dom.copyRosterCodeBtn.addEventListener('click', copyCodeToClipboard);
+    dom.copyRosterCodeBtn.addEventListener('click', copyRosterCodeToClipboard);
     dom.downloadWatermelonJsonBtn.addEventListener('click', downloadWatermelonJson);
     dom.exportTtsBtn.addEventListener('click', exportToTTS);
     dom.importRosterBtn.addEventListener('click', importRosterCode);
-    dom.rosterCodeModal.addEventListener('click', (event) => {
-        if (event.target === dom.rosterCodeModal) closeRosterCodeModal();
-    });
+    setupModalEvents(dom.rosterCodeModal, [dom.rosterCodeModalClose], closeRosterCodeModal);
+
+    // TTS Modal
+    dom.copyTtsCommandBtn.addEventListener('click', copyTtsCommandToClipboard);
+    setupModalEvents(dom.ttsModal, [dom.ttsModalClose], closeTTSModal);
 
     // Image Export Settings Modal
-    dom.imageExportSettingsClose.addEventListener('click', closeImageExportSettingsModal);
-    dom.cancelExportBtn.addEventListener('click', closeImageExportSettingsModal);
-    dom.imageExportSettingsModal.addEventListener('click', (event) => {
-        if (event.target === dom.imageExportSettingsModal) closeImageExportSettingsModal();
-    });
+    setupModalEvents(
+        dom.imageExportSettingsModal, 
+        [dom.imageExportSettingsClose, dom.cancelExportBtn], 
+        closeImageExportSettingsModal
+    );
 
     // Settings Modal
     dom.settingsBtn.addEventListener('click', openSettingsModal);
-    dom.settingsClose.addEventListener('click', closeSettingsModal);
-    dom.settingsModal.addEventListener('click', (event) => {
-        if (event.target === dom.settingsModal) closeSettingsModal();
-    });
+    setupModalEvents(dom.settingsModal, [dom.settingsClose], closeSettingsModal);
 
     dom.generalSettingsForm.addEventListener('change', () => {
         const newSettings = {

@@ -49,6 +49,13 @@ export const rosterCodeImportContainer = document.getElementById('roster-code-im
 export const rosterCodeInput = document.getElementById('roster-code-input');
 export const importRosterBtn = document.getElementById('import-roster-btn');
 
+// TTS Modal Elements
+export const ttsModal = document.getElementById('tts-modal');
+export const ttsModalClose = document.getElementById('tts-modal-close');
+export const ttsModalTitle = document.getElementById('tts-modal-title');
+export const ttsCommandDisplay = document.getElementById('tts-command-display');
+export const copyTtsCommandBtn = document.getElementById('copy-tts-command-btn');
+
 // Image Export Settings Modal Elements
 export const imageExportSettingsModal = document.getElementById('image-export-settings-modal');
 export const imageExportSettingsClose = document.getElementById('image-export-settings-close');

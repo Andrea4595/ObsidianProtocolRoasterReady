@@ -456,3 +456,77 @@ export const closeSettingsModal = () => {
     dom.settingsModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 };
+
+// --- Roster Code Modal ---
+
+export const showRosterCodeModal = () => {
+    const roster = state.getActiveRoster();
+    if (!roster) return;
+
+    dom.rosterCodeDisplay.value = '';
+    dom.rosterCodeModalTitle.textContent = '로스터 코드';
+    dom.rosterCodeInput.value = '';
+    
+    // Logic from rosterCode.js to generate the code
+    const factionCode = roster.faction || 'RDL';
+    const encodedRosterName = encodeURIComponent(roster.name);
+
+    const unitsCode = Object.values(roster.units).map(unit => {
+        return ['Pilot', 'Chassis', 'Torso', 'Left', 'Right', 'Back'].map(category => {
+            const card = unit[category];
+            return card ? card.name : '';
+        }).join('/');
+    }).join('|');
+
+    const droneNames = roster.drones
+        .filter(card => card && card.name)
+        .map(card => {
+            if (card.special?.includes('freight_back') && card.backCard) {
+                return `${card.name}:${card.backCard.name}`;
+            }
+            return card.name;
+        });
+    const dronesCode = droneNames.length > 0 ? `Drone:${droneNames.join(',')}` : '';
+
+    const tacticalNames = roster.tacticalCards
+        .filter(card => card && card.name)
+        .map(card => card.name);
+    const tacticalCardsCode = tacticalNames.length > 0 ? `Tactical:${tacticalNames.join(',')}` : '';
+
+    const dataCode = `${factionCode}~${unitsCode}~${dronesCode}~${tacticalCardsCode}`;
+    const fullCode = `${encodedRosterName}#${dataCode}`;
+
+    dom.rosterCodeDisplay.value = fullCode;
+    dom.rosterCodeModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+export const closeRosterCodeModal = () => {
+    dom.rosterCodeModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+export const copyRosterCodeToClipboard = () => {
+    dom.rosterCodeDisplay.select();
+    document.execCommand('copy');
+    alert('코드가 클립보드에 복사되었습니다.');
+};
+
+// --- TTS Modal ---
+
+export const showTTSModal = (command) => {
+    dom.ttsCommandDisplay.value = command;
+    dom.ttsModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+export const closeTTSModal = () => {
+    dom.ttsModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+export const copyTtsCommandToClipboard = () => {
+    dom.ttsCommandDisplay.select();
+    document.execCommand('copy');
+    alert('TTS 명령어가 클립보드에 복사되었습니다.');
+};

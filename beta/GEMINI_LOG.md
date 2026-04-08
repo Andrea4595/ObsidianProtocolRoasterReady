@@ -36,4 +36,47 @@
 - `uploadImageToImgBB(canvas)`, `uploadTextToGist(content, filename)`: 외부 API 업로드.
 
 ---
+
+## [2026-04-08] TTS 명령어 복사 방식 개선 (모달 도입)
+
+### 1. 작업 개요
+- **목표:** TTS 익스포트 완료 후 생성된 명령어를 자동으로 복사하는 대신, 사용자가 직접 확인하고 복사할 수 있도록 전용 모달 제공.
+- **배경:** 자동 복사가 일부 환경에서 불안정하거나 사용자에게 혼란을 줄 수 있어, 명시적인 확인 단계를 추가함.
+
+### 2. 기술적 구현 세부 사항
+- **UI 구성:**
+    - `index.html`에 `#tts-modal` 추가 (제목, 안내 문구, readonly textarea, 복사 버튼 포함).
+    - `style.css`에 기존 로스터 코드 모달과 일관된 스타일 적용.
+- **모듈 업데이트:**
+    - **`modules/dom.js`:** 신규 모달 관련 DOM 요소(`ttsModal`, `ttsCommandDisplay` 등) 추가 및 익스포트.
+    - **`modules/rosterCode.js`:** 
+        - `showTTSModal(command)`, `closeTTSModal()`, `copyTtsCommandToClipboard()` 함수 추가.
+        - `exportToTTS()` 함수에서 익스포트 성공 시 기존 모달을 닫고 신규 TTS 모달을 띄우도록 로직 변경.
+    - **`modules/events.js`:** 신규 모달의 닫기 버튼, 복사 버튼, 배경 클릭 닫기 이벤트 리스너 등록.
+
+### 3. 주요 변경 사항
+- **`exportToTTS()`:** 더 이상 `alert()`을 띄우며 자동 복사하지 않고, 전용 UI(`tts-modal`)를 통해 결과를 표시함.
+
+---
+
+## [2026-04-08] 모달 시스템 리팩토링 및 코드 표준화
+
+### 1. 작업 개요
+- **목표:** TTS 모달 도입 후 산재된 모달 로직을 통합하고, 이벤트 핸들링 및 스타일링 방식을 표준화하여 유지보수성 향상.
+
+### 2. 기술적 구현 세부 사항
+- **모달 로직 중앙 집중화:**
+    - `modules/rosterCode.js`에 있던 UI 관련 함수들(`showTTSModal`, `showRosterCodeModal` 등)을 `modules/modal.js`로 이전.
+    - 데이터 처리(로직)와 UI 표시(모달)의 역할을 명확히 분리.
+- **이벤트 핸들링 표준화:**
+    - `modules/events.js`에 `setupModalEvents` 헬퍼 함수 도입.
+    - 모든 모달에 대해 '닫기 버튼 연결' 및 '배경 클릭 시 닫기' 로직을 일관되게 적용하고 중복 코드 제거.
+- **CSS 클래스 기반 스타일링:**
+    - `style.css`의 개별 ID 선택자들을 `.modal-textarea`, `.modal-btn-*` 등 공통 클래스로 대체.
+    - `index.html`의 요소들에 해당 클래스를 적용하여 디자인 일관성 확보 및 재사용성 증대.
+
+### 3. 주요 변경 파일
+- `index.html`, `style.css`, `modules/modal.js`, `modules/rosterCode.js`, `modules/events.js`
+
+---
 *다음 작업 시 이 로그를 참고하여 기존 기능과의 정렬을 유지하십시오.*

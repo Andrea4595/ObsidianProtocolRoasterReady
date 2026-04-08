@@ -32,13 +32,12 @@
     - `createUnitPartsCompositeImage(unitData, targetSize)`: 메카 파츠(토르소, 섀시 등)를 합성하여 하나의 캔버스 이미지 생성.
     - `renderRoster()`: 전체 로스터 UI 업데이트.
 
-### 6. `modules/rosterCode.js` (코드 및 익스포트)
-- **역할:** 로스터를 문자열 코드로 변환하거나, 외부 형식(Watermelon)으로 내보내는 기능 담당.
+### 6. `modules/rosterCode.js` (코드 및 익스포트 로직)
+- **역할:** 로스터를 문자열 코드로 변환하거나, 외부 형식(Watermelon)으로 내보내는 데이터 처리 담당.
 - **주요 기능:**
-    - `showRosterCodeModal()`: 현재 로스터를 코드로 변환하여 표시.
     - `importRosterCode()`: 코드를 읽어 로스터 복구.
     - `downloadWatermelonJson()`: Watermelon02 앱 호환 형식의 JSON 다운로드.
-    - `exportToTTS()`: TTS용 명령어를 생성하여 클립보드에 복사.
+    - `exportToTTS()`: TTS용 명령어를 생성 (출력은 `modal.js`의 `showTTSModal` 호출).
 
 ### 7. `modules/ttsExporter.js` (신설: TTS 전용)
 - **역할:** 로스터 데이터를 TTS(Tabletop Simulator) 호환 텍스트 형식으로 변환.
@@ -68,7 +67,7 @@
 
 ---
 ## 개발 참고 사항
-- **카드 ID:** `id_watermelon02` 속성이 있으면 우선 사용하고, 없으면 `id`를 3자리(001 등)로 패딩하여 사용함.
+- **카드 ID:** `id_watermelon02`속성이 있으면 우선 사용하고, 없으면 `id`를 3자리(001 등)로 패딩하여 사용함.
 - **TTS 익스포트:** 메카 이미지는 ImgBB에 업로드되며, 최종 로스터 데이터는 Gist에 텍스트 파일로 저장되어 `!spawn-team-tts-url` 명령어로 제공됨.
 - **이미지 합성:** 메카 이미지는 `ui.js`의 `createUnitPartsCompositeImage`를 통해 동적으로 생성 가능.
-- **모달:** `modal.js`를 통해 범용 모달 기능을 제공함.
+- **모달 (`modal.js`):** 모든 모달(부품 선택, 카드 상세, 로스터 코드, TTS 명령어 등)의 표시 및 제어를 전담하며, 범용적인 모달 관리 기능을 제공함.
