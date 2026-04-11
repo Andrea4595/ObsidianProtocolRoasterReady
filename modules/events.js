@@ -24,27 +24,28 @@ import { ROSTER_SELECT_ACTIONS, CSS_CLASSES } from './constants.js';
 import { importRosterCode, downloadWatermelonJson, exportToTTS } from './rosterCode.js';
 
 export function setupEventListeners() {
-    dom.addUnitButton.addEventListener('click', () => {
-        if (state.isGameMode) return;
-        const activeRoster = state.getActiveRoster();
-        const newUnitId = activeRoster._nextUnitId++; // Use and increment the roster's internal counter
-        state.addUnitToActiveRoster(newUnitId); // Use state mutation function
-    });
+    // --- Helpers ---
+    const safeAddListener = (el, event, handler) => el && el.addEventListener(event, handler);
 
-    dom.addDroneButton.addEventListener('click', openDroneModal);
-
-    dom.addTacticalCardButton.addEventListener('click', openTacticalCardModal);
-
-    // --- Modal Setup Helper ---
     const setupModalEvents = (modalOverlay, closeElements, closeFn) => {
         if (!modalOverlay) return;
         closeElements.forEach(el => {
-            if (el) el.addEventListener('click', closeFn);
+            safeAddListener(el, 'click', closeFn);
         });
-        modalOverlay.addEventListener('click', (event) => {
+        safeAddListener(modalOverlay, 'click', (event) => {
             if (event.target === modalOverlay) closeFn();
         });
     };
+
+    safeAddListener(dom.addUnitButton, 'click', () => {
+        if (state.isGameMode) return;
+        const activeRoster = state.getActiveRoster();
+        const newUnitId = activeRoster._nextUnitId++; 
+        state.addUnitToActiveRoster(newUnitId);
+    });
+
+    safeAddListener(dom.addDroneButton, 'click', openDroneModal);
+    safeAddListener(dom.addTacticalCardButton, 'click', openTacticalCardModal);
 
     // Main Selection Modal
     setupModalEvents(dom.modalOverlay, [dom.modalClose], closeModal);
@@ -57,15 +58,15 @@ export function setupEventListeners() {
     );
 
     // Roster Code Modal
-    dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
-    dom.copyRosterCodeBtn.addEventListener('click', copyRosterCodeToClipboard);
-    dom.downloadWatermelonJsonBtn.addEventListener('click', downloadWatermelonJson);
-    dom.exportTtsBtn.addEventListener('click', exportToTTS);
-    dom.importRosterBtn.addEventListener('click', importRosterCode);
+    safeAddListener(dom.rosterCodeBtn, 'click', showRosterCodeModal);
+    safeAddListener(dom.copyRosterCodeBtn, 'click', copyRosterCodeToClipboard);
+    safeAddListener(dom.downloadWatermelonJsonBtn, 'click', downloadWatermelonJson);
+    safeAddListener(dom.exportTtsBtn, 'click', exportToTTS);
+    safeAddListener(dom.importRosterBtn, 'click', importRosterCode);
     setupModalEvents(dom.rosterCodeModal, [dom.rosterCodeModalClose], closeRosterCodeModal);
 
     // TTS Modal
-    dom.copyTtsCommandBtn.addEventListener('click', copyTtsCommandToClipboard);
+    safeAddListener(dom.copyTtsCommandBtn, 'click', copyTtsCommandToClipboard);
     setupModalEvents(dom.ttsModal, [dom.ttsModalClose], closeTTSModal);
 
     // Image Export Settings Modal
@@ -76,15 +77,15 @@ export function setupEventListeners() {
     );
 
     // Settings Modal
-    dom.settingsBtn.addEventListener('click', openSettingsModal);
+    safeAddListener(dom.settingsBtn, 'click', openSettingsModal);
     setupModalEvents(dom.settingsModal, [dom.settingsClose], closeSettingsModal);
 
-    dom.generalSettingsForm.addEventListener('change', () => {
+    safeAddListener(dom.generalSettingsForm, 'change', () => {
         const newSettings = {
             showUnitCompositeImageRoster: dom.settingShowUnitCompositeImageRoster.checked,
             showUnitCompositeImageGame: dom.settingShowUnitCompositeImageGame.checked,
         };
-        state.setSettings(newSettings); // This will dispatch 'settingsChanged' event
+        state.setSettings(newSettings); 
     });
 
     document.getElementById('setting-show-details').addEventListener('change', (event) => {

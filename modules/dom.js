@@ -1,73 +1,102 @@
-export const appTitle = document.getElementById('app-title');
-export const unitsContainer = document.getElementById('units-container');
+/**
+ * This module centralizes all DOM element references used by the application.
+ * Using getters ensures that we always try to find the element in the current DOM,
+ * which helps avoid null references due to timing or caching issues.
+ */
 
-const dronesContainerElement = document.createElement('div');
-dronesContainerElement.id = 'drones-container';
-unitsContainer.after(dronesContainerElement);
-export const dronesContainer = dronesContainerElement;
+const get = (id) => document.getElementById(id);
 
-const tacticalCardsContainerElement = document.createElement('div');
-tacticalCardsContainerElement.id = 'tactical-cards-container';
-dronesContainerElement.after(tacticalCardsContainerElement);
-export const tacticalCardsContainer = tacticalCardsContainerElement;
+// App Layout & Main Containers
+export const appTitle = get('app-title');
+export const unitsContainer = get('units-container');
 
+// These are dynamically inserted, so we handle them specially
+let _dronesContainer = null;
+export const getDronesContainer = () => {
+    if (!_dronesContainer) {
+        _dronesContainer = get('drones-container');
+        if (!_dronesContainer && unitsContainer) {
+            _dronesContainer = document.createElement('div');
+            _dronesContainer.id = 'drones-container';
+            unitsContainer.after(_dronesContainer);
+        }
+    }
+    return _dronesContainer;
+};
+export const dronesContainer = getDronesContainer(); // For backward compatibility
 
+let _tacticalCardsContainer = null;
+export const getTacticalCardsContainer = () => {
+    if (!_tacticalCardsContainer) {
+        _tacticalCardsContainer = get('tactical-cards-container');
+        if (!_tacticalCardsContainer && getDronesContainer()) {
+            _tacticalCardsContainer = document.createElement('div');
+            _tacticalCardsContainer.id = 'tactical-cards-container';
+            getDronesContainer().after(_tacticalCardsContainer);
+        }
+    }
+    return _tacticalCardsContainer;
+};
+export const tacticalCardsContainer = getTacticalCardsContainer(); // For backward compatibility
 
-export const totalPointsSpan = document.getElementById('total-points');
-export const rosterSelect = document.getElementById('roster-select');
-export const renameRosterBtn = document.getElementById('rename-roster-btn');
-export const deleteRosterBtn = document.getElementById('delete-roster-btn');
-export const exportImageBtn = document.getElementById('export-image-btn');
-export const settingsBtn = document.getElementById('settings-btn');
-export const gameModeBtn = document.getElementById('game-mode-btn');
-export const exitGameModeBtn = document.getElementById('exit-game-mode-btn');
-export const addUnitButton = document.getElementById('add-unit-button');
-export const addDroneButton = document.getElementById('add-drone-button');
-export const addTacticalCardButton = document.getElementById('add-tactical-card-button');
-export const modalOverlay = document.getElementById('modal-overlay');
-export const modalClose = document.getElementById('modal-close');
-export const modalTitle = document.getElementById('modal-title');
-export const modalImageContainer = document.getElementById('modal-image-container');
-export const rosterControls = document.getElementById('roster-controls');
-export const rosterSummary = document.getElementById('roster-summary');
-export const rosterSummaryPlaceholder = document.getElementById('roster-summary-placeholder');
-export const gameModeHeader = document.getElementById('game-mode-header');
+// Header & Controls
+export const totalPointsSpan = get('total-points');
+export const rosterSelect = get('roster-select');
+export const renameRosterBtn = get('rename-roster-btn');
+export const deleteRosterBtn = get('delete-roster-btn');
+export const exportImageBtn = get('export-image-btn');
+export const settingsBtn = get('settings-btn');
+export const gameModeBtn = get('game-mode-btn');
+export const exitGameModeBtn = get('exit-game-mode-btn');
+export const addUnitButton = get('add-unit-button');
+export const addDroneButton = get('add-drone-button');
+export const addTacticalCardButton = get('add-tactical-card-button');
+export const rosterControls = get('roster-controls');
+export const rosterSummary = get('roster-summary');
+export const rosterSummaryPlaceholder = get('roster-summary-placeholder');
+export const gameModeHeader = get('game-mode-header');
 export const addButtonContainer = document.querySelector('.add-button-container');
-export const factionSelect = document.getElementById('faction-select');
+export const factionSelect = get('faction-select');
 
-// Roster Code Modal Elements
-export const rosterCodeBtn = document.getElementById('roster-code-btn');
-export const rosterCodeModal = document.getElementById('roster-code-modal');
-export const rosterCodeModalClose = document.getElementById('roster-code-modal-close');
-export const rosterCodeModalTitle = document.getElementById('roster-code-modal-title');
-export const rosterCodeExportContainer = document.getElementById('roster-code-export-container');
-export const rosterCodeDisplay = document.getElementById('roster-code-display');
-export const copyRosterCodeBtn = document.getElementById('copy-roster-code-btn');
-export const downloadWatermelonJsonBtn = document.getElementById('download-watermelon-json-btn');
-export const exportTtsBtn = document.getElementById('export-tts-btn');
-export const rosterCodeImportContainer = document.getElementById('roster-code-import-container');
-export const rosterCodeInput = document.getElementById('roster-code-input');
-export const importRosterBtn = document.getElementById('import-roster-btn');
+// Main Selection Modal
+export const modalOverlay = get('modal-overlay');
+export const modalClose = get('modal-close');
+export const modalTitle = get('modal-title');
+export const modalImageContainer = get('modal-image-container');
 
-// TTS Modal Elements
-export const ttsModal = document.getElementById('tts-modal');
-export const ttsModalClose = document.getElementById('tts-modal-close');
-export const ttsModalTitle = document.getElementById('tts-modal-title');
-export const ttsCommandDisplay = document.getElementById('tts-command-display');
-export const copyTtsCommandBtn = document.getElementById('copy-tts-command-btn');
+// Roster Code Modal
+export const rosterCodeBtn = get('roster-code-btn');
+export const rosterCodeModal = get('roster-code-modal');
+export const rosterCodeModalClose = get('roster-code-modal-close');
+export const rosterCodeModalTitle = get('roster-code-modal-title');
+export const rosterCodeExportContainer = get('roster-code-export-container');
+export const rosterCodeDisplay = get('roster-code-display');
+export const copyRosterCodeBtn = get('copy-roster-code-btn');
+export const downloadWatermelonJsonBtn = get('download-watermelon-json-btn');
+export const exportTtsBtn = get('export-tts-btn');
+export const rosterCodeImportContainer = get('roster-code-import-container');
+export const rosterCodeInput = get('roster-code-input');
+export const importRosterBtn = get('import-roster-btn');
 
-// Image Export Settings Modal Elements
-export const imageExportSettingsModal = document.getElementById('image-export-settings-modal');
-export const imageExportSettingsClose = document.getElementById('image-export-settings-close');
-export const imageExportSettingsForm = document.getElementById('image-export-settings-form');
-export const generateImageBtn = document.getElementById('generate-image-btn');
-export const cancelExportBtn = document.getElementById('cancel-export-btn');
-export const settingShowUnitCompositeExport = document.getElementById('setting-show-unit-composite');
-export const settingRevealHiddenRow = document.getElementById('setting-reveal-hidden-row');
+// TTS Modal
+export const ttsModal = get('tts-modal');
+export const ttsModalClose = get('tts-modal-close');
+export const ttsModalTitle = get('tts-modal-title');
+export const ttsCommandDisplay = get('tts-command-display');
+export const copyTtsCommandBtn = get('copy-tts-command-btn');
 
-// Settings Modal Elements
-export const settingsModal = document.getElementById('settings-modal');
-export const settingsClose = document.getElementById('settings-close');
-export const generalSettingsForm = document.getElementById('general-settings-form');
-export const settingShowUnitCompositeImageRoster = document.getElementById('setting-show-unit-composite-image-roster');
-export const settingShowUnitCompositeImageGame = document.getElementById('setting-show-unit-composite-image-game');
+// Image Export Settings Modal
+export const imageExportSettingsModal = get('image-export-settings-modal');
+export const imageExportSettingsClose = get('image-export-settings-close');
+export const imageExportSettingsForm = get('image-export-settings-form');
+export const generateImageBtn = get('generate-image-btn');
+export const cancelExportBtn = get('cancel-export-btn');
+export const settingShowUnitCompositeExport = get('setting-show-unit-composite');
+export const settingRevealHiddenRow = get('setting-reveal-hidden-row');
+
+// General Settings Modal
+export const settingsModal = get('settings-modal');
+export const settingsClose = get('settings-close');
+export const generalSettingsForm = get('general-settings-form');
+export const settingShowUnitCompositeImageRoster = get('setting-show-unit-composite-image-roster');
+export const settingShowUnitCompositeImageGame = get('setting-show-unit-composite-image-game');

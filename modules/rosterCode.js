@@ -12,6 +12,43 @@ import { closeRosterCodeModal, showTTSModal } from './modal.js';
 
 // --- Core Functions ---
 
+/**
+ * Generates a encoded roster code string from a roster object.
+ * @param {object} roster The roster object to encode.
+ * @returns {string} The full roster code.
+ */
+export function generateRosterCode(roster) {
+    if (!roster) return '';
+
+    const factionCode = roster.faction || 'RDL';
+    const encodedRosterName = encodeURIComponent(roster.name);
+
+    const unitsCode = Object.values(roster.units).map(unit => {
+        return categoryOrder.map(category => {
+            const card = unit[category];
+            return card ? card.name : '';
+        }).join('/');
+    }).join('|');
+
+    const droneNames = roster.drones
+        .filter(card => card && card.name)
+        .map(card => {
+            if (card.special?.includes('freight_back') && card.backCard) {
+                return `${card.name}:${card.backCard.name}`;
+            }
+            return card.name;
+        });
+    const dronesCode = droneNames.length > 0 ? `Drone:${droneNames.join(',')}` : '';
+
+    const tacticalNames = roster.tacticalCards
+        .filter(card => card && card.name)
+        .map(card => card.name);
+    const tacticalCardsCode = tacticalNames.length > 0 ? `Tactical:${tacticalNames.join(',')}` : '';
+
+    const dataCode = `${factionCode}~${unitsCode}~${dronesCode}~${tacticalCardsCode}`;
+    return `${encodedRosterName}#${dataCode}`;
+}
+
 export async function importRosterCode() {
     const code = dom.rosterCodeInput.value.trim();
     if (!code) {

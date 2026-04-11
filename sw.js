@@ -1,17 +1,44 @@
-const CACHE_NAME = 'unit-combiner-v5';
-const appShellUrls = [
-  '/',
-  'index.html',
-  'style.css',
-  'script.js',
-  'manifest.json'
-  // NOTE: Icon files are removed from here for now, as they don't exist yet.
-  // We will add them back once they are created.
-  // '/icons/icon-192x192.png',
-  // '/icons/icon-512x512.png'
+/**
+ * Service Worker for Obsidian Protocol Roster Builder
+ * Handles offline caching of the app shell and card images.
+ */
+
+const CACHE_VERSION = 'v7';
+const CACHE_NAME = `unit-combiner-${CACHE_VERSION}`;
+
+// Core application files (App Shell)
+const APP_SHELL_FILES = [
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json'
 ];
 
-// Caches all card images robustly
+// JavaScript modules
+const MODULE_FILES = [
+  'apiService.js',
+  'cardRenderer.js',
+  'constants.js',
+  'dom.js',
+  'events.js',
+  'gameMode.js',
+  'imageExporter.js',
+  'longPress.js',
+  'modal.js',
+  'Roster.js',
+  'rosterCode.js',
+  'rules.js',
+  'state.js',
+  'ttsExporter.js',
+  'ui.js'
+].map(file => `./modules/${file}`);
+
+const ALL_ASSETS = [...APP_SHELL_FILES, ...MODULE_FILES];
+
+/**
+ * Caches all card images robustly by fetching their metadata first.
+ */
 const cacheCardImages = async (cache) => {
   try {
     const categoryFiles = [
@@ -49,24 +76,23 @@ const cacheCardImages = async (cache) => {
   }
 };
 
-// Install a service worker
+// Install: Cache app shell and images
 self.addEventListener('install', event => {
   console.log('Service Worker: Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(async (cache) => {
-        console.log('Service Worker: Caching app shell');
-        await cache.addAll(appShellUrls);
+        console.log('Service Worker: Caching assets');
+        await cache.addAll(ALL_ASSETS);
         await cacheCardImages(cache);
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate the service worker
+// Activate: Clean up old caches
 self.addEventListener('activate', event => {
   console.log('Service Worker: Activating...');
-  // Remove old caches
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -82,16 +108,16 @@ self.addEventListener('activate', event => {
   return self.clients.claim();
 });
 
-// Fetch event to serve content from cache
+// Fetch: Network first, then fallback to cache (better for development/updates)
+// or Cache first, then fallback to network (better for performance/offline)
+// Here we use Cache First for better offline experience.
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
           return response;
         }
-        // Not in cache - fetch from network
         return fetch(event.request);
       })
   );
