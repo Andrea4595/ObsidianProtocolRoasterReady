@@ -5,6 +5,7 @@ import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
 import { performActionAndPreserveScroll } from './gameMode.js';
 import { CSS_CLASSES, categoryOrder } from './constants.js';
 import { renderCardElement } from './cardRenderer.js';
+import { generateRosterCode } from './rosterCode.js';
 
 let currentUnitId = null;
 let currentCategory = null;
@@ -468,33 +469,7 @@ export const showRosterCodeModal = () => {
     dom.rosterCodeInput.value = '';
     
     // Logic from rosterCode.js to generate the code
-    const factionCode = roster.faction || 'RDL';
-    const encodedRosterName = encodeURIComponent(roster.name);
-
-    const unitsCode = Object.values(roster.units).map(unit => {
-        return categoryOrder.map(category => {
-            const card = unit[category];
-            return card ? card.name : '';
-        }).join('/');
-    }).join('|');
-
-    const droneNames = roster.drones
-        .filter(card => card && card.name)
-        .map(card => {
-            if (card.special?.includes('freight_back') && card.backCard) {
-                return `${card.name}:${card.backCard.name}`;
-            }
-            return card.name;
-        });
-    const dronesCode = droneNames.length > 0 ? `Drone:${droneNames.join(',')}` : '';
-
-    const tacticalNames = roster.tacticalCards
-        .filter(card => card && card.name)
-        .map(card => card.name);
-    const tacticalCardsCode = tacticalNames.length > 0 ? `Tactical:${tacticalNames.join(',')}` : '';
-
-    const dataCode = `${factionCode}~${unitsCode}~${dronesCode}~${tacticalCardsCode}`;
-    const fullCode = `${encodedRosterName}#${dataCode}`;
+    const fullCode = generateRosterCode(roster);
 
     dom.rosterCodeDisplay.value = fullCode;
     dom.rosterCodeModal.style.display = 'flex';

@@ -79,4 +79,32 @@
 - `index.html`, `style.css`, `modules/modal.js`, `modules/rosterCode.js`, `modules/events.js`
 
 ---
+
+## [2026-04-11] PWA 캐시 개선 및 로스터 코드 파츠 순서 버그 수정
+
+### 1. 작업 개요
+- **목표:** 애플리케이션 초기 로드 시 발생하는 `TypeError` 해결 및 로스터 코드를 불러올 때 특정 파츠(Torso, Chassis)가 누락되는 문제 수정.
+
+### 2. 기술적 구현 세부 사항
+- **PWA 서비스 워커 (`sw.js`) 개선:**
+    - `index.html`은 캐시되지만 `modules/` 내의 JS 파일들이 개별적으로 캐시되지 않아 발생할 수 있는 버전 불일치 문제 해결.
+    - `appShellUrls`에 모든 모듈 파일 경로 명시.
+    - 캐시 버전을 `unit-combiner-v6`로 업데이트하여 즉각적인 갱신 유도.
+- **로스터 코드 파츠 순서 동기화:**
+    - **문제:** 코드 생성(Export) 시 파츠 순서(`Pilot/Chassis/Torso/...`)와 로드(Import) 시 순서(`Pilot/Torso/Chassis/...`)가 불일치하여 데이터 복원 실패.
+    - **해결:** `modules/modal.js`에서 코드를 생성할 때 하드코딩된 배열 대신 `modules/constants.js`의 `categoryOrder`를 사용하도록 수정하여 생성/로드 순서 일치.
+- **안정성 강화:**
+    - **`modules/dom.js`:** 일부 요소 ID에 포함된 불필요한 줄바꿈 제거.
+    - **`modules/events.js`:** 신규 추가된 모달 요소(`exportTtsBtn` 등)에 대해 `addEventListener` 호출 전 null 체크 로직 추가.
+
+- **구조적 리팩토링:**
+    - 로스터 코드 생성 로직을 `rosterCode.js`로 통합하여 데이터 일관성 보장.
+    - `events.js`에 `safeAddListener` 유틸리티 도입으로 코드 가독성 및 안정성 향상.
+    - `dom.js` 요소 접근 방식 개선으로 초기 로딩 시 타이밍 문제 해결.
+    - `sw.js` 파일 목록 관리 구조화 및 캐시 버전 업데이트(v7).
+
+### 3. 주요 변경 파일
+- `sw.js`, `modules/dom.js`, `modules/events.js`, `modules/modal.js`, `modules/rosterCode.js`
+
+---
 *다음 작업 시 이 로그를 참고하여 기존 기능과의 정렬을 유지하십시오.*
