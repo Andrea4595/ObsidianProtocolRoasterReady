@@ -3,7 +3,7 @@ import * as state from './state.js';
 import { currentSort, setCurrentSort, saveCurrentSort } from './state.js';
 // import { renderRoster, updateUnitDisplay, updateTotalPoints, addDroneElement, addTacticalCardElement, updateDroneDisplay, updateTacticalCardDisplay } from './ui.js'; // Removed direct UI imports
 import { performActionAndPreserveScroll } from './gameMode.js';
-import { CSS_CLASSES } from './constants.js';
+import { CSS_CLASSES, categoryOrder } from './constants.js';
 import { renderCardElement } from './cardRenderer.js';
 
 let currentUnitId = null;
@@ -472,7 +472,7 @@ export const showRosterCodeModal = () => {
     const encodedRosterName = encodeURIComponent(roster.name);
 
     const unitsCode = Object.values(roster.units).map(unit => {
-        return ['Pilot', 'Chassis', 'Torso', 'Left', 'Right', 'Back'].map(category => {
+        return categoryOrder.map(category => {
             const card = unit[category];
             return card ? card.name : '';
         }).join('/');

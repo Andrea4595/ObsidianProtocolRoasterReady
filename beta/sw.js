@@ -1,14 +1,25 @@
-const CACHE_NAME = 'unit-combiner-v5';
+const CACHE_NAME = 'unit-combiner-v6';
 const appShellUrls = [
-  '/',
-  'index.html',
-  'style.css',
-  'script.js',
-  'manifest.json'
-  // NOTE: Icon files are removed from here for now, as they don't exist yet.
-  // We will add them back once they are created.
-  // '/icons/icon-192x192.png',
-  // '/icons/icon-512x512.png'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './manifest.json',
+  './modules/apiService.js',
+  './modules/cardRenderer.js',
+  './modules/constants.js',
+  './modules/dom.js',
+  './modules/events.js',
+  './modules/gameMode.js',
+  './modules/imageExporter.js',
+  './modules/longPress.js',
+  './modules/modal.js',
+  './modules/Roster.js',
+  './modules/rosterCode.js',
+  './modules/rules.js',
+  './modules/state.js',
+  './modules/ttsExporter.js',
+  './modules/ui.js'
 ];
 
 // Caches all card images robustly

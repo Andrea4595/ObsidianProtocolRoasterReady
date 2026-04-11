@@ -57,15 +57,15 @@ export function setupEventListeners() {
     );
 
     // Roster Code Modal
-    dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
-    dom.copyRosterCodeBtn.addEventListener('click', copyRosterCodeToClipboard);
-    dom.downloadWatermelonJsonBtn.addEventListener('click', downloadWatermelonJson);
-    dom.exportTtsBtn.addEventListener('click', exportToTTS);
-    dom.importRosterBtn.addEventListener('click', importRosterCode);
+    if (dom.rosterCodeBtn) dom.rosterCodeBtn.addEventListener('click', showRosterCodeModal);
+    if (dom.copyRosterCodeBtn) dom.copyRosterCodeBtn.addEventListener('click', copyRosterCodeToClipboard);
+    if (dom.downloadWatermelonJsonBtn) dom.downloadWatermelonJsonBtn.addEventListener('click', downloadWatermelonJson);
+    if (dom.exportTtsBtn) dom.exportTtsBtn.addEventListener('click', exportToTTS);
+    if (dom.importRosterBtn) dom.importRosterBtn.addEventListener('click', importRosterCode);
     setupModalEvents(dom.rosterCodeModal, [dom.rosterCodeModalClose], closeRosterCodeModal);
 
     // TTS Modal
-    dom.copyTtsCommandBtn.addEventListener('click', copyTtsCommandToClipboard);
+    if (dom.copyTtsCommandBtn) dom.copyTtsCommandBtn.addEventListener('click', copyTtsCommandToClipboard);
     setupModalEvents(dom.ttsModal, [dom.ttsModalClose], closeTTSModal);
 
     // Image Export Settings Modal
