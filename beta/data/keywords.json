@@ -136,7 +136,7 @@
 	},
 	{
 		"keyword" : "OmniDirectionFiring",
-		"name" : "전방향 사격",
+		"name" : "전방위 사격",
 		"information" : "이 액션에는 전방 범위 제한이 없습니다."
 	},
 	{
@@ -278,6 +278,11 @@
 		"keyword" : "Strength+X",
 		"name" : "송출 강도+X",
 		"information" : "EA 시 노랑 주사위를 X만큼 추가합니다."
+	},
+	{
+		"keyword" : "RWS",
+		"name" : "원격 조작 무기",
+		"information" : "(플래닛링 다이나믹스 본사로부터 매뉴얼 수신 중...)"
 	},
 	{
 		"keyword" : "Pilot_Misty",

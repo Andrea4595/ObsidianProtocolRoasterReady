@@ -339,5 +339,14 @@
         "subCards": [
             "Drone_WD_ACE001_Defense_Front.jpg"
         ]
+    },
+    {
+        "fileName": "Part_PL_LS297_Front.png",
+		"id": 545,
+        "name": "LS297",
+        "points": 48,
+        "category": "Back",
+        "faction": "Public",
+		"keywords": ["Suppression"]
     }
 ]

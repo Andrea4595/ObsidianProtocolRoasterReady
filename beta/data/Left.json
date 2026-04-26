@@ -398,5 +398,14 @@
         "faction": "Public",
         "freehand": true,
 		"keywords": ["MeleeFiring", "OnHit", "Fragile"]
+    },
+    {
+        "fileName": "Part_PL_LS197R_Front_Left.png",
+		"id": 550,
+        "name": "LS197R_L",
+        "points": 48,
+        "category": "Left",
+        "faction": "Public",
+		"keywords": ["RWS"]
     }
 ]

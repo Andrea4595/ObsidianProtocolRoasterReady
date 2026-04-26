@@ -115,5 +115,14 @@
         "category": "Chassis",
         "faction": "Public",
 		"mobility": 3
+    },
+    {
+        "fileName": "Part_PL_HL2_Front.png",
+		"id": 548,
+        "name": "HL2",
+        "points": 21,
+        "category": "Chassis",
+        "faction": "Public",
+		"mobility": 3
     }
 ]
