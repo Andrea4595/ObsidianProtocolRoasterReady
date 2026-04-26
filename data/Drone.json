@@ -55,6 +55,7 @@
         "faction": "UN",
         "intercept": 3,
         "frame": true,
+		"keywords": ["LaserWeapon", "Intercept(3)", "OmniDirectionFiring", "MeleeFiring"],
 		"size": 2
     },
     {

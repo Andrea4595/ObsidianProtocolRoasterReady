@@ -302,5 +302,17 @@
         "frame": true,
 		"mobility": 1,
 		"electronic": 3
+    },
+    {
+        "fileName": "Part_PL_H2B_Front.png",
+		"id": 547,
+        "name": "H2B",
+        "points": 63,
+        "category": "Torso",
+        "faction": "Public",
+        "frame": true,
+		"electronic": 2,
+		"freehand": true,
+		"keywords": ["Stationary", "MultiTarget(5)"]
     }
 ]

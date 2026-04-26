@@ -377,5 +377,15 @@
         "faction": "Public",
 		"link": 4,
 		"keywords": ["Pilot_KarlFried"]
+    },
+    {
+        "fileName": "Dial_PD_PLPilot_102_Front.png",
+		"id": 0,
+		"id_watermelon02": "XPA-60",
+        "name": "CombatantA102",
+        "points": 10,
+        "category": "Pilot",
+        "faction": "Public",
+		"link": 5
     }
 ]

@@ -472,5 +472,14 @@
         "faction": "Public",
         "freehand": true,
 		"keywords": ["MeleeFiring", "Mutilation"]
+    },
+    {
+        "fileName": "Part_PL_LS197R_Front_Right.png",
+		"id": 551,
+        "name": "LS197R_R",
+        "points": 48,
+        "category": "Right",
+        "faction": "Public",
+		"keywords": ["RWS"]
     }
 ]
