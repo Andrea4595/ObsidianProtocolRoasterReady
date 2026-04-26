@@ -229,7 +229,7 @@
         "points": 48,
         "category": "Drone",
         "faction": "Public",
-		"keywords": ["OmniDirectionFiring", "MeleeFiring", "AirbornMovement"],
+		"keywords": ["OmniDirectionFiring", "MeleeFiring", "AirborneMovement"],
 		"size": 2
     },
     {
@@ -244,7 +244,7 @@
         "subCards": [
             "Projectile_PL_FG33_Front.png"
         ],
-		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement"],
+		"keywords": ["IndirectFire", "Volley(2)", "AirborneMovement"],
 		"size": 2
     },
     {
@@ -255,7 +255,7 @@
         "points": 42,
         "category": "Drone",
         "faction": "Public",
-		"keywords": ["Highlight", "AirbornMovement", "OmniDirectionFiring", "MeleeFiring"],
+		"keywords": ["Highlight", "AirborneMovement", "OmniDirectionFiring", "MeleeFiring"],
 		"size": 2
     },
     {
@@ -271,7 +271,7 @@
             "Projectile_PL_FG33_Front.png",
             "Projectile_PL_RMA_Front.png"
         ],
-		"keywords": ["IndirectFire", "Volley(2)", "AirbornMovement", "DirectFire"],
+		"keywords": ["IndirectFire", "Volley(2)", "AirborneMovement", "DirectFire"],
 		"size": 2
     },
     {
