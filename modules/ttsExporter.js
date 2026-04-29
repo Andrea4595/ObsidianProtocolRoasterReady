@@ -3,6 +3,8 @@ import { categoryOrder } from './constants.js';
 import { createUnitPartsCompositeImage } from './ui.js';
 import { uploadImageToImgBB, uploadTextToGist } from './apiService.js';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 /**
  * Returns the TTS-compatible ID for a card.
  */
@@ -10,8 +12,7 @@ export function getTTSId(card) {
     if (!card) return null;
     if (card.id_watermelon02) return card.id_watermelon02;
     const id = card.id;
-    if (id === undefined) return null;
-    return String(id).padStart(3, '0');
+    return id !== undefined ? String(id).padStart(3, '0') : null;
 }
 
 /**
@@ -21,104 +22,132 @@ export function getDropId(card) {
     if (!card) return null;
     if (card.id_watermelon02) return card.id_watermelon02 + "-T";
     const id = parseInt(card.id);
-    if (isNaN(id)) return null;
-    return String(id + 1).padStart(3, '0');
+    return !isNaN(id) ? String(id + 1).padStart(3, '0') : null;
 }
 
 /**
- * Generates the full TTS roster text content and uploads it to Gist.
- * @param {object} roster 
- * @param {function} onProgress Callback for status updates
- * @returns {Promise<string>} The Raw Gist URL
+ * 유닛에서 프로젝타일 ID 목록을 추출합니다.
+ */
+function getProjectiles(card) {
+    const projectiles = new Set();
+    if (!card) return [];
+
+    if (card.changes) {
+        card.changes.forEach(fileName => {
+            const subCard = state.allCards.byFileName.get(fileName);
+            if (subCard) projectiles.add(getTTSId(subCard));
+        });
+    }
+    if (card.resolvedSubCards) {
+        card.resolvedSubCards.forEach(subCard => {
+            projectiles.add(getTTSId(subCard));
+        });
+    }
+    return Array.from(projectiles);
+}
+
+/**
+ * 개별 메카(Mech) 데이터를 TTS 텍스트 라인으로 변환합니다.
+ */
+async function processMech(unit, index, total, onProgress) {
+    const lines = [];
+    if (!unit.Pilot) return lines;
+
+    if (onProgress) onProgress(`이미지 합성 중... (유닛 ${index + 1}/${total})`);
+    const canvas = await createUnitPartsCompositeImage(unit, 600);
+    
+    let imageUrl = 'https://example.com/placeholder.png';
+    if (canvas) {
+        if (index > 0) {
+            if (onProgress) onProgress(`안전한 업로드를 위해 대기 중...`);
+            await sleep(1500);
+        }
+        if (onProgress) onProgress(`이미지 업로드 중... (유닛 ${index + 1}/${total})`);
+        imageUrl = await uploadImageToImgBB(canvas);
+    }
+
+    lines.push(`# Mech ${imageUrl}`);
+    lines.push(`Pilot: ${getTTSId(unit.Pilot)}`);
+    lines.push(`Torso: ${getTTSId(unit.Torso)}`);
+    lines.push(`Chasis: ${getTTSId(unit.Chassis)}`);
+
+    ['Left', 'Right'].forEach(side => {
+        const card = unit[side];
+        const id = getTTSId(card) || '';
+        const dropId = card?.drop ? getDropId(card) : null;
+        const suffix = dropId ? ` [throwIndex:${dropId}]` : '';
+        lines.push(`${side}Arm: ${id}${suffix}`);
+    });
+
+    lines.push(`Backpack: ${getTTSId(unit.Back)}`);
+
+    // 모든 파츠에서 프로젝타일 수집
+    const allProjectiles = new Set();
+    categoryOrder.forEach(cat => {
+        getProjectiles(unit[cat]).forEach(p => allProjectiles.add(p));
+    });
+
+    if (allProjectiles.size > 0) {
+        lines.push(`Projectile: ${Array.from(allProjectiles).join(',')}`);
+    }
+
+    lines.push(''); // 문단 구분
+    return lines;
+}
+
+/**
+ * 드론(Drone) 데이터를 TTS 텍스트 라인으로 변환합니다.
+ */
+function processDrone(drone) {
+    const droneId = getTTSId(drone);
+    if (!droneId) return [];
+
+    const lines = [`# Drone ${droneId}`];
+    const projectiles = new Set(getProjectiles(drone));
+    
+    if (drone.backCard) {
+        projectiles.add(getTTSId(drone.backCard));
+    }
+
+    if (projectiles.size > 0) {
+        lines.push(`Projectile: ${Array.from(projectiles).join(',')}`);
+    }
+    lines.push('');
+    return lines;
+}
+
+/**
+ * 전술 카드(Tactical Card) 데이터를 TTS 텍스트 라인으로 변환합니다.
+ */
+function processTacticalCard(card) {
+    const cardId = getTTSId(card);
+    return cardId ? [`# TacticCard ${cardId}`, ''] : [];
+}
+
+/**
+ * 로스터를 TTS 형식으로 변환하고 Gist에 업로드합니다.
  */
 export async function exportRosterToGist(roster, onProgress) {
-    let ttsContent = `# Team Faction: ${roster.faction || 'RDL'} Lang: en\n\n`;
+    const output = [`# Team Faction: ${roster.faction || 'RDL'} Lang: en`, ''];
 
-    // Process Mechs
-    for (const unitId in roster.units) {
-        const unit = roster.units[unitId];
-        if (!unit.Pilot) continue;
-
-        if (onProgress) onProgress(`이미지 합성 중... (유닛 ${unitId})`);
-        const canvas = await createUnitPartsCompositeImage(unit, 600);
-        let imageUrl = 'https://example.com/placeholder.png';
-        if (canvas) {
-            if (onProgress) onProgress(`이미지 업로드 중... (유닛 ${unitId})`);
-            imageUrl = await uploadImageToImgBB(canvas);
-        }
-
-        ttsContent += `# Mech ${imageUrl}\n`;
-        ttsContent += `Pilot: ${getTTSId(unit.Pilot)}\n`;
-        ttsContent += `Torso: ${getTTSId(unit.Torso)}\n`;
-        ttsContent += `Chasis: ${getTTSId(unit.Chassis)}\n`;
-
-        const leftArmId = getTTSId(unit.Left);
-        const leftDropId = unit.Left?.drop ? getDropId(unit.Left) : null;
-        ttsContent += `LeftArm: ${leftArmId || ''}${leftDropId ? ` [throwIndex:${leftDropId}]` : ''}\n`;
-
-        const rightArmId = getTTSId(unit.Right);
-        const rightDropId = unit.Right?.drop ? getDropId(unit.Right) : null;
-        ttsContent += `RightArm: ${rightArmId || ''}${rightDropId ? ` [throwIndex:${rightDropId}]` : ''}\n`;
-
-        ttsContent += `Backpack: ${getTTSId(unit.Back)}\n`;
-
-        // Projectiles (Changes and SubCards)
-        const projectiles = [];
-        categoryOrder.forEach(cat => {
-            const card = unit[cat];
-            if (card) {
-                if (card.changes) {
-                    card.changes.forEach(fileName => {
-                        const subCard = state.allCards.byFileName.get(fileName);
-                        if (subCard) projectiles.push(getTTSId(subCard));
-                    });
-                }
-                if (card.resolvedSubCards) {
-                    card.resolvedSubCards.forEach(subCard => {
-                        projectiles.push(getTTSId(subCard));
-                    });
-                }
-            }
-        });
-
-        if (projectiles.length > 0) {
-            ttsContent += `Projectile: ${Array.from(new Set(projectiles)).join(',')}\n`;
-        }
-        ttsContent += `\n`;
+    // 1. 메카 처리
+    const unitIds = Object.keys(roster.units);
+    for (let i = 0; i < unitIds.length; i++) {
+        const mechLines = await processMech(roster.units[unitIds[i]], i, unitIds.length, onProgress);
+        output.push(...mechLines);
     }
 
-    // Process Drones
-    for (const drone of roster.drones) {
-        const droneId = getTTSId(drone);
-        if (!droneId) continue;
+    // 2. 드론 처리
+    roster.drones.forEach(drone => {
+        output.push(...processDrone(drone));
+    });
 
-        ttsContent += `# Drone ${droneId}\n`;
-        
-        const projectiles = [];
-        if (drone.resolvedSubCards) {
-            drone.resolvedSubCards.forEach(subCard => {
-                projectiles.push(getTTSId(subCard));
-            });
-        }
-        if (drone.backCard) {
-            projectiles.push(getTTSId(drone.backCard));
-        }
+    // 3. 전술 카드 처리
+    roster.tacticalCards.forEach(card => {
+        output.push(...processTacticalCard(card));
+    });
 
-        if (projectiles.length > 0) {
-            ttsContent += `Projectile: ${Array.from(new Set(projectiles)).join(',')}\n`;
-        }
-        ttsContent += `\n`;
-    }
-
-    // Process Tactical Cards
-    for (const card of roster.tacticalCards) {
-        const cardId = getTTSId(card);
-        if (cardId) {
-            ttsContent += `# TacticCard ${cardId}\n\n`;
-        }
-    }
-
-    if (onProgress) onProgress('Gist 업로드 중...');
+    if (onProgress) onProgress('최종 Gist 업로드 중...');
     const filename = `tts_${Date.now()}.txt`;
-    return await uploadTextToGist(ttsContent, filename);
+    return await uploadTextToGist(output.join('\n'), filename);
 }
