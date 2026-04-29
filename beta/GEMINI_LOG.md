@@ -4,6 +4,96 @@
 
 ---
 
+## [2026-04-28] 보안 강화 및 로컬 테스트 환경/업로드 로직 개선
+
+### 1. 작업 개요
+- **목표:** 소스 코드 내 API 토큰 노출 차단, 안전한 로컬 테스트 환경 구축, ImgBB 할당량 제한(Rate Limit) 방지를 위한 업로드 로직 개선.
+- **배경:** 기존 Base64 인코딩 방식의 보안 취약성을 해결하고, PWA 환경에서 개발 및 테스트의 편의성을 높이기 위함.
+
+### 2. 기술적 구현 세부 사항
+- **보안 및 환경 구축:**
+    - **`.gitignore` 도입:** `modules/env.js`를 무시 목록에 추가하여 실제 토큰 노출 방지.
+    - **로컬 설정 파일 (`modules/env.js`) 생성:** 로컬 테스트 전용 토큰 관리 파일 도입.
+    - **동적 토큰 로딩 (`modules/apiService.js`):** `dynamic import`를 통해 로컬 `env.js`와 빌드 타임 환경 변수(`process.env`)를 유연하게 참조하도록 구현. 캐시 방지를 위해 타임스탬프 쿼리 스트링 적용.
+- **업로드 안정화:**
+    - **순차 업로드 및 딜레이 도입 (`modules/ttsExporter.js`):** 여러 유닛의 이미지 업로드 시 ImgBB의 할당량 제한을 방지하기 위해 각 업로드 사이에 1.5초의 대기 시간(`sleep`)을 추가.
+    - **에러 핸들링 강화:** `Rate limit reached` 발생 시 사용자에게 재시도 안내 메시지 표시 및 설정 파일 누락 시 구체적인 안내 제공.
+- **데이터 정리:**
+    - `prompt/` 폴더 내의 가이드 문서에서 노출된 실제 토큰 값을 플레이스홀더로 교체하여 보안 위반 사항 정리.
+
+---
+
+## [2026-04-11] PWA 캐시 개선 및 로스터 코드 파츠 순서 버그 수정
+
+### 1. 작업 개요
+- **목표:** 애플리케이션 초기 로드 시 발생하는 `TypeError` 해결 및 로스터 코드를 불러올 때 특정 파츠(Torso, Chassis)가 누락되는 문제 수정.
+
+### 2. 기술적 구현 세부 사항
+- **PWA 서비스 워커 (`sw.js`) 개선:**
+    - `index.html`은 캐시되지만 `modules/` 내의 JS 파일들이 개별적으로 캐시되지 않아 발생할 수 있는 버전 불일치 문제 해결.
+    - `appShellUrls`에 모든 모듈 파일 경로 명시.
+    - 캐시 버전을 `unit-combiner-v6`로 업데이트하여 즉각적인 갱신 유도.
+- **로스터 코드 파츠 순서 동기화:**
+    - **문제:** 코드 생성(Export) 시 파츠 순서(`Pilot/Chassis/Torso/...`)와 로드(Import) 시 순서(`Pilot/Torso/Chassis/...`)가 불일치하여 데이터 복원 실패.
+    - **해결:** `modules/modal.js`에서 코드를 생성할 때 하드코딩된 배열 대신 `modules/constants.js`의 `categoryOrder`를 사용하도록 수정하여 생성/로드 순서 일치.
+- **안정성 강화:**
+    - **`modules/dom.js`:** 일부 요소 ID에 포함된 불필요한 줄바꿈 제거.
+    - **`modules/events.js`:** 신규 추가된 모달 요소(`exportTtsBtn` 등)에 대해 `addEventListener` 호출 전 null 체크 로직 추가.
+
+- **구조적 리팩토링:**
+    - 로스터 코드 생성 로직을 `rosterCode.js`로 통합하여 데이터 일관성 보장.
+    - `events.js`에 `safeAddListener` 유틸리티 도입으로 코드 가독성 및 안정성 향상.
+    - `dom.js` 요소 접근 방식 개선으로 초기 로딩 시 타이밍 문제 해결.
+    - `sw.js` 파일 목록 관리 구조화 및 캐시 버전 업데이트(v7).
+
+### 3. 주요 변경 파일
+- `sw.js`, `modules/dom.js`, `modules/events.js`, `modules/modal.js`, `modules/rosterCode.js`
+
+---
+
+## [2026-04-08] 모달 시스템 리팩토링 및 코드 표준화
+
+### 1. 작업 개요
+- **목표:** TTS 모달 도입 후 산재된 모달 로직을 통합하고, 이벤트 핸들링 및 스타일링 방식을 표준화하여 유지보수성 향상.
+
+### 2. 기술적 구현 세부 사항
+- **모달 로직 중앙 집중화:**
+    - `modules/rosterCode.js`에 있던 UI 관련 함수들(`showTTSModal`, `showRosterCodeModal` 등)을 `modules/modal.js`로 이전.
+    - 데이터 처리(로직)와 UI 표시(모달)의 역할을 명확히 분리.
+- **이벤트 핸들링 표준화:**
+    - `modules/events.js`에 `setupModalEvents` 헬퍼 함수 도입.
+    - 모든 모달에 대해 '닫기 버튼 연결' 및 '배경 클릭 시 닫기' 로직을 일관되게 적용하고 중복 코드 제거.
+- **CSS 클래스 기반 스타일링:**
+    - `style.css`의 개별 ID 선택자들을 `.modal-textarea`, `.modal-btn-*` 등 공통 클래스로 대체.
+    - `index.html`의 요소들에 해당 클래스를 적용하여 디자인 일관성 확보 및 재사용성 증대.
+
+### 3. 주요 변경 파일
+- `index.html`, `style.css`, `modules/modal.js`, `modules/rosterCode.js`, `modules/events.js`
+
+---
+
+## [2026-04-08] TTS 명령어 복사 방식 개선 (모달 도입)
+
+### 1. 작업 개요
+- **목표:** TTS 익스포트 완료 후 생성된 명령어를 자동으로 복사하는 대신, 사용자가 직접 확인하고 복사할 수 있도록 전용 모달 제공.
+- **배경:** 자동 복사가 일부 환경에서 불안정하거나 사용자에게 혼란을 줄 수 있어, 명시적인 확인 단계를 추가함.
+
+### 2. 기술적 구현 세부 사항
+- **UI 구성:**
+    - `index.html`에 `#tts-modal` 추가 (제목, 안내 문구, readonly textarea, 복사 버튼 포함).
+    - `style.css`에 기존 로스터 코드 모달과 일관된 스타일 적용.
+- **모듈 업데이트:**
+    - **`modules/dom.js`:** 신규 모달 관련 DOM 요소(`ttsModal`, `ttsCommandDisplay` 등) 추가 및 익스포트.
+    - **`modules/rosterCode.js`:** 
+        - `showTTSModal(command)`, `closeTTSModal()`, `copyTtsCommandToClipboard()` 함수 추가.
+        - `exportToTTS()` 함수에서 익스포트 성공 시 기존 모달을 닫고 신규 TTS 모달을 띄우도록 로직 변경.
+    - **`modules/events.js`:** 신규 모달의 닫기 버튼, 복사 버튼, 배경 클릭 닫기 이벤트 리스너 등록.
+
+### 3. 주요 변경 사항
+- **`exportToTTS()`:** 더 이상 `alert()`을 띄우며 자동 복사하지 않고, 전용 UI(`tts-modal`)를 통해 결과를 표시함.
+
+---
+
 ## [2026-03-29] TTS용 로스터 익스포트 기능 구현 및 리팩토링
 
 ### 1. 작업 개요
@@ -34,77 +124,6 @@
 - `exportRosterToGist(roster, onProgress)`: 전체 익스포트 프로세스 실행.
 - `getTTSId(card)`, `getDropId(card)`: 카드 객체에서 TTS 호환 ID 추출.
 - `uploadImageToImgBB(canvas)`, `uploadTextToGist(content, filename)`: 외부 API 업로드.
-
----
-
-## [2026-04-08] TTS 명령어 복사 방식 개선 (모달 도입)
-
-### 1. 작업 개요
-- **목표:** TTS 익스포트 완료 후 생성된 명령어를 자동으로 복사하는 대신, 사용자가 직접 확인하고 복사할 수 있도록 전용 모달 제공.
-- **배경:** 자동 복사가 일부 환경에서 불안정하거나 사용자에게 혼란을 줄 수 있어, 명시적인 확인 단계를 추가함.
-
-### 2. 기술적 구현 세부 사항
-- **UI 구성:**
-    - `index.html`에 `#tts-modal` 추가 (제목, 안내 문구, readonly textarea, 복사 버튼 포함).
-    - `style.css`에 기존 로스터 코드 모달과 일관된 스타일 적용.
-- **모듈 업데이트:**
-    - **`modules/dom.js`:** 신규 모달 관련 DOM 요소(`ttsModal`, `ttsCommandDisplay` 등) 추가 및 익스포트.
-    - **`modules/rosterCode.js`:** 
-        - `showTTSModal(command)`, `closeTTSModal()`, `copyTtsCommandToClipboard()` 함수 추가.
-        - `exportToTTS()` 함수에서 익스포트 성공 시 기존 모달을 닫고 신규 TTS 모달을 띄우도록 로직 변경.
-    - **`modules/events.js`:** 신규 모달의 닫기 버튼, 복사 버튼, 배경 클릭 닫기 이벤트 리스너 등록.
-
-### 3. 주요 변경 사항
-- **`exportToTTS()`:** 더 이상 `alert()`을 띄우며 자동 복사하지 않고, 전용 UI(`tts-modal`)를 통해 결과를 표시함.
-
----
-
-## [2026-04-08] 모달 시스템 리팩토링 및 코드 표준화
-
-### 1. 작업 개요
-- **목표:** TTS 모달 도입 후 산재된 모달 로직을 통합하고, 이벤트 핸들링 및 스타일링 방식을 표준화하여 유지보수성 향상.
-
-### 2. 기술적 구현 세부 사항
-- **모달 로직 중앙 집중화:**
-    - `modules/rosterCode.js`에 있던 UI 관련 함수들(`showTTSModal`, `showRosterCodeModal` 등)을 `modules/modal.js`로 이전.
-    - 데이터 처리(로직)와 UI 표시(모달)의 역할을 명확히 분리.
-- **이벤트 핸들링 표준화:**
-    - `modules/events.js`에 `setupModalEvents` 헬퍼 함수 도입.
-    - 모든 모달에 대해 '닫기 버튼 연결' 및 '배경 클릭 시 닫기' 로직을 일관되게 적용하고 중복 코드 제거.
-- **CSS 클래스 기반 스타일링:**
-    - `style.css`의 개별 ID 선택자들을 `.modal-textarea`, `.modal-btn-*` 등 공통 클래스로 대체.
-    - `index.html`의 요소들에 해당 클래스를 적용하여 디자인 일관성 확보 및 재사용성 증대.
-
-### 3. 주요 변경 파일
-- `index.html`, `style.css`, `modules/modal.js`, `modules/rosterCode.js`, `modules/events.js`
-
----
-
-## [2026-04-11] PWA 캐시 개선 및 로스터 코드 파츠 순서 버그 수정
-
-### 1. 작업 개요
-- **목표:** 애플리케이션 초기 로드 시 발생하는 `TypeError` 해결 및 로스터 코드를 불러올 때 특정 파츠(Torso, Chassis)가 누락되는 문제 수정.
-
-### 2. 기술적 구현 세부 사항
-- **PWA 서비스 워커 (`sw.js`) 개선:**
-    - `index.html`은 캐시되지만 `modules/` 내의 JS 파일들이 개별적으로 캐시되지 않아 발생할 수 있는 버전 불일치 문제 해결.
-    - `appShellUrls`에 모든 모듈 파일 경로 명시.
-    - 캐시 버전을 `unit-combiner-v6`로 업데이트하여 즉각적인 갱신 유도.
-- **로스터 코드 파츠 순서 동기화:**
-    - **문제:** 코드 생성(Export) 시 파츠 순서(`Pilot/Chassis/Torso/...`)와 로드(Import) 시 순서(`Pilot/Torso/Chassis/...`)가 불일치하여 데이터 복원 실패.
-    - **해결:** `modules/modal.js`에서 코드를 생성할 때 하드코딩된 배열 대신 `modules/constants.js`의 `categoryOrder`를 사용하도록 수정하여 생성/로드 순서 일치.
-- **안정성 강화:**
-    - **`modules/dom.js`:** 일부 요소 ID에 포함된 불필요한 줄바꿈 제거.
-    - **`modules/events.js`:** 신규 추가된 모달 요소(`exportTtsBtn` 등)에 대해 `addEventListener` 호출 전 null 체크 로직 추가.
-
-- **구조적 리팩토링:**
-    - 로스터 코드 생성 로직을 `rosterCode.js`로 통합하여 데이터 일관성 보장.
-    - `events.js`에 `safeAddListener` 유틸리티 도입으로 코드 가독성 및 안정성 향상.
-    - `dom.js` 요소 접근 방식 개선으로 초기 로딩 시 타이밍 문제 해결.
-    - `sw.js` 파일 목록 관리 구조화 및 캐시 버전 업데이트(v7).
-
-### 3. 주요 변경 파일
-- `sw.js`, `modules/dom.js`, `modules/events.js`, `modules/modal.js`, `modules/rosterCode.js`
 
 ---
 *다음 작업 시 이 로그를 참고하여 기존 기능과의 정렬을 유지하십시오.*
