@@ -11,23 +11,43 @@ let GIST_TOKEN = '';
  * 환경 변수 및 로컬 env.js 파일로부터 토큰을 로드합니다.
  */
 async function loadTokens() {
+    // 1. 이미 로드되었는지 확인
+    if (IMGBB_API_KEY && GIST_TOKEN) return;
+
+    // 2. 환경 변수 확인 (빌드 도구나 특정 환경용)
     if (typeof process !== 'undefined' && process.env) {
         IMGBB_API_KEY = process.env.IMGBB_API_TOKEN || IMGBB_API_KEY;
         GIST_TOKEN = process.env.GIT_GIST_API_TOKEN || GIST_TOKEN;
     }
 
+    // 3. env.js 로드 시도 (404 에러 방지를 위해 fetch로 존재 확인)
     try {
-        const localEnv = await import(`./env.js?t=${new Date().getTime()}`);
-        if (localEnv && localEnv.env) {
-            if (localEnv.env.IMGBB_API_TOKEN && !localEnv.env.IMGBB_API_TOKEN.includes('여기에')) {
-                IMGBB_API_KEY = localEnv.env.IMGBB_API_TOKEN.trim();
-            }
-            if (localEnv.env.GIT_GIST_API_TOKEN && !localEnv.env.GIT_GIST_API_TOKEN.includes('여기에')) {
-                GIST_TOKEN = localEnv.env.GIT_GIST_API_TOKEN.trim();
+        const checkResponse = await fetch('./modules/env.js', { method: 'HEAD' });
+        if (checkResponse.ok) {
+            const localEnv = await import(`./env.js?t=${new Date().getTime()}`);
+            if (localEnv && localEnv.env) {
+                let { IMGBB_API_TOKEN, GIT_GIST_API_TOKEN, isEncoded } = localEnv.env;
+                
+                // 난독화된 경우 디코딩
+                if (isEncoded) {
+                    try {
+                        IMGBB_API_TOKEN = atob(IMGBB_API_TOKEN);
+                        GIT_GIST_API_TOKEN = atob(GIT_GIST_API_TOKEN);
+                    } catch (e) {
+                        console.error('토큰 디코딩 실패:', e);
+                    }
+                }
+
+                if (IMGBB_API_TOKEN && !IMGBB_API_TOKEN.includes('여기에')) {
+                    IMGBB_API_KEY = IMGBB_API_TOKEN.trim();
+                }
+                if (GIT_GIST_API_TOKEN && !GIT_GIST_API_TOKEN.includes('여기에')) {
+                    GIST_TOKEN = GIT_GIST_API_TOKEN.trim();
+                }
             }
         }
     } catch (e) {
-        // env.js 파일이 없는 경우 무시
+        // 로드 실패 시 무시
     }
 }
 

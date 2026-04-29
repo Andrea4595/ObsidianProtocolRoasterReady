@@ -1,0 +1,50 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"] # 혹은 사용하시는 기본 브랜치 이름 (master 등)으로 수정하세요.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps: deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create env.js from Secrets (Obfuscated)
+        run: |
+          mkdir -p modules
+          # Secrets를 Base64로 인코딩하여 주입 (단순 평문 노출 방지)
+          ENCODED_IMGBB=$(echo -n "${{ secrets.IMGBB_API_TOKEN }}" | base64 -w 0)
+          ENCODED_GIST=$(echo -n "${{ secrets.GIT_GIST_API_TOKEN }}" | base64 -w 0)
+          
+          echo "export const env = {
+            IMGBB_API_TOKEN: '$ENCODED_IMGBB',
+            GIT_GIST_API_TOKEN: '$ENCODED_GIST',
+            isEncoded: true
+          };" > modules/env.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
