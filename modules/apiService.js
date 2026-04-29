@@ -22,9 +22,13 @@ async function loadTokens() {
 
     // 3. env.js 로드 시도 (404 에러 방지를 위해 fetch로 존재 확인)
     try {
-        const checkResponse = await fetch('./modules/env.js', { method: 'HEAD' });
+        // 상대 경로 대신 절대 경로 느낌의 상대 경로 사용 (./modules/env.js)
+        const envPath = './modules/env.js';
+        const checkResponse = await fetch(envPath, { method: 'HEAD' });
+        
         if (checkResponse.ok) {
-            const localEnv = await import(`./env.js?t=${new Date().getTime()}`);
+            // ?t= 누락 수정 및 경로 보정
+            const localEnv = await import(`./env.js?t=${Date.now()}`);
             if (localEnv && localEnv.env) {
                 let { IMGBB_API_TOKEN, GIT_GIST_API_TOKEN, isEncoded } = localEnv.env;
                 
