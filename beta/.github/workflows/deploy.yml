@@ -26,16 +26,20 @@ jobs:
 
       - name: Create env.js from Secrets (Obfuscated)
         run: |
+          # 루트 및 beta 폴더 내의 modules 디렉토리 생성
           mkdir -p modules
-          # Secrets를 Base64로 인코딩하여 주입 (단순 평문 노출 방지)
+          mkdir -p beta/modules
+          
+          # Secrets를 Base64로 인코딩하여 주입
           ENCODED_IMGBB=$(echo -n "${{ secrets.IMGBB_API_TOKEN }}" | base64 -w 0)
           ENCODED_GIST=$(echo -n "${{ secrets.GIT_GIST_API_TOKEN }}" | base64 -w 0)
           
+          # 두 위치 모두에 env.js 생성
           echo "export const env = {
             IMGBB_API_TOKEN: '$ENCODED_IMGBB',
             GIT_GIST_API_TOKEN: '$ENCODED_GIST',
             isEncoded: true
-          };" > modules/env.js
+          };" | tee modules/env.js beta/modules/env.js > /dev/null
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

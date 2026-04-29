@@ -1,0 +1,9 @@
+# API 환경 변수 파일 (로컬 테스트용)
+modules/env.js
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
