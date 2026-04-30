@@ -80,7 +80,7 @@
         "fileName": "Part_UN_Chassis_LM213B_Front.png",
 		"id": 101,
         "name": "LM213B",
-        "points": 57,
+        "points": 51,
         "category": "Chassis",
         "faction": "UN",
 		"frame": true,
