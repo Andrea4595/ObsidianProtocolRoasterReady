@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Left_Type55_CC6_Front.png",
+        "fileName": "Part_RDL_Left_Type55_CC6_Front.jpg",
 		"id": 23,
         "name": "Type55_CC6",
         "points": 54,
@@ -10,7 +10,7 @@
 		"dropKeywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_CC7_Front.png",
+        "fileName": "Part_RDL_Left_CC7_Front.jpg",
 		"id": 535,
         "name": "CC7",
         "points": 36,
@@ -20,7 +20,7 @@
 		"keywords": ["PulseWeapon"]
     },
     {
-        "fileName": "Part_RDL_Left_ML32_CC3_Front.png",
+        "fileName": "Part_RDL_Left_ML32_CC3_Front.jpg",
 		"id": 29,
         "name": "ML32_CC3",
         "points": 33,
@@ -28,13 +28,13 @@
         "faction": "RDL",
         "ammunition": 2,
         "subCards": [
-            "Projectile_RDL_MC3_Front.png"
+            "Projectile_RDL_MC3_Front.jpg"
         ],
         "freehand": true,
 		"keywords": ["Volley(2)", "IndirectFire"]
     },
     {
-        "fileName": "Part_RDL_Left_R20_Front.png",
+        "fileName": "Part_RDL_Left_R20_Front.jpg",
 		"id": 32,
         "name": "R20",
         "points": 51,
@@ -44,18 +44,18 @@
 		"keywords": ["Stationary", "ArmorPiercing(1)"]
     },
     {
-        "fileName": "Part_RDL_Left_Type77_Front.png",
+        "fileName": "Part_RDL_Left_Type77_Front.jpg",
 		"id": 34,
         "name": "Type77",
         "points": 50,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type77_Dropped.png",
+        "drop": "Part_RDL_Left_Type77_Dropped.jpg",
 		"mobility": -2,
 		"dropMobility": 0
     },
     {
-        "fileName": "Part_RDL_Left_SPHX3_Front.png",
+        "fileName": "Part_RDL_Left_SPHX3_Front.jpg",
 		"id": 40,
         "name": "SPHX3",
         "points": 42,
@@ -64,19 +64,19 @@
         "freehand": true
     },
     {
-        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.png",
+        "fileName": "Part_RDL_Left_Type55_L320_CC6_Front.jpg",
 		"id": 41,
         "name": "Type55_L320_CC6",
         "points": 51,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.png",
+        "drop": "Part_RDL_Left_Type55_L320_CC6_Dropped.jpg",
         "intercept": 1,
 		"keywords": ["Intercept(1)", "PulseWeapon"],
 		"dropKeywords": ["Intercept(1)", "Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_Type79_Front.png",
+        "fileName": "Part_RDL_Left_Type79_Front.jpg",
 		"id": 45,
         "name": "Type79",
         "points": 56,
@@ -85,7 +85,7 @@
         "freehand": true
     },
     {
-        "fileName": "Part_RDL_Left_FCC12_Front.png",
+        "fileName": "Part_RDL_Left_FCC12_Front.jpg",
 		"id": 50,
         "name": "FCC12",
         "points": 69,
@@ -95,33 +95,33 @@
 		"keywords": ["OnHit", "Drag", "Disarm"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_PC9_Front.png",
+        "fileName": "Part_RDL_Left_Type55_PC9_Front.jpg",
 		"id": 53,
         "name": "Type55_PC9",
         "points": 42,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9_Dropped.png",
+        "drop": "Part_RDL_Left_Type55_PC9_Dropped.jpg",
 		"keywords": ["ScatterShot"],
 		"dropKeywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_GAC6_Front.png",
+        "fileName": "Part_RDL_Left_GAC6_Front.jpg",
 		"id": 56,
         "name": "GAC6",
         "points": 36,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_GAC6_Dropped.png",
+        "drop": "Part_RDL_Left_GAC6_Dropped.jpg",
         "ammunition": 2,
         "subCards": [
-            "Projectile_RDL_RA81_Front.png"
+            "Projectile_RDL_RA81_Front.jpg"
         ],
 		"keywords": ["DirectFire"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_RDL_Left_Type62_CC20_Front.png",
+        "fileName": "Part_RDL_Left_Type62_CC20_Front.jpg",
 		"id": 62,
         "name": "Type62_CC20",
         "points": 42,
@@ -131,42 +131,42 @@
 		"keywords": ["PulseWeapon"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_MES_Front.png",
+        "fileName": "Part_RDL_Left_Type55_MES_Front.jpg",
 		"id": 64,
         "name": "Type55_MES",
         "points": 45,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_MES_Dropped.png",
+        "drop": "Part_RDL_Left_Type55_MES_Dropped.jpg",
         "subCards": [
-            "Projectile_RDL_MES_Front.png"
+            "Projectile_RDL_MES_Front.jpg"
         ],
 		"keywords": ["DirectFire", "Silence"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_PC9K_Front.png",
+        "fileName": "Part_RDL_Left_Type55_PC9K_Front.jpg",
 		"id": 510,
         "name": "Type55_PC9K",
         "points": 57,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_Type55_PC9K_Dropped.png",
+        "drop": "Part_RDL_Left_Type55_PC9K_Dropped.jpg",
 		"keywords": ["OnHit", "KnockBack", "ScatterShot"],
 		"dropKeywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_AH21_CC50_Front.png",
+        "fileName": "Part_RDL_Left_AH21_CC50_Front.jpg",
 		"id": 514,
         "name": "AH21_CC50",
         "points": 48,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_AH21_CC50_Dropped.png",
+        "drop": "Part_RDL_Left_AH21_CC50_Dropped.jpg",
 		"keywords": ["OmniDirectionFiring"],
 		"dropKeywords": ["Mutilation"]
     },
     {
-        "fileName": "Part_RDL_Left_Type55_Front.png",
+        "fileName": "Part_RDL_Left_Type55_Front.jpg",
 		"id": 520,
         "name": "Type55",
         "points": 30,
@@ -176,35 +176,35 @@
 		"keywords": ["Concussion"]
     },
     {
-        "fileName": "Part_RDL_Left_L330_Type77B_Front.png",
+        "fileName": "Part_RDL_Left_L330_Type77B_Front.jpg",
 		"id": 282,
         "name": "L330_Type77B",
         "points": 56,
         "category": "Left",
         "faction": "RDL",
-        "drop": "Part_RDL_Left_L330_Type77B_Dropped.png",
+        "drop": "Part_RDL_Left_L330_Type77B_Dropped.jpg",
         "intercept": 1,
         "visible": false,
 		"keywords": ["Intercept(1)"]
     },
     {
-        "fileName": "Part_UN_Left_G6_Front.png",
+        "fileName": "Part_UN_Left_G6_Front.jpg",
 		"id": 146,
         "name": "G6",
         "points": 66,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_G6_Dropped.png",
+        "drop": "Part_UN_Left_G6_Dropped.jpg",
         "ammunition": 3,
 		"mobility": 1,
         "subCards": [
-            "Projectile_UN_M7_Front.png"
+            "Projectile_UN_M7_Front.jpg"
         ],
 		"keywords": ["LaserWeapon", "Fragile", "ScatterShot", "MeleeFiring", "Volley(3)", "IndirectFire"],
 		"dropKeywords": ["Volley(3)", "IndirectFire"]
     },
     {
-        "fileName": "Part_UN_Left_K7_S10_Front.png",
+        "fileName": "Part_UN_Left_K7_S10_Front.jpg",
 		"id": 144,
         "name": "K7_S10",
         "points": 45,
@@ -214,7 +214,7 @@
 		"keywords": ["Silence", "OnHit"]
     },
     {
-        "fileName": "Part_UN_Left_K9_Front.png",
+        "fileName": "Part_UN_Left_K9_Front.jpg",
 		"id": 126,
         "name": "K9",
         "points": 21,
@@ -224,7 +224,7 @@
 		"keywords": ["Silence", "OnHit"]
     },
     {
-        "fileName": "Part_UN_Left_M3S_Front.png",
+        "fileName": "Part_UN_Left_M3S_Front.jpg",
 		"id": 131,
         "name": "M3S",
         "points": 36,
@@ -234,7 +234,7 @@
 		"mobility": 1
     },
     {
-        "fileName": "Part_UN_Left_M4_Grenade_Front.png",
+        "fileName": "Part_UN_Left_M4_Grenade_Front.jpg",
 		"id": 135,
         "name": "M4_Grenade",
         "points": 45,
@@ -243,25 +243,25 @@
         "ammunition": 3,
 		"mobility": 1,
         "subCards": [
-            "Projectile_UN_M7_Front.png"
+            "Projectile_UN_M7_Front.jpg"
         ],
         "freehand": true,
 		"keywords": ["Volley(3)", "IndirectFire"]
     },
     {
-        "fileName": "Part_UN_Left_MDXS_R6_Front.png",
+        "fileName": "Part_UN_Left_MDXS_R6_Front.jpg",
 		"id": 117,
         "name": "MDXS_R6",
         "points": 45,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_MDXS_R6_Dropped.png",
+        "drop": "Part_UN_Left_MDXS_R6_Dropped.jpg",
 		"mobility": 2,
 		"keywords": ["LaserWeapon", "Stationary"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_UN_Left_MX82_Front.png",
+        "fileName": "Part_UN_Left_MX82_Front.jpg",
 		"id": 139,
         "name": "MX82",
         "points": 48,
@@ -272,7 +272,7 @@
 		"keywords": ["OnHit", "Drag", "Immobilized"]
     },
     {
-        "fileName": "Part_UN_Left_MSH1_Front.png",
+        "fileName": "Part_UN_Left_MSH1_Front.jpg",
 		"id": 121,
         "name": "MSH1",
         "points": 27,
@@ -281,70 +281,70 @@
         "freehand": true
     },
     {
-        "fileName": "Part_UN_Left_RH21_M3_Front.png",
+        "fileName": "Part_UN_Left_RH21_M3_Front.jpg",
 		"id": 111,
         "name": "RH21_M3",
         "points": 42,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_RH21_M3_Dropped.png",
+        "drop": "Part_UN_Left_RH21_M3_Dropped.jpg",
 		"mobility": 1,
 		"keywords": ["OmniDirectionFiring"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_UN_Left_RHX23_Front.png",
+        "fileName": "Part_UN_Left_RHX23_Front.jpg",
 		"id": 150,
         "name": "RHX23",
         "points": 57,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_RHX23_Dropped.png",
+        "drop": "Part_UN_Left_RHX23_Dropped.jpg",
 		"mobility": 2,
 		"keywords": ["OmniDirectionFiring", "Suppression"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_UN_Left_RKG70_Front.png",
+        "fileName": "Part_UN_Left_RKG70_Front.jpg",
 		"id": 129,
         "name": "RKG70",
         "points": 42,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_RKG70_Dropped.png",
+        "drop": "Part_UN_Left_RKG70_Dropped.jpg",
         "ammunition": 1,
         "subCards": [
-            "Projectile_UN_RKG70_Front.png"
+            "Projectile_UN_RKG70_Front.jpg"
         ],
 		"keywords": ["DirectFire", "TwoHanded"],
 		"dropKeywords": []
     },
     {
-        "fileName": "Part_UN_Left_S100_Front.png",
+        "fileName": "Part_UN_Left_S100_Front.jpg",
 		"id": 142,
         "name": "S100",
         "points": 39,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_S100_Dropped.png"
+        "drop": "Part_UN_Left_S100_Dropped.jpg"
     },
     {
-        "fileName": "Part_UN_Left_S100_Grenade_Front.png",
+        "fileName": "Part_UN_Left_S100_Grenade_Front.jpg",
 		"id": 107,
         "name": "S100_Grenade",
         "points": 48,
         "category": "Left",
         "faction": "UN",
-        "drop": "Part_UN_Left_S100_Grenade_Dropped.png",
+        "drop": "Part_UN_Left_S100_Grenade_Dropped.jpg",
         "ammunition": 3,
         "subCards": [
-            "Projectile_UN_M7_Front.png"
+            "Projectile_UN_M7_Front.jpg"
         ],
 		"keywords": ["Volley(3)", "IndirectFire"],
 		"dropKeywords": ["Volley(3)", "IndirectFire"]
     },
     {
-        "fileName": "Part_UN_Left_S9_M5_Front.png",
+        "fileName": "Part_UN_Left_S9_M5_Front.jpg",
 		"id": 103,
         "name": "S9_M5",
         "points": 57,
@@ -355,7 +355,7 @@
 		"keywords": ["Concussion", "Mutilation"]
     },
     {
-        "fileName": "Part_UN_Left_K9_Trial_Front.png",
+        "fileName": "Part_UN_Left_K9_Trial_Front.jpg",
 		"id": 256,
         "name": "K9_Trial",
         "points": 21,
@@ -365,7 +365,7 @@
 		"keywords": ["Silence", "OnHit"]
     },
     {
-        "fileName": "Part_UN_Left_S9IGX106_Front.png",
+        "fileName": "Part_UN_Left_S9IGX106_Front.jpg",
 		"id": 540,
         "name": "S9IGX106",
         "points": 69,
@@ -378,8 +378,8 @@
 		"keywords": ["Concussion", "Charged", "Mutilation", "ScatterShot", "IonWeapon", "MeleeFiring"]
     },
     {
-        "fileName": "Part_GOF_Left_MHKX_Front.png",
-        "drop": "Part_GOF_Left_MHKX_Drop.png",
+        "fileName": "Part_GOF_Left_MHKX_Front.jpg",
+        "drop": "Part_GOF_Left_MHKX_Drop.jpg",
 		"id": 0,
         "id_watermelon02": "ZHLA-304",
         "name": "MHKX_L",
@@ -400,7 +400,7 @@
 		"keywords": ["MeleeFiring", "OnHit", "Fragile"]
     },
     {
-        "fileName": "Part_PL_LS197R_Front_Left.png",
+        "fileName": "Part_PL_LS197R_Front_Left.jpg",
 		"id": 550,
         "name": "LS197R_L",
         "points": 48,
