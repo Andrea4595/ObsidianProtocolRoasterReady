@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Dial_RDL_01_Misty_Front.png",
+        "fileName": "Dial_RDL_01_Misty_Front.jpg",
 		"id": 301,
 		"id_watermelon02": "FPA-01",
         "name": "Misty",
@@ -11,7 +11,7 @@
 		"keywords": ["Pilot_Misty"]
     },
     {
-        "fileName": "Dial_RDL_02_Spike_Front.png",
+        "fileName": "Dial_RDL_02_Spike_Front.jpg",
 		"id": 302,
 		"id_watermelon02": "FPA-02",
         "name": "Spike",
@@ -22,7 +22,7 @@
 		"keywords": ["Pilot_Spike", "ArmorPiercing(1)"]
     },
     {
-        "fileName": "Dial_RDL_03_Wu_Front.png",
+        "fileName": "Dial_RDL_03_Wu_Front.jpg",
 		"id": 303,
 		"id_watermelon02": "FPA-03",
         "name": "Wu",
@@ -33,7 +33,7 @@
 		"keywords": ["Pilot_Wu"]
     },
     {
-        "fileName": "Dial_RDL_04_Hammerhead_Front.png",
+        "fileName": "Dial_RDL_04_Hammerhead_Front.jpg",
 		"id": 304,
 		"id_watermelon02": "FPA-04",
         "name": "Hammerhead",
@@ -44,7 +44,7 @@
 		"keywords": ["Pilot_Hammerhead"]
     },
     {
-        "fileName": "Dial_RDL_04_Hammerhead_Different_1_Front.png",
+        "fileName": "Dial_RDL_04_Hammerhead_Different_1_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "FPA-04-2",
         "name": "Hammerhead_Different_1",
@@ -55,7 +55,7 @@
 		"keywords": ["Pilot_Hammerhead_Different_1"]
     },
     {
-        "fileName": "Dial_RDL_05_Anser_Front.png",
+        "fileName": "Dial_RDL_05_Anser_Front.jpg",
 		"id": 305,
 		"id_watermelon02": "FPA-05",
         "name": "Anser",
@@ -69,7 +69,7 @@
 		"keywords": ["Pilot_Anser"]
     },
     {
-        "fileName": "Dial_RDL_06_Keyhole_Front.png",
+        "fileName": "Dial_RDL_06_Keyhole_Front.jpg",
 		"id": 306,
 		"id_watermelon02": "FPA-06",
         "name": "Keyhole",
@@ -80,7 +80,7 @@
 		"keywords": ["Pilot_Keyhole"]
     },
     {
-        "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.png",
+        "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "FPA-06-2",
         "name": "Keyhole_Different_1",
@@ -91,7 +91,7 @@
 		"keywords": ["Pilot_Keyhole_Different_1", "LowProfile"]
     },
     {
-        "fileName": "Dial_RDL_09_ShockTroop_Front.png",
+        "fileName": "Dial_RDL_09_ShockTroop_Front.jpg",
 		"id": 309,
 		"id_watermelon02": "FPA-09",
         "name": "ShockTroop",
@@ -101,7 +101,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_10_ShockTroop_Front.png",
+        "fileName": "Dial_RDL_10_ShockTroop_Front.jpg",
 		"id": 310,
 		"id_watermelon02": "FPA-10",
         "name": "ShockTroop10",
@@ -111,7 +111,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_11_ShockTroop_Front.png",
+        "fileName": "Dial_RDL_11_ShockTroop_Front.jpg",
 		"id": 311,
 		"id_watermelon02": "FPA-11",
         "name": "ShockTroop11",
@@ -121,7 +121,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_12_ShockTroop_Front.png",
+        "fileName": "Dial_RDL_12_ShockTroop_Front.jpg",
 		"id": 312,
 		"id_watermelon02": "FPA-12",
         "name": "ShockTroop12",
@@ -131,7 +131,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_13_ShockTrooper_Front.png",
+        "fileName": "Dial_RDL_13_ShockTrooper_Front.jpg",
 		"id": 313,
 		"id_watermelon02": "FPA-13",
         "name": "ShockTrooper13",
@@ -141,7 +141,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_14_ Scout_Front.png",
+        "fileName": "Dial_RDL_14_ Scout_Front.jpg",
 		"id": 314,
 		"id_watermelon02": "FPA-14",
         "name": "Scout",
@@ -151,7 +151,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_15_Scount_Front.png",
+        "fileName": "Dial_RDL_15_Scount_Front.jpg",
 		"id": 315,
 		"id_watermelon02": "FPA-15",
         "name": "Scount15",
@@ -161,7 +161,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_16_Scout_Front.png",
+        "fileName": "Dial_RDL_16_Scout_Front.jpg",
 		"id": 316,
 		"id_watermelon02": "FPA-16",
         "name": "Scout16",
@@ -171,7 +171,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_17_Scout_Front.png",
+        "fileName": "Dial_RDL_17_Scout_Front.jpg",
 		"id": 317,
 		"id_watermelon02": "FPA-17",
         "name": "Scout17",
@@ -181,7 +181,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_RDL_18_Scout_Front.png",
+        "fileName": "Dial_RDL_18_Scout_Front.jpg",
 		"id": 318,
 		"id_watermelon02": "FPA-18",
         "name": "Scout18",
@@ -191,7 +191,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_19_Quartz_Front.png",
+        "fileName": "Dial_UNPilot_19_Quartz_Front.jpg",
 		"id": 319,
 		"id_watermelon02": "LPA-19",
         "name": "Quartz",
@@ -202,7 +202,7 @@
 		"keywords": ["Pilot_Quartz"]
     },
     {
-        "fileName": "Dial_UNPilot_20_Panzer_Front.png",
+        "fileName": "Dial_UNPilot_20_Panzer_Front.jpg",
 		"id": 320,
 		"id_watermelon02": "LPA-20",
         "name": "Panzer",
@@ -213,7 +213,7 @@
 		"keywords": ["Pilot_Panzer"]
     },
     {
-        "fileName": "Dial_UNPilot_21_Firefly_Front.png",
+        "fileName": "Dial_UNPilot_21_Firefly_Front.jpg",
 		"id": 321,
 		"id_watermelon02": "LPA-21",
         "name": "Firefly",
@@ -224,7 +224,7 @@
 		"keywords": ["Pilot_Firefly"]
     },
     {
-        "fileName": "Dial_UNPilot_22_Yoyu_Front.png",
+        "fileName": "Dial_UNPilot_22_Yoyu_Front.jpg",
 		"id": 322,
 		"id_watermelon02": "LPA-22",
         "name": "Yoyu",
@@ -235,7 +235,7 @@
 		"keywords": ["Pilot_Yoyu"]
     },
     {
-        "fileName": "Dial_UNPilot_23_Onyx_Front.png",
+        "fileName": "Dial_UNPilot_23_Onyx_Front.jpg",
 		"id": 323,
 		"id_watermelon02": "LPA-23",
         "name": "Onyx",
@@ -246,7 +246,7 @@
 		"keywords": ["Pilot_Onyx"]
     },
     {
-        "fileName": "Dial_UNPilot_23_Onyx_Different_1_Front.png",
+        "fileName": "Dial_UNPilot_23_Onyx_Different_1_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "LPA-23-2",
         "name": "Onyx_Different_1",
@@ -257,7 +257,7 @@
 		"keywords": ["Pilot_Onyx_Different_1"]
     },
     {
-        "fileName": "Dial_UNPilot_24_Sealock_Front.png",
+        "fileName": "Dial_UNPilot_24_Sealock_Front.jpg",
 		"id": 324,
 		"id_watermelon02": "LPA-24",
         "name": "Sealock",
@@ -268,7 +268,7 @@
 		"keywords": ["Pilot_Sealock", "Fragile"]
     },
     {
-        "fileName": "Dial_UNPilot_27_Rifleman_Front.png",
+        "fileName": "Dial_UNPilot_27_Rifleman_Front.jpg",
 		"id": 327,
 		"id_watermelon02": "LPA-27",
         "name": "Rifleman",
@@ -278,7 +278,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_28_Rifleman_Front.png",
+        "fileName": "Dial_UNPilot_28_Rifleman_Front.jpg",
 		"id": 328,
 		"id_watermelon02": "LPA-28",
         "name": "Rifleman28",
@@ -288,7 +288,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_29_Rifleman_Front.png",
+        "fileName": "Dial_UNPilot_29_Rifleman_Front.jpg",
 		"id": 329,
 		"id_watermelon02": "LPA-29",
         "name": "Rifleman29",
@@ -298,7 +298,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_30_Rifleman_Front.png",
+        "fileName": "Dial_UNPilot_30_Rifleman_Front.jpg",
 		"id": 330,
 		"id_watermelon02": "LPA-30",
         "name": "Rifleman30",
@@ -308,7 +308,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_66_Rifleman_Front.png",
+        "fileName": "Dial_UNPilot_66_Rifleman_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "LPA-66",
         "name": "Rifleman66",
@@ -318,7 +318,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_31_Charger_Front.png",
+        "fileName": "Dial_UNPilot_31_Charger_Front.jpg",
 		"id": 331,
 		"id_watermelon02": "LPA-31",
         "name": "Charger",
@@ -328,7 +328,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_32_Charger_Front.png",
+        "fileName": "Dial_UNPilot_32_Charger_Front.jpg",
 		"id": 332,
 		"id_watermelon02": "LPA-32",
         "name": "Charger32",
@@ -338,7 +338,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_33_Charger_Front.png",
+        "fileName": "Dial_UNPilot_33_Charger_Front.jpg",
 		"id": 333,
 		"id_watermelon02": "LPA-33",
         "name": "Charger33",
@@ -348,7 +348,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_UNPilot_34_Charger_Front.png",
+        "fileName": "Dial_UNPilot_34_Charger_Front.jpg",
 		"id": 334,
 		"id_watermelon02": "LPA-34",
         "name": "Charger34",
@@ -358,7 +358,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_GOFPilot_72_Grenadier_Front.png",
+        "fileName": "Dial_GOFPilot_72_Grenadier_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "ZPA-46",
         "name": "Grenadier72",
@@ -368,7 +368,7 @@
 		"link": 4
     },
     {
-        "fileName": "Dial_WD_ACE001_KarlFried_Front.png",
+        "fileName": "Dial_WD_ACE001_KarlFried_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "ACE-01",
         "name": "ACE001_KarlFried",
@@ -379,7 +379,7 @@
 		"keywords": ["Pilot_KarlFried"]
     },
     {
-        "fileName": "Dial_PD_PLPilot_102_Front.png",
+        "fileName": "Dial_PD_PLPilot_102_Front.jpg",
 		"id": 0,
 		"id_watermelon02": "XPA-60",
         "name": "CombatantA102",

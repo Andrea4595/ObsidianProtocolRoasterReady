@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Torso_RT06_Front.png",
+        "fileName": "Part_RDL_Torso_RT06_Front.jpg",
 		"id": 12,
         "name": "RT06",
         "points": 15,
@@ -10,7 +10,7 @@
 		"electronic": 2
     },
     {
-        "fileName": "Part_RDL_Torso_RT07T_Front.png",
+        "fileName": "Part_RDL_Torso_RT07T_Front.jpg",
 		"id": 14,
         "name": "RT07T",
         "points": 62,
@@ -21,7 +21,7 @@
 		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT08_Front.png",
+        "fileName": "Part_RDL_Torso_RT08_Front.jpg",
 		"id": 15,
         "name": "RT08",
         "points": 56,
@@ -32,7 +32,7 @@
 		"keywords": ["Stationary", "ExtraFiringTick", "OnHit", "KnockBack(1)"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT15B_Front.png",
+        "fileName": "Part_RDL_Torso_RT15B_Front.jpg",
 		"id": 17,
         "name": "RT15B",
         "points": 47,
@@ -42,12 +42,12 @@
 		"mobility": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.png"
+            "Projectile_RDL_GS2_Front.jpg"
         ],
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT15EC_Front.png",
+        "fileName": "Part_RDL_Torso_RT15EC_Front.jpg",
 		"id": 18,
         "name": "RT15EC",
         "points": 60,
@@ -58,7 +58,7 @@
 		"keywords": ["ElectronicSupport", "WarfareNode(1)"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT15C_Front.png",
+        "fileName": "Part_RDL_Torso_RT15C_Front.jpg",
 		"id": 19,
         "name": "RT15C",
         "points": 56,
@@ -68,12 +68,12 @@
 		"mobility": 1,
 		"electronic": 2,
         "subCards": [
-            "Projectile_RDL_GS2_Front.png"
+            "Projectile_RDL_GS2_Front.jpg"
         ],
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT09A_Front.png",
+        "fileName": "Part_RDL_Torso_RT09A_Front.jpg",
 		"id": 16,
         "name": "RT09A",
         "points": 66,
@@ -82,13 +82,13 @@
         "ammunition": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.png"
+            "Projectile_RDL_GS2_Front.jpg"
         ],
         "frame": true,
 		"keywords": ["DesignateW(1)", "DirectFire"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT16B_Front.png",
+        "fileName": "Part_RDL_Torso_RT16B_Front.jpg",
 		"id": 503,
         "name": "RT16B",
         "points": 60,
@@ -98,13 +98,13 @@
 		"mobility": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_RDL_GS2_Front.png"
+            "Projectile_RDL_GS2_Front.jpg"
         ],
         "frame": true,
 		"keywords": ["DirectFire"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT15S_Front.png",
+        "fileName": "Part_RDL_Torso_RT15S_Front.jpg",
 		"id": 504,
         "name": "RT15S",
         "points": 60,
@@ -115,7 +115,7 @@
 		"keywords": ["ElectronicSupport"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT06E_Front.png",
+        "fileName": "Part_RDL_Torso_RT06E_Front.jpg",
 		"id": 505,
         "name": "RT06E",
         "points": 21,
@@ -125,7 +125,7 @@
 		"electronic": 3
     },
     {
-        "fileName": "Part_RDL_Torso_RT09MII_Front.png",
+        "fileName": "Part_RDL_Torso_RT09MII_Front.jpg",
 		"id": 246,
         "name": "RT09MII",
         "points": 66,
@@ -135,12 +135,12 @@
 		"electronic": 3,
         "visible": false,
         "subCards": [
-            "Projectile_RDL_GS2_Front.png"
+            "Projectile_RDL_GS2_Front.jpg"
         ],
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RTX06SR_Front.png",
+        "fileName": "Part_RDL_Torso_RTX06SR_Front.jpg",
 		"id": 533,
         "name": "RTX06SR",
         "points": 18,
@@ -150,7 +150,7 @@
         "frame": true
     },
     {
-        "fileName": "Part_RDL_Torso_RT12T_Front.png",
+        "fileName": "Part_RDL_Torso_RT12T_Front.jpg",
 		"id": 558,
         "name": "RT12T",
         "points": 67,
@@ -161,7 +161,7 @@
 		"keywords": ["Aura", "FlexibleTiming"]
     },
     {
-        "fileName": "Part_RDL_Torso_RT18T_Front.png",
+        "fileName": "Part_RDL_Torso_RT18T_Front.jpg",
 		"id": 559,
         "name": "RT18T",
         "points": 67,
@@ -172,7 +172,7 @@
 		"keywords": ["Aura"]
     },
     {
-        "fileName": "Part_UN_Torso_TM31C_Front.png",
+        "fileName": "Part_UN_Torso_TM31C_Front.jpg",
 		"id": 91,
         "name": "TM31C",
         "points": 36,
@@ -182,13 +182,13 @@
 		"mobility": 1,
 		"electronic": 3,
         "subCards": [
-            "Projectile_UN_M9_Front.png"
+            "Projectile_UN_M9_Front.jpg"
         ],
         "frame": true,
 		"keywords": ["IndirectFire"]
     },
     {
-        "fileName": "Part_UN_Torso_TM31R_Front.png",
+        "fileName": "Part_UN_Torso_TM31R_Front.jpg",
 		"id": 92,
         "name": "TM31R",
         "points": 54,
@@ -199,7 +199,7 @@
 		"electronic": 4
     },
     {
-        "fileName": "Part_UN_Torso_TM35B_Front.png",
+        "fileName": "Part_UN_Torso_TM35B_Front.jpg",
 		"id": 98,
         "name": "TM35B",
         "points": 60,
@@ -212,7 +212,7 @@
 		"keywords": ["KCArmor", "Highlight"]
     },
     {
-        "fileName": "Part_UN_Torso_TM35N_Front.png",
+        "fileName": "Part_UN_Torso_TM35N_Front.jpg",
 		"id": 97,
         "name": "TM35N",
         "points": 72,
@@ -225,7 +225,7 @@
 		"keywords": ["KCArmor", "ElectronicAttack", "Silence", "Immobilized"]
     },
     {
-        "fileName": "Part_UN_Torso_TM39_Front.png",
+        "fileName": "Part_UN_Torso_TM39_Front.jpg",
 		"id": 94,
         "name": "TM39",
         "points": 63,
@@ -237,7 +237,7 @@
 		"keywords": ["Silence", "LowProfile"]
     },
     {
-        "fileName": "Part_UN_Torso_TM641_Front.png",
+        "fileName": "Part_UN_Torso_TM641_Front.jpg",
 		"id": 96,
         "name": "TM641",
         "points": 81,
@@ -249,7 +249,7 @@
 		"keywords": ["Silence", "LowProfile", "Stealth(2)"]
     },
     {
-        "fileName": "Part_UN_Torso_TM641O_Trial_Front.png",
+        "fileName": "Part_UN_Torso_TM641O_Trial_Front.jpg",
 		"id": 247,
         "name": "TM641O_Trial",
         "points": 81,
@@ -261,7 +261,7 @@
 		"keywords": ["Silence", "LowProfile", "Stealth(2)"]
     },
     {
-        "fileName": "Part_UN_Torso_TM35BT_Front.png",
+        "fileName": "Part_UN_Torso_TM35BT_Front.jpg",
 		"id": 555,
         "name": "TM35BT",
         "points": 75,
@@ -274,7 +274,7 @@
 		"keywords": ["KCArmor"]
     },
     {
-        "fileName": "Part_UN_Torso_TM31Q_Front.png",
+        "fileName": "Part_UN_Torso_TM31Q_Front.jpg",
 		"id": 539,
         "name": "TM31Q",
         "points": 63,
@@ -286,7 +286,7 @@
 		"keywords": ["CommandCreate(2)"]
     },
     {
-        "fileName": "Part_GOF_Torso_P7A3SK_Front.png",
+        "fileName": "Part_GOF_Torso_P7A3SK_Front.jpg",
 		"id": 173,
         "name": "P7A3SK",
         "points": 85,
@@ -326,7 +326,7 @@
 		"electronic": 3
     },
     {
-        "fileName": "Part_PL_H2B_Front.png",
+        "fileName": "Part_PL_H2B_Front.jpg",
 		"id": 547,
         "name": "H2B",
         "points": 63,

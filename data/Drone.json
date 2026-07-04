@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Drone_RDL_DTG30M_Front.png",
+        "fileName": "Drone_RDL_DTG30M_Front.jpg",
 		"id": 78,
         "name": "DTG30M",
         "points": 42,
@@ -12,7 +12,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_RDL_DTG30R_Front.png",
+        "fileName": "Drone_RDL_DTG30R_Front.jpg",
 		"id": 80,
         "name": "DTG30R",
         "points": 27,
@@ -22,7 +22,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_RDL_DTG30S_Front.png",
+        "fileName": "Drone_RDL_DTG30S_Front.jpg",
 		"id": 79,
         "name": "DTG30S",
         "points": 33,
@@ -32,12 +32,12 @@
         "frame": true,
 		"keywords": ["Volley(2)", "IndirectFire"],
         "subCards": [
-            "Projectile_RDL_MC3_Front.png"
+            "Projectile_RDL_MC3_Front.jpg"
         ],
 		"size": 2
     },
     {
-        "fileName": "Drone_RDL_DTG30Art_Front.png",
+        "fileName": "Drone_RDL_DTG30Art_Front.jpg",
 		"id": 523,
         "name": "DTG30Art",
         "points": 99,
@@ -47,7 +47,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK15D_Front.png",
+        "fileName": "Drone_UN_ADK15D_Front.jpg",
 		"id": 160,
         "name": "ADK15D",
         "points": 51,
@@ -59,7 +59,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK15MAS_Front.png",
+        "fileName": "Drone_UN_ADK15MAS_Front.jpg",
 		"id": 161,
         "name": "ADK15MAS",
         "points": 30,
@@ -70,7 +70,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK30C_Front.png",
+        "fileName": "Drone_UN_ADK30C_Front.jpg",
 		"id": 162,
         "name": "ADK30C",
         "points": 12,
@@ -83,7 +83,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK30F_Front.png",
+        "fileName": "Drone_UN_ADK30F_Front.jpg",
 		"id": 163,
         "name": "ADK30F",
         "points": 33,
@@ -94,7 +94,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK60EC_Front.png",
+        "fileName": "Drone_UN_ADK60EC_Front.jpg",
 		"id": 165,
         "name": "ADK60EC",
         "points": 24,
@@ -104,7 +104,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK60R_Front.png",
+        "fileName": "Drone_UN_ADK60R_Front.jpg",
 		"id": 164,
         "name": "ADK60R",
         "points": 24,
@@ -113,7 +113,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK60S_Front.png",
+        "fileName": "Drone_UN_ADK60S_Front.jpg",
 		"id": 166,
         "name": "ADK60S",
         "points": 36,
@@ -123,7 +123,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK15Art_Front.png",
+        "fileName": "Drone_UN_ADK15Art_Front.jpg",
 		"id": 524,
         "name": "ADK15Art",
         "points": 99,
@@ -133,7 +133,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_UN_ADK15P_Front.png",
+        "fileName": "Drone_UN_ADK15P_Front.jpg",
 		"id": 543,
         "name": "ADK15P",
         "points": 70,
@@ -145,7 +145,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_PL_MD4A_Front.png",
+        "fileName": "Drone_PL_MD4A_Front.jpg",
 		"id": 269,
 		"id_watermelon02": "PRDR-101",
         "name": "MD4A",
@@ -156,13 +156,13 @@
         "intercept": 2,
         "frame": true,
         "subCards": [
-            "Projectile_PL_FGM25_Front.png"
+            "Projectile_PL_FGM25_Front.jpg"
         ],
 		"keywords": ["Volley(3)", "IndirectFire", "Intercept(2)"],
 		"size": 3
     },
     {
-        "fileName": "Drone_PL_MD4B_Front.png",
+        "fileName": "Drone_PL_MD4B_Front.jpg",
 		"id": 272,
 		"id_watermelon02": "PRDR-104",
         "name": "MD4B",
@@ -175,7 +175,7 @@
 		"size": 3
     },
     {
-        "fileName": "Drone_PL_MD4C_Front.png",
+        "fileName": "Drone_PL_MD4C_Front.jpg",
 		"id": 270,
 		"id_watermelon02": "PRDR-102",
         "name": "MD4C",
@@ -185,13 +185,13 @@
         "ammunition": 6,
         "frame": true,
         "subCards": [
-            "Projectile_PL_FGM25_Front.png"
+            "Projectile_PL_FGM25_Front.jpg"
         ],
 		"keywords": ["Volley(3)", "IndirectFire", "OnHit", "FireControlInterference"],
 		"size": 3
     },
     {
-        "fileName": "Drone_PL_MD4D_Front.png",
+        "fileName": "Drone_PL_MD4D_Front.jpg",
 		"id": 271,
 		"id_watermelon02": "PRDR-103",
         "name": "MD4D",
@@ -205,7 +205,7 @@
 		"size": 3
     },
     {
-        "fileName": "Drone_PL_MD4E_Front.png",
+        "fileName": "Drone_PL_MD4E_Front.jpg",
 		"id": 296,
 		"id_watermelon02": "PRDR-105",
         "name": "MD4E",
@@ -215,14 +215,14 @@
         "ammunition": 2,
         "frame": true,
         "subCards": [
-            "Projectile_PL_AS3A_Front.png",
-            "Projectile_PL_AS3B_Front.png"
+            "Projectile_PL_AS3A_Front.jpg",
+            "Projectile_PL_AS3B_Front.jpg"
         ],
 		"keywords": ["DirectFire"],
 		"size": 3
     },
     {
-        "fileName": "Drone_PL_LD5A_Front.png",
+        "fileName": "Drone_PL_LD5A_Front.jpg",
 		"id": 526,
 		"id_watermelon02": "PRDR-201",
         "name": "LD5A",
@@ -233,7 +233,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_PL_LD5B_Front.png",
+        "fileName": "Drone_PL_LD5B_Front.jpg",
 		"id": 528,
 		"id_watermelon02": "PRDR-203",
         "name": "LD5B",
@@ -242,13 +242,13 @@
         "faction": "Public",
         "ammunition": 4,
         "subCards": [
-            "Projectile_PL_FG33_Front.png"
+            "Projectile_PL_FG33_Front.jpg"
         ],
 		"keywords": ["IndirectFire", "Volley(2)", "AirborneMovement"],
 		"size": 2
     },
     {
-        "fileName": "Drone_PL_LD5M_Front.png",
+        "fileName": "Drone_PL_LD5M_Front.jpg",
 		"id": 527,
 		"id_watermelon02": "PRDR-202",
         "name": "LD5M",
@@ -259,7 +259,7 @@
 		"size": 2
     },
     {
-        "fileName": "Drone_PL_LD5S_Front.png",
+        "fileName": "Drone_PL_LD5S_Front.jpg",
 		"id": 529,
 		"id_watermelon02": "PRDR-204",
         "name": "LD5S",
@@ -268,8 +268,8 @@
         "faction": "Public",
         "ammunition": 2,
         "subCards": [
-            "Projectile_PL_FG33_Front.png",
-            "Projectile_PL_RMA_Front.png"
+            "Projectile_PL_FG33_Front.jpg",
+            "Projectile_PL_RMA_Front.jpg"
         ],
 		"keywords": ["IndirectFire", "Volley(2)", "AirborneMovement", "DirectFire"],
 		"size": 2

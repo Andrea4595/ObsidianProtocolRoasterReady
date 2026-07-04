@@ -1,6 +1,6 @@
 [
     {
-        "fileName": "Part_RDL_Chassis_RL06_Front.png",
+        "fileName": "Part_RDL_Chassis_RL06_Front.jpg",
 		"id": 20,
         "name": "RL06",
         "points": 18,
@@ -9,7 +9,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_RDL_Chassis_RL03D_Front.png",
+        "fileName": "Part_RDL_Chassis_RL03D_Front.jpg",
 		"id": 22,
         "name": "RL03D",
         "points": 42,
@@ -18,7 +18,7 @@
 		"mobility": 4
     },
     {
-        "fileName": "Part_RDL_Chassis_RL08_Front.png",
+        "fileName": "Part_RDL_Chassis_RL08_Front.jpg",
 		"id": 21,
         "name": "RL08",
         "points": 30,
@@ -29,7 +29,7 @@
 		"keywords": ["MovingInStraightLine"]
     },
     {
-        "fileName": "Part_RDL_Chassis_RL08C_Front.png",
+        "fileName": "Part_RDL_Chassis_RL08C_Front.jpg",
 		"id": 534,
         "name": "RL08C",
         "points": 24,
@@ -39,7 +39,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_RDL_Chassis_RL06M_Front.png",
+        "fileName": "Part_RDL_Chassis_RL06M_Front.jpg",
 		"id": 506,
         "name": "RL06M",
         "points": 18,
@@ -48,7 +48,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_RDL_Chassis_RL06MS_Front.png",
+        "fileName": "Part_RDL_Chassis_RL06MS_Front.jpg",
 		"id": 507,
         "name": "RL06MS",
         "points": 24,
@@ -58,7 +58,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_UN_Chassis_LM231_Front.png",
+        "fileName": "Part_UN_Chassis_LM231_Front.jpg",
 		"id": 99,
         "name": "LM231",
         "points": 27,
@@ -67,7 +67,7 @@
 		"mobility": 4
     },
     {
-        "fileName": "Part_UN_Chassis_LM210S_Front.png",
+        "fileName": "Part_UN_Chassis_LM210S_Front.jpg",
 		"id": 100,
         "name": "LM210S",
         "points": 39,
@@ -77,7 +77,7 @@
 		"keywords": ["Silence"]
     },
     {
-        "fileName": "Part_UN_Chassis_LM213B_Front.png",
+        "fileName": "Part_UN_Chassis_LM213B_Front.jpg",
 		"id": 101,
         "name": "LM213B",
         "points": 51,
@@ -87,7 +87,7 @@
 		"mobility": 4
     },
     {
-        "fileName": "Part_UN_Chassis_LM210S_Trial_Front.png",
+        "fileName": "Part_UN_Chassis_LM210S_Trial_Front.jpg",
 		"id": 250,
         "name": "LM210S_Trial",
         "points": 39,
@@ -97,7 +97,7 @@
 		"keywords": ["Silence"]
     },
     {
-        "fileName": "Part_GOF_Chassis_PLK400SK_Front.png",
+        "fileName": "Part_GOF_Chassis_PLK400SK_Front.jpg",
 		"id": 181,
         "name": "PLK400SK",
         "points": 90,
@@ -117,7 +117,7 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_PL_HL2_Front.png",
+        "fileName": "Part_PL_HL2_Front.jpg",
 		"id": 548,
         "name": "HL2",
         "points": 21,
