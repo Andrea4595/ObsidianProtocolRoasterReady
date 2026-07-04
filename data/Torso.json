@@ -150,6 +150,28 @@
         "frame": true
     },
     {
+        "fileName": "Part_RDL_Torso_RT12T_Front.png",
+		"id": 558,
+        "name": "RT12T",
+        "points": 67,
+        "category": "Torso",
+        "faction": "RDL",
+		"electronic": 3,
+        "frame": true,
+		"keywords": ["Aura", "FlexibleTiming"]
+    },
+    {
+        "fileName": "Part_RDL_Torso_RT18T_Front.png",
+		"id": 559,
+        "name": "RT18T",
+        "points": 67,
+        "category": "Torso",
+        "faction": "RDL",
+		"electronic": 3,
+        "frame": true,
+		"keywords": ["Aura"]
+    },
+    {
         "fileName": "Part_UN_Torso_TM31C_Front.png",
 		"id": 91,
         "name": "TM31C",
