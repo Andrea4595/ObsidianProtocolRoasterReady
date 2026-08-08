@@ -45,6 +45,14 @@
         "faction": "Public"
     },
     {
+        "fileName": "Projectile_PL_FGM46_Front.jpg",
+		"id": 554,
+        "name": "FGM46",
+        "points": 0,
+        "category": "Projectile",
+        "faction": "Public"
+    },
+    {
         "fileName": "Projectile_RDL_B31_Front.jpg",
 		"id": 75,
         "name": "B31",
