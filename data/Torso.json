@@ -309,7 +309,8 @@
         ],
         "frame": true,
 		"mobility": 4,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["Transform"]
     },
     {
         "fileName": "Part_WD_Torso_ACE001_Front.jpg",
@@ -323,13 +324,26 @@
         ],
         "frame": true,
 		"mobility": 1,
-		"electronic": 3
+		"electronic": 3,
+		"keywords": ["Transform", "CruiseMode"]
     },
     {
         "fileName": "Part_PL_H2B_Front.jpg",
 		"id": 547,
         "name": "H2B",
         "points": 63,
+        "category": "Torso",
+        "faction": "Public",
+        "frame": true,
+		"electronic": 2,
+		"freehand": true,
+		"keywords": ["Stationary", "MultiTarget(5)"]
+    },
+    {
+        "fileName": "Part_PL_H2A_Front.jpg",
+		"id": 546,
+        "name": "H2A",
+        "points": 60,
         "category": "Torso",
         "faction": "Public",
         "frame": true,

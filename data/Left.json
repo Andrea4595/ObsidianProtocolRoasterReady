@@ -407,5 +407,14 @@
         "category": "Left",
         "faction": "Public",
 		"keywords": ["RWS"]
+    },
+    {
+        "fileName": "Part_PL_Ot41Sd3_Front_Left.jpg",
+		"id": 552,
+        "name": "Ot41Sd3_L",
+        "points": 66,
+        "category": "Left",
+        "faction": "Public",
+		"keywords": ["AutomaticShield"]
     }
 ]

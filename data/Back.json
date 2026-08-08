@@ -348,5 +348,17 @@
         "category": "Back",
         "faction": "Public",
 		"keywords": ["Suppression"]
+    },
+    {
+        "fileName": "Part_PL_Lm384_Front.jpg",
+		"id": 544,
+        "name": "Lm384",
+        "points": 48,
+        "category": "Back",
+        "faction": "Public",
+		"keywords": ["Volley(2)", "IndirectFire"],
+        "subCards": [
+            "Projectile_PL_FGM46_Front.jpg"
+        ]
     }
 ]
