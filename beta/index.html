@@ -157,14 +157,16 @@
                         <label for="setting-show-sub-cards">서브 카드 표시</label>
                         <input type="checkbox" id="setting-show-sub-cards" checked>
                     </div>
-                    <div class="setting-row sub-setting" id="setting-reveal-hidden-row" style="display: none;">
-                        <label for="setting-reveal-hidden">숨김 카드 공개</label>
-                        <input type="checkbox" id="setting-reveal-hidden" checked>
-                    </div>
                 </div>
                 <div class="setting-row">
                     <label for="setting-show-tactical">전술 카드 표시</label>
                     <input type="checkbox" id="setting-show-tactical" checked>
+                </div>
+                <div id="tactical-sub-settings">
+                    <div class="setting-row sub-setting" id="setting-hide-tactical-row" style="display: none;">
+                        <label for="setting-hide-tactical">전술 카드 숨김</label>
+                        <input type="checkbox" id="setting-hide-tactical">
+                    </div>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" id="generate-image-btn">이미지 생성</button>

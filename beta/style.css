@@ -401,8 +401,10 @@ div.hidden-card-overlay > img.hidden-title-image {
     width: auto;
 }
 
-/* This more specific selector ensures the unknown icon size is not overridden by the general .tactical-display-card img rule */
-.tactical-display-card .unknown-icon-image {
+/* This more specific selector ensures the unknown icon size is not overridden by the general .tactical-display-card img rule.
+   Also matched via .hidden-card-overlay directly, since export-mode cards render without the .tactical-display-card class. */
+.tactical-display-card .unknown-icon-image,
+.hidden-card-overlay .unknown-icon-image {
     width: 50%;
     height: auto;
     object-fit: contain; /* Use contain to ensure the whole icon is visible */
@@ -1113,7 +1115,8 @@ div.hidden-card-overlay > img.hidden-title-image {
     color: white;
 }
 
-#details-sub-settings {
+#details-sub-settings,
+#tactical-sub-settings {
     padding-left: 20px;
     border-left: 3px solid #e0e0e0;
     margin-left: 10px;

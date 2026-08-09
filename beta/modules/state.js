@@ -17,7 +17,7 @@ export let imageExportSettings = {
     showCardPoints: true,
     showUnitPoints: true,
     showSubCards: true,
-    revealHidden: true,
+    hideTactical: false,
     showTactical: true,
 };
 
@@ -290,7 +290,6 @@ export function deleteTacticalCard(rosterId) {
 
 // Toggles the isRevealedInGameMode status of a card
 export function toggleCardRevealedStatus(cardCategory, rosterId, unitId = null) {
-    console.log(`[State] toggleCardRevealedStatus: cat=${cardCategory}, rid=${rosterId}, uid=${unitId}`);
     const roster = getActiveRoster();
     if (!roster) return;
 

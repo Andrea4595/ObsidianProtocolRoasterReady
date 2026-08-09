@@ -411,11 +411,12 @@ export const openImageExportSettingsModal = () => {
     document.getElementById('setting-show-card-points').checked = state.imageExportSettings.showCardPoints;
     document.getElementById('setting-show-unit-points').checked = state.imageExportSettings.showUnitPoints;
     document.getElementById('setting-show-sub-cards').checked = state.imageExportSettings.showSubCards;
-    document.getElementById('setting-reveal-hidden').checked = state.imageExportSettings.revealHidden;
+    document.getElementById('setting-hide-tactical').checked = state.imageExportSettings.hideTactical;
     document.getElementById('setting-show-tactical').checked = state.imageExportSettings.showTactical;
 
     // Trigger change event to correctly set sub-option states
     document.getElementById('setting-show-details').dispatchEvent(new Event('change'));
+    document.getElementById('setting-show-tactical').dispatchEvent(new Event('change'));
 
 
     const rosterState = state.getActiveRoster();
@@ -430,9 +431,9 @@ export const openImageExportSettingsModal = () => {
     const hasHiddenCards = allCardsInRoster.some(card => card && card.hidden);
 
     if (hasHiddenCards) {
-        dom.settingRevealHiddenRow.style.display = 'flex';
+        dom.settingHideTacticalRow.style.display = 'flex';
     } else {
-        dom.settingRevealHiddenRow.style.display = 'none';
+        dom.settingHideTacticalRow.style.display = 'none';
     }
 
     dom.imageExportSettingsModal.style.display = 'flex';
