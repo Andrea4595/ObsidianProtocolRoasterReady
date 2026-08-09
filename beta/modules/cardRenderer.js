@@ -108,6 +108,22 @@ const createHiddenCardOverlay = (cardData) => {
 };
 
 
+const createBoxBadgesContainer = (cardData) => {
+    const boxes = state.getBoxesForCard(cardData);
+    if (!boxes.length) return null;
+
+    const container = createDomElement('div', { className: 'box-badges-container' });
+    boxes.forEach(box => {
+        const badge = createDomElement('span', {
+            className: 'box-badge',
+            textContent: box.name,
+            style: { backgroundColor: box.color }
+        });
+        container.appendChild(badge);
+    });
+    return container;
+};
+
 // --- Main Card Element Creator ---
 
 export const renderCardElement = (cardData, existingElement = null, options = {}) => {
@@ -158,6 +174,11 @@ export const renderCardElement = (cardData, existingElement = null, options = {}
         // --- Card Content ---
         img = createCardImage(cardData, mode);
         card.appendChild(img);
+
+        if (mode === 'modal') {
+            const boxBadgesContainer = createBoxBadgesContainer(cardData);
+            if (boxBadgesContainer) card.appendChild(boxBadgesContainer);
+        }
 
         // --- Overlays and Buttons ---
         if (showPoints) {

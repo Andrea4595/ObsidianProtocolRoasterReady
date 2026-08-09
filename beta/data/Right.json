@@ -333,7 +333,7 @@
     },
     {
         "fileName": "Part_UN_Right_R6_Front.jpg",
-		"id": 109,
+		"id": 119,
         "name": "R6",
         "points": 54,
         "category": "Right",
@@ -454,7 +454,7 @@
     {
         "fileName": "Part_GOF_Right_MHKX_Front.jpg",
         "drop": "Part_GOF_Right_MHKX_Dropped.jpg",
-		"id": 0,
+		"id": 2304,
         "id_watermelon02": "ZHRA-304",
         "name": "MHKX_R",
         "points": 56,

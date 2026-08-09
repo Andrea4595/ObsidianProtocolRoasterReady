@@ -4,6 +4,8 @@ import { advanceCardStatus as gameModeAdvanceCardStatus } from './gameMode.js'; 
 // --- State Variables ---
 export let allCards = { byCategory: {}, drones: [], tactical: [], byFileName: new Map() };
 export let allKeywords = new Map();
+export let allBoxes = [];
+let boxesByCardId = new Map();
 export let allRosters = {}; // This will store Roster instances
 export let activeRosterName = '';
 export let isGameMode = false;
@@ -516,6 +518,7 @@ async function loadImageData() {
         allCards.byFileName = new Map();
         allCards.byCardId = new Map();
         allCards.byName = new Map();
+        allCards.byId = new Map();
         
         cardData.forEach(card => {
             // ... (existing code to populate maps)
@@ -538,6 +541,7 @@ async function loadImageData() {
             allCards.byFileName.set(card.fileName, card);
             allCards.byCardId.set(cardId, card);
             allCards.byName.set(`${card.category}_${card.name}`, card);
+            allCards.byId.set(card.id, card);
 
             if (card.category === "Tactical" && card.hidden === true) {
                 card.isRevealedInGameMode = false;
@@ -584,6 +588,38 @@ async function loadImageData() {
     }
 }
 
+async function loadBoxData() {
+    try {
+        const response = await fetch(`data/Boxes.json?v=${new Date().getTime()}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} for file Boxes.json`);
+        }
+        allBoxes = await response.json();
+    } catch (error) {
+        console.error("Could not load box data:", error);
+        allBoxes = [];
+    }
+}
+
+// Builds a cardId -> [{id, name, color}] lookup from allBoxes, for O(1) badge rendering
+function buildBoxIndex() {
+    boxesByCardId = new Map();
+    allBoxes.forEach(box => {
+        const boxInfo = { id: box.id, name: box.name, color: box.color };
+        (box.contents || []).forEach(cardId => {
+            if (!boxesByCardId.has(cardId)) {
+                boxesByCardId.set(cardId, []);
+            }
+            boxesByCardId.get(cardId).push(boxInfo);
+        });
+    });
+}
+
+export function getBoxesForCard(cardData) {
+    if (!cardData || cardData.id === undefined) return [];
+    return boxesByCardId.get(cardData.id) || [];
+}
+
 async function loadKeywordData() {
     try {
         const response = await fetch(`data/keywords.json?v=${new Date().getTime()}`);
@@ -598,7 +634,8 @@ async function loadKeywordData() {
 }
 
 export const initializeApp = async () => {
-    await Promise.all([loadImageData(), loadKeywordData()]);
+    await Promise.all([loadImageData(), loadKeywordData(), loadBoxData()]);
+    buildBoxIndex();
 
     loadCurrentSort();
 
