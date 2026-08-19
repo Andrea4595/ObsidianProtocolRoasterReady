@@ -92,7 +92,7 @@ export const imageExportSettingsForm = get('image-export-settings-form');
 export const generateImageBtn = get('generate-image-btn');
 export const cancelExportBtn = get('cancel-export-btn');
 export const settingShowUnitCompositeExport = get('setting-show-unit-composite');
-export const settingRevealHiddenRow = get('setting-reveal-hidden-row');
+export const settingHideTacticalRow = get('setting-hide-tactical-row');
 
 // General Settings Modal
 export const settingsModal = get('settings-modal');

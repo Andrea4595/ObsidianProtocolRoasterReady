@@ -1,7 +1,7 @@
 [
     {
         "fileName": "Projectile_PL_AS3A_Front.jpg",
-		"id": 0,
+		"id": 297,
 		"id_watermelon02": "PDAM-003",
         "name": "AS3A",
         "points": 0,
@@ -10,7 +10,7 @@
     },
     {
         "fileName": "Projectile_PL_AS3B_Front.jpg",
-		"id": 0,
+		"id": 298,
 		"id_watermelon02": "PDAM-004",
         "name": "AS3B",
         "points": 0,
@@ -19,7 +19,7 @@
     },
     {
         "fileName": "Projectile_PL_FG33_Front.jpg",
-		"id": 0,
+		"id": 531,
 		"id_watermelon02": "PDAM-005",
         "name": "FG33",
         "points": 0,
@@ -28,7 +28,7 @@
     },
     {
         "fileName": "Projectile_PL_FGM25_Front.jpg",
-		"id": 0,
+		"id": 273,
 		"id_watermelon02": "PDAM-001",
         "name": "FGM25",
         "points": 0,

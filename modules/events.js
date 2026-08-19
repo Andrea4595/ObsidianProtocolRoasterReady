@@ -113,6 +113,18 @@ export function setupEventListeners() {
         }
     });
 
+    document.getElementById('setting-show-tactical').addEventListener('change', (event) => {
+        const subSettings = document.getElementById('tactical-sub-settings');
+        const isChecked = event.target.checked;
+        subSettings.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.disabled = !isChecked;
+            // Re-enabling tactical display resets the sub-option to its safe default (not hidden)
+            if (!isChecked || event.isTrusted) {
+                checkbox.checked = false;
+            }
+        });
+    });
+
     const saveImageExportSettings = () => {
         const settings = {
             showTitle: document.getElementById('setting-show-title').checked,
@@ -123,7 +135,7 @@ export function setupEventListeners() {
             showCardPoints: document.getElementById('setting-show-card-points').checked,
             showUnitPoints: document.getElementById('setting-show-unit-points').checked,
             showSubCards: document.getElementById('setting-show-sub-cards').checked,
-            revealHidden: document.getElementById('setting-reveal-hidden').checked,
+            hideTactical: document.getElementById('setting-hide-tactical').checked,
             showTactical: document.getElementById('setting-show-tactical').checked,
         };
         localStorage.setItem('imageExportSettings', JSON.stringify(settings));

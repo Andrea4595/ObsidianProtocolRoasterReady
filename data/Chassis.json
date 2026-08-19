@@ -117,15 +117,6 @@
 		"mobility": 3
     },
     {
-        "fileName": "Part_PL_HL2_Front.jpg",
-		"id": 548,
-        "name": "HL2",
-        "points": 21,
-        "category": "Chassis",
-        "faction": "Public",
-		"mobility": 3
-    },
-    {
         "fileName": "Part_PL_HL2M_Front.jpg",
 		"id": 549,
         "name": "HL2M",
@@ -133,6 +124,15 @@
         "category": "Chassis",
         "faction": "Public",
         "frame": true,
+		"mobility": 3
+    },
+    {
+        "fileName": "Part_PL_HL2_Front.jpg",
+		"id": 548,
+        "name": "HL2",
+        "points": 21,
+        "category": "Chassis",
+        "faction": "Public",
 		"mobility": 3
     }
 ]

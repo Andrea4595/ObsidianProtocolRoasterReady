@@ -328,10 +328,10 @@
 		"keywords": ["Transform", "CruiseMode"]
     },
     {
-        "fileName": "Part_PL_H2B_Front.jpg",
-		"id": 547,
-        "name": "H2B",
-        "points": 63,
+        "fileName": "Part_PL_H2A_Front.jpg",
+		"id": 546,
+        "name": "H2A",
+        "points": 60,
         "category": "Torso",
         "faction": "Public",
         "frame": true,
@@ -340,10 +340,10 @@
 		"keywords": ["Stationary", "MultiTarget(5)"]
     },
     {
-        "fileName": "Part_PL_H2A_Front.jpg",
-		"id": 546,
-        "name": "H2A",
-        "points": 60,
+        "fileName": "Part_PL_H2B_Front.jpg",
+		"id": 547,
+        "name": "H2B",
+        "points": 63,
         "category": "Torso",
         "faction": "Public",
         "frame": true,

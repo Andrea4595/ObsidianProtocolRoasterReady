@@ -81,7 +81,7 @@ const generateCardHtml = (cardData, settings) => {
 };
 
 
-const generateUnitHtml = async (unit, shouldHide, settings) => {
+const generateUnitHtml = async (unit, settings) => {
     const unitContainer = createElementWithStyles('div', {
         display: 'flex',
         gap: '10px',
@@ -147,7 +147,7 @@ const generateUnitHtml = async (unit, shouldHide, settings) => {
     return unitContainer;
 };
 
-const generateDroneEntryHtml = async (drone, shouldHide, settings) => {
+const generateDroneEntryHtml = async (drone, settings) => {
     const droneContainer = createElementWithStyles('div', {
         display: 'flex',
         alignItems: 'flex-start',
@@ -171,7 +171,7 @@ const generateDroneEntryHtml = async (drone, shouldHide, settings) => {
     return droneContainer;
 };
 
-const generateTacticalCardHtml = (card, shouldHide, settings) => {
+const generateTacticalCardHtml = (card, settings) => {
     // Tactical cards have their own unique size, so we don't use generateCardHtml
     const cardContainer = createElementWithStyles('div', {
         display: 'flex',
@@ -287,8 +287,6 @@ export const handleExportImage = async (settings, format = 'image/png') => {
         const rosterState = state.getActiveRoster();
         if (!rosterState) return;
 
-        const shouldHide = !settings.revealHidden;
-
         const exportContainer = createElementWithStyles('div', {
             position: 'absolute',
             top: '0',
@@ -375,7 +373,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
             const unitsContainer = createElementWithStyles('div', { display: 'flex', flexDirection: 'column', gap: '20px' });
             for (const unitId in rosterState.units) {
-                unitsContainer.appendChild(await generateUnitHtml(rosterState.units[unitId], shouldHide, settings));
+                unitsContainer.appendChild(await generateUnitHtml(rosterState.units[unitId], settings));
             }
             exportContainer.appendChild(unitsContainer);
         }
@@ -405,7 +403,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
             const dronesContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
             for (const drone of allDronesToRender) {
-                dronesContainer.appendChild(await generateDroneEntryHtml(drone, shouldHide, settings));
+                dronesContainer.appendChild(await generateDroneEntryHtml(drone, settings));
             }
             exportContainer.appendChild(dronesContainer);
         }
@@ -417,7 +415,7 @@ export const handleExportImage = async (settings, format = 'image/png') => {
 
             const tacticalContainer = createElementWithStyles('div', { display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center' });
             rosterState.tacticalCards.forEach(card => {
-                tacticalContainer.appendChild(generateTacticalCardHtml(card, shouldHide, settings));
+                tacticalContainer.appendChild(generateTacticalCardHtml(card, settings));
             });
             exportContainer.appendChild(tacticalContainer);
         }

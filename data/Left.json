@@ -380,7 +380,7 @@
     {
         "fileName": "Part_GOF_Left_MHKX_Front.jpg",
         "drop": "Part_GOF_Left_MHKX_Drop.jpg",
-		"id": 0,
+		"id": 1304,
         "id_watermelon02": "ZHLA-304",
         "name": "MHKX_L",
         "points": 51,
@@ -400,15 +400,6 @@
 		"keywords": ["MeleeFiring", "OnHit", "Fragile"]
     },
     {
-        "fileName": "Part_PL_LS197R_Front_Left.jpg",
-		"id": 550,
-        "name": "LS197R_L",
-        "points": 48,
-        "category": "Left",
-        "faction": "Public",
-		"keywords": ["RWS"]
-    },
-    {
         "fileName": "Part_PL_Ot41Sd3_Front_Left.jpg",
 		"id": 552,
         "name": "Ot41Sd3_L",
@@ -416,5 +407,14 @@
         "category": "Left",
         "faction": "Public",
 		"keywords": ["AutomaticShield"]
+    },
+    {
+        "fileName": "Part_PL_LS197R_Front_Left.jpg",
+		"id": 550,
+        "name": "LS197R_L",
+        "points": 48,
+        "category": "Left",
+        "faction": "Public",
+		"keywords": ["RWS"]
     }
 ]

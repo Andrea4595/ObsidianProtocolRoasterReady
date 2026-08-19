@@ -108,6 +108,22 @@ const createHiddenCardOverlay = (cardData) => {
 };
 
 
+const createBoxBadgesContainer = (cardData) => {
+    const boxes = state.getBoxesForCard(cardData);
+    if (!boxes.length) return null;
+
+    const container = createDomElement('div', { className: 'box-badges-container' });
+    boxes.forEach(box => {
+        const badge = createDomElement('span', {
+            className: 'box-badge',
+            textContent: box.name,
+            style: { backgroundColor: box.color }
+        });
+        container.appendChild(badge);
+    });
+    return container;
+};
+
 // --- Main Card Element Creator ---
 
 export const renderCardElement = (cardData, existingElement = null, options = {}) => {
@@ -120,7 +136,8 @@ export const renderCardElement = (cardData, existingElement = null, options = {}
         onClick = null,
         unit = null, // Pass unit data for game mode logic
         onDeleteCallback = null, // New: Callback for when delete button is pressed
-        unitId = null // This is the rosterId for drones/tactical cards, or unitId for unit parts
+        unitId = null, // This is the rosterId for drones/tactical cards, or unitId for unit parts
+        exportSettings = {} // Image export settings (e.g. hideTactical), only relevant when mode === 'export'
     } = options;
 
     let mainContainer;
@@ -157,6 +174,11 @@ export const renderCardElement = (cardData, existingElement = null, options = {}
         // --- Card Content ---
         img = createCardImage(cardData, mode);
         card.appendChild(img);
+
+        if (mode === 'modal') {
+            const boxBadgesContainer = createBoxBadgesContainer(cardData);
+            if (boxBadgesContainer) card.appendChild(boxBadgesContainer);
+        }
 
         // --- Overlays and Buttons ---
         if (showPoints) {
@@ -207,6 +229,12 @@ export const renderCardElement = (cardData, existingElement = null, options = {}
                 card.appendChild(createHiddenCardOverlay(cardData));
             } else if (isInteractive) {
                 appendStatusToken(card, cardData);
+            }
+        } else if (mode === 'export') {
+            // Export Mode: static image, mirror game mode's masking but with no interactivity
+            const isHiddenTactical = exportSettings.hideTactical && cardData.hidden && !cardData.isRevealedInGameMode;
+            if (isHiddenTactical) {
+                card.appendChild(createHiddenCardOverlay(cardData));
             }
         } else {
             // Builder Mode: remove game listeners and add builder listener

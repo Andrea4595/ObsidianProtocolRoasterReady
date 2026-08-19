@@ -7,7 +7,7 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     },
     {
         "fileName": "2_전장_회복.jpg",
@@ -17,7 +17,7 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     },
     {
         "fileName": "3_치고_빠지기.jpg",
@@ -27,7 +27,7 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     },
     {
         "fileName": "4_시스템_복구.jpg",
@@ -37,7 +37,7 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     },
     {
         "fileName": "5_전술적_배치.jpg",
@@ -47,7 +47,7 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     },
     {
         "fileName": "6_원격_재가동.jpg",
@@ -57,6 +57,6 @@
         "category": "Tactical",
         "faction": "Public",
         "hidden": true,
-        "hiddenTitle": "tacticalTitle.jpg"
+        "hiddenTitle": "tacticalTitle.png"
     }
 ]

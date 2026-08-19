@@ -318,7 +318,7 @@
     },
     {
         "fileName": "Part_GOF_Back_HALO_Front.jpg",
-		"id": 0,
+		"id": 1302,
 		"id_watermelon02": "ZYBP-302",
         "name": "HALO",
         "points": 30,
@@ -341,15 +341,6 @@
         ]
     },
     {
-        "fileName": "Part_PL_LS297_Front.jpg",
-		"id": 545,
-        "name": "LS297",
-        "points": 48,
-        "category": "Back",
-        "faction": "Public",
-		"keywords": ["Suppression"]
-    },
-    {
         "fileName": "Part_PL_Lm384_Front.jpg",
 		"id": 544,
         "name": "Lm384",
@@ -360,5 +351,14 @@
         "subCards": [
             "Projectile_PL_FGM46_Front.jpg"
         ]
+    },
+    {
+        "fileName": "Part_PL_LS297_Front.jpg",
+		"id": 545,
+        "name": "LS297",
+        "points": 48,
+        "category": "Back",
+        "faction": "Public",
+		"keywords": ["Suppression"]
     }
 ]

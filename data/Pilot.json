@@ -45,7 +45,7 @@
     },
     {
         "fileName": "Dial_RDL_04_Hammerhead_Different_1_Front.jpg",
-		"id": 0,
+		"id": 364,
 		"id_watermelon02": "FPA-04-2",
         "name": "Hammerhead_Different_1",
         "points": 18,
@@ -81,7 +81,7 @@
     },
     {
         "fileName": "Dial_RDL_06_Keyhole_Different_1_Front.jpg",
-		"id": 0,
+		"id": 362,
 		"id_watermelon02": "FPA-06-2",
         "name": "Keyhole_Different_1",
         "points": 12,
@@ -191,6 +191,15 @@
 		"link": 4
     },
     {
+        "fileName": "Dial_RDL_63_Scout_Front.jpg",
+		"id": 363,
+        "name": "Scout63",
+        "points": 9,
+        "category": "Pilot",
+        "faction": "RDL",
+		"link": 4
+    },
+    {
         "fileName": "Dial_UNPilot_19_Quartz_Front.jpg",
 		"id": 319,
 		"id_watermelon02": "LPA-19",
@@ -247,7 +256,7 @@
     },
     {
         "fileName": "Dial_UNPilot_23_Onyx_Different_1_Front.jpg",
-		"id": 0,
+		"id": 365,
 		"id_watermelon02": "LPA-23-2",
         "name": "Onyx_Different_1",
         "points": 24,
@@ -309,7 +318,7 @@
     },
     {
         "fileName": "Dial_UNPilot_66_Rifleman_Front.jpg",
-		"id": 0,
+		"id": 366,
 		"id_watermelon02": "LPA-66",
         "name": "Rifleman66",
         "points": 9,
@@ -359,8 +368,8 @@
     },
     {
         "fileName": "Dial_GOFPilot_72_Grenadier_Front.jpg",
-		"id": 0,
-		"id_watermelon02": "ZPA-46",
+		"id": 372,
+		"id_watermelon02": "ZPA-72",
         "name": "Grenadier72",
         "points": 4,
         "category": "Pilot",
@@ -369,7 +378,7 @@
     },
     {
         "fileName": "Dial_WD_ACE001_KarlFried_Front.jpg",
-		"id": 0,
+		"id": 3001,
 		"id_watermelon02": "ACE-01",
         "name": "ACE001_KarlFried",
         "points": 15,
@@ -380,7 +389,7 @@
     },
     {
         "fileName": "Dial_PD_PLPilot_102_Front.jpg",
-		"id": 0,
+		"id": 369,
 		"id_watermelon02": "XPA-60",
         "name": "CombatantA102",
         "points": 10,

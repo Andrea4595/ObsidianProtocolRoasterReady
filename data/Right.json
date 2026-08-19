@@ -454,7 +454,7 @@
     {
         "fileName": "Part_GOF_Right_MHKX_Front.jpg",
         "drop": "Part_GOF_Right_MHKX_Dropped.jpg",
-		"id": 0,
+		"id": 2304,
         "id_watermelon02": "ZHRA-304",
         "name": "MHKX_R",
         "points": 51,
@@ -474,15 +474,6 @@
 		"keywords": ["MeleeFiring", "Mutilation"]
     },
     {
-        "fileName": "Part_PL_LS197R_Front_Right.jpg",
-		"id": 551,
-        "name": "LS197R_R",
-        "points": 48,
-        "category": "Right",
-        "faction": "Public",
-		"keywords": ["RWS"]
-    },
-    {
         "fileName": "Part_PL_Ot41Sd3_Front_Right.jpg",
 		"id": 553,
         "name": "Ot41Sd3_R",
@@ -491,5 +482,14 @@
         "faction": "Public",
         "intercept": 2,
 		"keywords": ["AutomaticShield"]
+    },
+    {
+        "fileName": "Part_PL_LS197R_Front_Right.jpg",
+		"id": 551,
+        "name": "LS197R_R",
+        "points": 48,
+        "category": "Right",
+        "faction": "Public",
+		"keywords": ["RWS"]
     }
 ]
